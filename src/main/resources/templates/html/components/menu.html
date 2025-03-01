@@ -1,0 +1,84 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top primary-nav" ng-controller="NavController as navCtrl">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#/">
+            <img src="image/FPT_Logo.png" alt="Bootstrap" width="120" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item mx-2">
+                    <a class="nav-link fw-bold border rounded rounded-4 px-4 text-center " aria-current="page"
+                        href="#ticketing/0">Mua vé</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center " aria-current="page"
+                        href="#movies-list">Phim</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center " aria-current="page"
+                        href="#promotions">Khuyến
+                        mãi</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center " aria-current="page"
+                        href="#feedback">Liên
+                        hệ</a>
+                </li>
+            </ul>
+
+            <!-- nếu chưa đăng nhập -->
+            <ul class="navbar-nav">
+                <li ng-if="!navCtrl.isLoggedIn()"><a style="text-decoration: none; font-weight: bold;"
+                        href="#login">Đăng nhập</a></li>
+                <li ng-if="!navCtrl.isLoggedIn()"><a style="text-decoration: none; font-weight: bold;"
+                        href="#register">Đăng ký</a></li>
+            </ul>
+            <!-- nếu đã đăng nhập -->
+            <div ng-if="navCtrl.isLoggedIn()" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <img ng-src="image/Content/cat.png" width="50px" height="50px" class="border rounded rounded-5"
+                        alt="">
+
+                </a>
+                <p>{{navCtrl.currentUser.username}}</p>
+                <div>
+                    <ul class="dropdown-menu dropdown-menu-end mx-2" style="z-index: -1;">
+                        <li><a class="dropdown-item" href="#my-tickets">Vé của tôi</a></li>
+                        <hr>
+                        <li><a class="dropdown-item" href="#account-information">Thông tin tài khoản</a>
+                        </li>
+                        <li><a class="dropdown-item" ng-click="navCtrl.logout()">Đăng xuất</a></li>
+                    </ul>
+                </div>
+                <!-- 
+                    <div ng-show="!currentUser">
+                        <a href="#login"></a>
+                    </div>
+                -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" ng-include="html/components/warning.html">
+    </div>
+    <div>
+        <!-- Warning (if didn't login) -->
+        <div ng-if="!navCtrl.isLoggedIn()" class="alert alert-warning alert-dismissible fade show fixed-top"
+            role="alert" style="margin-top: 65px; z-index: 10;">
+            <strong>Chú ý!</strong> Bạn cần đăng
+            nhập để thực hiện mua vé.
+            <button type=" button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .nav-link:hover {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
