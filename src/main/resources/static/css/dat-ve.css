@@ -1,0 +1,100 @@
+
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.button-group .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.movie-info {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.movie-info img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.movie-info .details {
+    margin-top: 10px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+.seat {
+    display: flex;
+    margin-bottom: 10px;
+}
+button {
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.standard {
+    background-color: blue;
+    color: white;
+}
+
+button.vip {
+    background-color: purple;
+    color: white;
+}
+
+button.booked {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+button.selected {
+    background-color: red;
+    color: white;
+}
+
+button:hover {
+    color: white;
+    background-color: rgb(96, 95, 95);
+}
+
+.summary {
+    margin-top: 20px;
+}
+
+.summary ul {
+    list-style: none;
+    padding: 0;
+}
+
+.summary li {
+    margin-bottom: 5px;
+    
+}
+
+.location-select, .movie-select, .showtime-select {
+    margin-bottom: 20px;
+}
+
+.table-thanh-toan tr td {
+    background-color: #e9ecef;
+}
+.table-ul {
+    list-style: none;
+}
