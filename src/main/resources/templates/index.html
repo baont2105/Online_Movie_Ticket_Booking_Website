@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Trang Chủ</title>
+
+	<!-- Bootstrap -->
 	<link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+	<!-- CSS Custom -->
 	<link rel="stylesheet" href="css/general.css">
 	<!--
-	<link rel="stylesheet" href="css/phan-hoi.css">
-	<link rel="stylesheet" href="css/index.css">
-	<link rel="stylesheet" href="css/chi-tiet-phim.css">
-	<link rel="stylesheet" href="css/chuong-trinh-khuyen-mai.css">
-	<link rel="stylesheet" href="css/dang-ky.css">
-	<link rel="stylesheet" href="css/dang-nhap.css">
-	<link rel="stylesheet" href="css/dat-ve.css">
-	<link rel="stylesheet" href="css/quen-mat-khau.css">
-	<link rel="stylesheet" href="css/thong-tin-tai-khoan.css">
-	<link rel="stylesheet" href="css/ve-cua-toi.css">		
-	-->
-	
-	
+    <link rel="stylesheet" href="css/phan-hoi.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/chi-tiet-phim.css">
+    <link rel="stylesheet" href="css/chuong-trinh-khuyen-mai.css">
+    <link rel="stylesheet" href="css/dang-ky.css">
+    <link rel="stylesheet" href="css/dang-nhap.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/quen-mat-khau.css">
+    <link rel="stylesheet" href="css/thong-tin-tai-khoan.css">
+    <link rel="stylesheet" href="css/ve-cua-toi.css">		
+    -->
 </head>
 
 <body>
@@ -30,269 +31,93 @@
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
-			<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top primary-nav">
-			    <div class="container-fluid">
-			        <a class="navbar-brand" href="#/">
-			            <img src="image/logo.png" alt="Bootstrap" width="120" height="40">
-			        </a>
-			        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-			            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			            <span class="navbar-toggler-icon"></span>
-			        </button>
+			<div th:replace="html/components/menu.html"></div>
 
-			        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-			            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-			                <li class="nav-item mx-2">
-			                    <a class="nav-link fw-bold border rounded rounded-4 px-4 text-center " aria-current="page"
-			                        href="#ticketing/0">Mua vé</a>
-			                </li>
-			                <li class="nav-item mx-2">
-			                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center " aria-current="page"
-			                        href="#movies-list">Phim</a>
-			                </li>
-			                <li class="nav-item mx-2">
-			                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center " aria-current="page"
-			                        href="#promotions">Khuyến
-			                        mãi</a>
-			                </li>
-			                <li class="nav-item mx-2">
-			                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center " aria-current="page"
-			                        href="#feedback">Liên
-			                        hệ</a>
-			                </li>
-			            </ul>
-
-			            <!-- nếu chưa đăng nhập -->
-			            <ul class="navbar-nav">
-			                <li ng-if="!navCtrl.isLoggedIn()"><a style="text-decoration: none; font-weight: bold;"
-			                        href="#login">Đăng nhập</a></li>
-			                <li ng-if="!navCtrl.isLoggedIn()"><a style="text-decoration: none; font-weight: bold;"
-			                        href="#register">Đăng ký</a></li>
-			            </ul>
-			                <!-- 
-			          
-			            <div ng-if="navCtrl.isLoggedIn()" class="nav-item dropdown">
-			                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-			                    aria-expanded="false">
-			                    <img ng-src="image/Content/cat.png" width="50px" height="50px" class="border rounded rounded-5"
-			                        alt="">
-
-			                </a>
-			                <div>
-			                    <ul class="dropdown-menu dropdown-menu-end mx-2" style="z-index: -1;">
-			                        <li><a class="dropdown-item" href="#my-tickets">Vé của tôi</a></li>
-			                        <hr>
-			                        <li><a class="dropdown-item" href="#account-information">Thông tin tài khoản</a>
-			                        </li>
-			                        <li><a class="dropdown-item" ng-click="navCtrl.logout()">Đăng xuất</a></li>
-			                    </ul>
-			                </div>
-			                    <div ng-show="!currentUser">
-			                        <a href="#login"></a>
-			                    </div>
-			                -->
-			            </div>
-			        </div>
-			    </div>
-			</nav>
-
-			<style>
-			    .nav-link:hover {
-			        background-color: #007bff;
-			        color: white;
-			    }
-			</style>
 		</header>
 
 		<!-- Body -->
 		<div class="container-fluid mx-0 p-0" style="margin-top: 65px;">
-			<!--Nội dung trang web-->
+			<!-- Nội dung trang web -->
+
 			<!-- Carousel -->
 			<div class="row">
-				<!-- Carousel -->
-				<div class="container-fluid bg-dark py-3">
-				    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-				        <div class="carousel-inner">
-				            <div class="carousel-item active" data-bs-interval="3000">
-				                <img src="image/Carousel/slide Doraemon.jpg" class="d-block w-100" alt="...">
-				            </div>
-				            <div class="carousel-item" data-bs-interval="3000">
-				                <img src="image/Carousel/slide Ngôi đền kỳ quái.jpg" class="d-block w-100" alt="...">
-				            </div>
-				            <div class="carousel-item" data-bs-interval="3000">
-				                <img src="image/Carousel/slide Mini game.jpg" class="d-block w-100" alt="...">
-				            </div>
-				        </div>
-				        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
-				            data-bs-slide="prev">
-				            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				            <span class="visually-hidden">Previous</span>
-				        </button>
-				        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"
-				            data-bs-slide="next">
-				            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-				            <span class="visually-hidden">Next</span>
-				        </button>
-				    </div>
-				</div>
+				<div th:replace="html/components/carousel.html"></div>
 			</div>
 
 			<!-- Main Content -->
 			<div class="row container-fluid m-0 p-0">
-			    <!-- Bản tin -->
-			    <div class="row container m-0 p-0">
-			        <h2 class="text-center my-3 py-4" style="background-color:#efebdb;">BẢN TIN HOT
-			            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-fire"
-			                viewBox="0 0 16 16">
-			                <path
-			                    d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15" />
-			            </svg>
-			        </h2>
-			        <!-- Article -->
-			        <article class="col-sm-8">
-			            <div class="container-fluid">
-							<div class="card mb-3" style="max-height: 200px;">
-							    <div class="row g-0">
-							        <div class="col-md-3">
-							            <img src="image/Thumbnail/Thumbnail Doraemon.jpg" class="img-fluid rounded-start" alt="..."
-							                style="max-height: 200px;">
-							        </div>
-							        <div class="col-md-9">
-							            <div class="card-body">
-							                <h5 class="card-title">DORAEMON: NOBITA VÀ BẢN GIAO HƯỞNG ĐỊA CẦU</h5>
-							                <p class="card-text">TÁC PHẨM KỶ NIỆM 90 NĂM FUJIKO F FUJIO.</p>
-							                <p class="card-text"><a href="" class="text-body-secondary">Xem chi
-							                        tiết</a>
-							                </p>
-							            </div>
-							        </div>
-							    </div>
+				<!-- Bản tin -->
+				<div class="row container m-0 p-0">
+					<h2 class="text-center my-3 py-4" style="background-color:#efebdb;">
+						BẢN TIN HOT
+						<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-fire"
+							viewBox="0 0 16 16">
+							<path
+								d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15" />
+						</svg>
+					</h2>
+
+					<!-- Article -->
+					<article class="col-sm-8">
+						<div class="container-fluid">
+							<div th:each="newsItem : ${newsList}" class="card mb-3" style="max-height: 200px;">
+								<div class="row g-0">
+									<div class="col-md-3">
+										<img th:src="@{/image/Thumbnail/{img}(img=${newsItem.image})}"
+											class="img-fluid rounded-start" alt="..." style="max-height: 200px;">
+									</div>
+									<div class="col-md-9">
+										<div class="card-body">
+											<h5 class="card-title" th:text="${newsItem.title}"></h5>
+											<p class="card-text" th:text="${newsItem.description}"></p>
+											<p class="card-text">
+												<a th:href="@{/news/{id}(id=${newsItem.id})}"
+													class="text-body-secondary">Xem chi tiết</a>
+											</p>
+										</div>
+									</div>
+								</div>
 							</div>
+						</div>
+					</article>
 
-							<div class="card mb-3" style="max-height: 200px;">
-							    <div class="row g-0">
-							        <div class="col-md-3">
-							            <img src="image/Thumbnail/Thumbnail Doraemon.jpg" class="img-fluid rounded-start" alt="..."
-							                style="max-height: 200px;">
-							        </div>
-							        <div class="col-md-9">
-							            <div class="card-body">
-							                <h5 class="card-title">DORAEMON: NOBITA VÀ BẢN GIAO HƯỞNG ĐỊA CẦU</h5>
-							                <p class="card-text">TÁC PHẨM KỶ NIỆM 90 NĂM FUJIKO F FUJIO.</p>
-							                <p class="card-text"><a href="" class="text-body-secondary">Xem chi
-							                        tiết</a>
-							                </p>
-							            </div>
-							        </div>
-							    </div>
-							</div>
+					<!-- Aside right -->
+					<aside class="col-sm-4 p-2">
+						<div class="container-fluid mt-5 me-2 p-3 pt-1 border border-4 rounded rounded-3 bg-white"
+							th:replace="html/components/leaderBoard.html">
+						</div>
+					</aside>
+				</div>
 
-							<div class="card mb-3" style="max-height: 200px;">
-							    <div class="row g-0">
-							        <div class="col-md-3">
-							            <img src="image/Thumbnail/Thumbnail Doraemon.jpg" class="img-fluid rounded-start" alt="..."
-							                style="max-height: 200px;">
-							        </div>
-							        <div class="col-md-9">
-							            <div class="card-body">
-							                <h5 class="card-title">DORAEMON: NOBITA VÀ BẢN GIAO HƯỞNG ĐỊA CẦU</h5>
-							                <p class="card-text">TÁC PHẨM KỶ NIỆM 90 NĂM FUJIKO F FUJIO.</p>
-							                <p class="card-text"><a href="" class="text-body-secondary">Xem chi
-							                        tiết</a>
-							                </p>
-							            </div>
-							        </div>
-							    </div>
-							</div>
-
-							<div class="card mb-3" style="max-height: 200px;">
-							    <div class="row g-0">
-							        <div class="col-md-3">
-							            <img src="image/Thumbnail/Thumbnail Doraemon.jpg" class="img-fluid rounded-start" alt="..."
-							                style="max-height: 200px;">
-							        </div>
-							        <div class="col-md-9">
-							            <div class="card-body">
-							                <h5 class="card-title">DORAEMON: NOBITA VÀ BẢN GIAO HƯỞNG ĐỊA CẦU</h5>
-							                <p class="card-text">TÁC PHẨM KỶ NIỆM 90 NĂM FUJIKO F FUJIO.</p>
-							                <p class="card-text"><a href="" class="text-body-secondary">Xem chi
-							                        tiết</a>
-							                </p>
-							            </div>
-							        </div>
-							    </div>
-							</div>
-			            </div>
-			        </article>
-
-			        <!-- Aside right -->
-			        <aside class="col-sm-4 p-2">
-			            <div class="container-fluid mt-5 me-2 p-3 pt-1 border border-4 rounded rounded-3 bg-white"
-			                ng-include="'html/components/leaderBoard.html'">
-			            </div>
-			        </aside>
-			    </div>
-
-			    <!-- Sự kiện -->
-			    <div class="row container m-0 p-0 ">
-					<h2 class="text-center my-3 py-4" style="background-color: rgb(144, 213, 224);">EVENT
-					    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-fire" viewBox="0 0 16 16">
-					        <path
-					            d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15" />
-					    </svg>
+				<!-- Sự kiện -->
+				<div class="row container m-0 p-0 ">
+					<h2 class="text-center my-3 py-4" style="background-color: rgb(144, 213, 224);">
+						EVENT
+						<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-fire"
+							viewBox="0 0 16 16">
+							<path
+								d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15" />
+						</svg>
 					</h2>
 					<div class="row">
-					    <aside class="col-sm-2">
-
-					    </aside>
-					    <article class="row col-sm-8">
-					        <div class="col-sm-4">
-					            <img src="image/Content/mua 2 tặng 1.jpg" style="max-width: 300px;" alt="">
-					        </div>
-					        <div class="col-sm-8">
-					            <img src="image/Content/culture day.jpg" style="max-width: 400px;" alt="">
-					        </div>
-					    </article>
-					    <aside class="col-sm-2">
-
-					    </aside>
-			    </div>
+						<article class="row col-sm-8">
+							<div class="col-sm-4">
+								<img src="image/Content/mua 2 tặng 1.jpg" style="max-width: 300px;" alt="">
+							</div>
+							<div class="col-sm-8">
+								<img src="image/Content/culture day.jpg" style="max-width: 400px;" alt="">
+							</div>
+						</article>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- Footer -->
-	<footer class="bg-body-tertiary p-0 m-0" ng-include="'html/components/footer.html'">
-
-	</footer>
+		<!-- Footer -->
+		<footer class="bg-body-tertiary p-0 m-0" th:replace="html/components/footer.html"></footer>
 	</div>
 
 	<script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/angular.min.js"></script>
-	<script src="js/angular-route.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-route.js"></script>
-
-	<!-- Views -->
-	<script src="js/views/singlePage.js"></script>
-
-	<!-- database -->
-	<script src="js/db/db_movies.js"></script>
-	<script src="js/db/db_seats.js"></script>
-	<script src="js/db/db_foods.js"></script>
-	<script src="js/db/db_tickets.js"></script>
-	<script src="js/db/db_accounts.js"></script>
-
-	<!-- Utility -->
-	<script src="js/utility/auth.js"></script>
-
-	<!-- Controllers -->
-	<script src="js/controllers/movie-detail.js"></script>
-	<script src="js/controllers/movies-list.js"></script>
-	<script src="js/controllers/ticketing.js"></script>
-
-	<!-- fuctions -->
-	<script src="js/fuction.js"></script>
 </body>
 
 </html>
