@@ -1,211 +1,230 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+	font-family: Arial, sans-serif;
+	background-color: #f8f9fa;
 }
 
 .background-image {
-    background-image: url('cinema-background.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    position: relative;
+	background-image: url('cinema-background.jpg');
+	background-size: cover;
+	background-position: center;
+	height: 100vh;
+	position: relative;
 }
 
 nav ul li {
-    margin-right: 50px;
+	margin-right: 50px;
 }
 
 .navbar {
-    background-color: #333;
-    padding: 10px;
+	background-color: #333;
+	padding: 10px;
+}
+
+.nav-link:hover {
+	background-color: #007bff;
+	color: white;
 }
 
 .navbar-brand {
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
+	color: #fff;
+	font-size: 1.5rem;
+	font-weight: bold;
 }
 
 /* Movie Details */
 .movie-banner {
-    background-image: url('banner-image-url.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 400px;
-    position: relative;
+	background-image: url('banner-image-url.jpg');
+	background-size: cover;
+	background-position: center;
+	height: 400px;
+	position: relative;
 }
 
 .movie-banner .play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 50px;
-    color: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 50px;
+	color: white;
 }
 
 #video-controls {
-    opacity: 0;
-    transition: opacity 0.5s ease;
+	opacity: 0;
+	transition: opacity 0.5s ease;
 }
 
 .trailer-container:hover #video-controls {
-    opacity: 1;
+	opacity: 1;
 }
 
 /* Forms */
 .form-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 40px auto;
-    max-width: 600px;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	margin: 40px auto;
+	max-width: 600px;
 }
 
 .form-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 20px;
+	text-align: center;
 }
 
 .btn-group .btn {
-    margin: 5px;
+	margin: 5px;
 }
 
 .back-link {
-    color: red;
+	color: red;
 }
 
 /* User Sections */
-.register-section, .login-section, .forgot-password-section {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 500px;
-    height: auto;
+.register-section,
+.login-section,
+.forgot-password-section {
+	background-color: rgba(255, 255, 255, 0.8);
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 500px;
+	height: auto;
 }
 
 /* Promo Section */
 .promo-section {
-    background-color: #0066cc;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
+	background-color: #0066cc;
+	color: white;
+	padding: 20px;
+	border-radius: 10px;
 }
 
 .promo-title {
-    font-size: 2rem;
-    font-weight: bold;
+	font-size: 2rem;
+	font-weight: bold;
 }
 
 .promo-date {
-    font-size: 1.5rem;
-    margin-top: 10px;
+	font-size: 1.5rem;
+	margin-top: 10px;
 }
 
 .movie-poster {
-    margin-top: 20px;
+	margin-top: 20px;
 }
 
 /* Booking */
 .movie-info {
-    background-color: #e9ecef;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
+	background-color: #e9ecef;
+	padding: 10px;
+	border-radius: 8px;
+	text-align: center;
 }
 
 .movie-info img {
-    max-width: 100%;
-    border-radius: 8px;
+	max-width: 100%;
+	border-radius: 8px;
 }
 
 .movie-info .details {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 /* Seating & Buttons */
 .seat {
-    display: flex;
-    margin-bottom: 10px;
+	display: flex;
+	margin-bottom: 10px;
 }
 
 button {
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+	margin: 5px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
 }
 
 button.standard {
-    background-color: blue;
-    color: white;
+	background-color: blue;
+	color: white;
 }
 
 button.vip {
-    background-color: purple;
-    color: white;
+	background-color: purple;
+	color: white;
 }
 
 button.booked {
-    background-color: gray;
-    cursor: not-allowed;
+	background-color: gray;
+	cursor: not-allowed;
 }
 
 button.selected {
-    background-color: red;
-    color: white;
+	background-color: red;
+	color: white;
 }
 
 button:hover {
-    color: white;
-    background-color: rgb(96, 95, 95);
+	color: white;
+	background-color: rgb(96, 95, 95);
 }
 
 /* Summary */
 .summary {
-    margin-top: 20px;
+	margin-top: 20px;
 }
 
 .summary ul {
-    list-style: none;
-    padding: 0;
+	list-style: none;
+	padding: 0;
 }
 
 .summary li {
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
-.location-select, .movie-select, .showtime-select {
-    margin-bottom: 20px;
+.location-select,
+.movie-select,
+.showtime-select {
+	margin-bottom: 20px;
 }
 
 /* Payment Table */
 .table-thanh-toan tr td {
-    background-color: #e9ecef;
+	background-color: #e9ecef;
 }
 
 .table-ul {
-    list-style: none;
+	list-style: none;
 }
 
 /* Ticket Page */
 .content {
-    margin-top: 20px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 40px auto;
+	margin-top: 20px;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	max-width: 800px;
+	margin: 40px auto;
 }
 
 thead th {
-    text-align: center !important;
-    vertical-align: middle !important;
-    background-color: black;
+	text-align: center !important;
+	vertical-align: middle !important;
+	background-color: black;
+}
+
+/* Footer*/
+.footer-container {
+	margin: 20px 0px 0px 0px;
+	padding: 30px;
+	background-color:antiquewhite;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
