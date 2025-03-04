@@ -8,11 +8,11 @@
 		<version>3.4.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>PrimeCinema_Test</artifactId>
+	<groupId>com.poly</groupId>
+	<artifactId>PrimeCinema</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>PrimeCinema_Test</name>
-	<description>Demo project for Spring Boot</description>
+	<name>PrimeCinema</name>
+	<description>Dự Án Tốt Nghiệp của nhóm 4 lớp PRO2113.03</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -44,6 +44,11 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
