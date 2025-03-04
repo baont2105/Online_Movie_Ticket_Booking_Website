@@ -16,9 +16,9 @@ public class testController {
 		return "ticketing";
 	}
 
-	@RequestMapping("/promotion")
-	public String promotion() {
-		return "promotion";
+	@RequestMapping("/promotions")
+	public String promotions() {
+		return "promotions";
 	}
 
 	@RequestMapping("/movies-list")
