@@ -219,13 +219,6 @@ thead th {
 	background-color: black;
 }
 
-/* Leaderboard */
-.leaderBoard-container {
-	background-color:white;
-	padding: 30px;
-	border: #333 solid 5px;
-	border-radius: 10px;
-}
 /* Footer*/
 .footer-container {
 	margin: 20px 0px 0px 0px;
