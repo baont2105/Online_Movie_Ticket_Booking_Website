@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top primary-nav">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="image/logo landscape black.png" alt="Bootstrap" width="200" height="40" >
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item mx-2">
+                    <a class="nav-link fw-bold border rounded rounded-4 px-4 text-center" href="/ticketing/0">Mua vé</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center"
+                        href="/movies-list">Phim</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center"
+                        href="/promotions">Khuyến mãi</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center" href="/feedback">Liên
+                        hệ</a>
+                </li>
+            </ul>
+
+            <!-- nếu chưa đăng nhập -->
+            <ul class="navbar-nav" th:if="${user == null}">
+                <li><a style="text-decoration: none; font-weight: bold;" href="/login">Đăng nhập</a></li>
+                <li><a style="text-decoration: none; font-weight: bold;" href="/register">Đăng ký</a></li>
+            </ul>
+
+            <!-- nếu đã đăng nhập -->
+            <div class="nav-item dropdown" th:if="${user != null}">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <img th:src="${user.avatar}" width="50px" height="50px" class="border rounded rounded-5" alt="">
+                </a>
+                <p th:text="${user.username}"></p>
+                <div>
+                    <ul class="dropdown-menu dropdown-menu-end mx-2">
+                        <li><a class="dropdown-item" href="/my-tickets">Vé của tôi</a></li>
+                        <hr>
+                        <li><a class="dropdown-item" href="/account-information">Thông tin tài khoản</a></li>
+                        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning nếu chưa đăng nhập -->
+    <div class="alert alert-warning alert-dismissible fade show fixed-top" role="alert"
+        style="margin-top: 65px; z-index: 10;" th:if="${user == null}">
+        <strong>Chú ý!</strong> Bạn cần đăng nhập để thực hiện mua vé.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</nav>
+
+<style>
+    .nav-link:hover {
+        background-color: #007bff;
+        color: white;
+    }
+</style>

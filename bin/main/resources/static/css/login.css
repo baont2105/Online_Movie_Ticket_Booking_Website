@@ -1,0 +1,39 @@
+.form-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.form-container h2 {
+		margin-bottom: 20px;
+	}
+
+	.form-group {
+		width: 100%;
+		margin-bottom: 15px;
+	}
+
+	.form-group label {
+		display: block;
+		margin-bottom: 5px;
+	}
+
+	.form-group input {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+	}
+
+	.alternative {
+		margin-top: 20px;
+	}
+
+	.alternative a {
+		color: #007bff;
+		text-decoration: none;
+	}
+
+	.alternative a:hover {
+		text-decoration: underline;
+	}
