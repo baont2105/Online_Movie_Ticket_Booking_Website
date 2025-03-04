@@ -1,0 +1,72 @@
+<!-- Main Content -->
+<!-- Movie Banner -->
+<div class="movie-banner text-center bg-dark">
+    <div class="container trailer-container">
+        <iframe width="710" height="400" ng-src="{{ getTrustedUrl(searchedMovie.trailer) }}"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <!-- 
+                        <div class="fade" id="video-controls" style="position: relative; bottom: 50px;">
+                            <button id="play-pause-btn">Play</button>
+                            <input id="volume-input" type="range" min="0" max="1" step="0.1" value="1">
+                            <button id="mute-unmute-btn">Mute</button>
+                            <button id="replay-btn">Replay</button>
+                            <button id="end-btn">Stop</button>
+                        </div>
+                    -->
+    </div>
+</div>
+
+<!-- Movie Details -->
+<div class="row mx-4">
+    <div class="col-md-4 d-flex align-items-end flex-column">
+        <img ng-src="image/Thumbnail/{{searchedMovie.thumbnail}}" class="img-fluid border border-2 border-white rounded"
+            alt="Furiosa Poster" style="width: 320px; height: 450px; position: relative; bottom: 100px;">
+        <!-- Replace with the actual poster image URL -->
+    </div>
+
+    <div class="col-md-8">
+        <h1>{{searchedMovie.name | uppercase}} <span
+                class="badge bg-warning text-dark mt-5">{{searchedMovie.tags}}</span></h1>
+        <div class="row">
+            <div class="col-sm-6">
+                <p><i class="bi bi-clock"></i> {{searchedMovie.duration}} Phút | <i class="bi bi-calendar"></i>
+                    {{searchedMovie.release_date |
+                    date}}</p>
+                <p><i class="bi bi-star-fill text-warning"></i> 8.6 (62 votes)</p>
+                <p>Quốc gia: {{searchedMovie.country}}</p>
+                <p>Nhà sản xuất: {{searchedMovie.producer}}</p>
+                <p>Thể loại: <span class="badge bg-primary">Giả Tưởng</span> <span class="badge bg-primary">Hành
+                        Động</span> <span class="badge bg-primary">Phiêu Lưu</span></p>
+                <p>Đạo diễn: {{searchedMovie.director}}</p>
+                <p>Diễn viên: {{searchedMovie.actors}}</p>
+            </div>
+            <div class="col-sm-6">
+                <a href="#ticketing/{{searchedMovie.id}}">
+                    <button class="btn btn-danger p-3">
+                        Đặt vé xem phim
+                    </button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Sub title -->
+<div class="container">
+    <h3>Nội dung phim</h3>
+    {{searchedMovie.desciption}}
+</div>
+
+<!-- lịch chiếu -->
+<div class="container my-3">
+    <h3>Lịch chiếu</h3>
+</div>
+
+<!-- Đánh giá phim -->
+<div class="container my-3">
+    <h3>Đánh giá phim</h3>
+</div>
+</div>
