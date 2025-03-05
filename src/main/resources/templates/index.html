@@ -19,7 +19,7 @@
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
-			<div th:replace="html/components/menu.html"></div>
+			<div th:replace="components/menu.html"></div>
 
 		</header>
 
@@ -29,7 +29,7 @@
 
 			<!-- Carousel -->
 			<div class="row">
-				<div th:replace="html/components/carousel.html"></div>
+				<div th:replace="components/carousel.html"></div>
 			</div>
 
 			<!-- Main Content -->
@@ -49,7 +49,7 @@
 					<article class="col-sm-8">
 						<div class="container-fluid">
 
-							<div th:replace="html/components/news.html"></div>
+							<div th:replace="components/news.html"></div>
 							<!--
 							<div th:each="newsItem : ${newsList}" class="card mb-3" style="max-height: 200px;">
 								<div class="row g-0">
@@ -77,19 +77,19 @@
 					<!-- Aside right -->
 					<aside class="col-sm-4 p-2">
 						<div class="container-fluid mt-5 me-2 p-3 pt-1 border border-4 rounded rounded-3 bg-white"
-							th:replace="html/components/leaderBoard.html">
+							th:replace="components/leaderBoard.html">
 						</div>
 					</aside>
 				</div>
 
 				<!-- Sự kiện -->
 				<div class="row container m-0 p-0 ">
-					<div th:replace="html/components/event.html"></div>
+					<div th:replace="components/event.html"></div>
 				</div>
 			</div>
 
 			<!-- Footer -->
-			<footer class="bg-body-tertiary p-0 m-0" th:replace="html/components/footer.html"></footer>
+			<footer class="bg-body-tertiary p-0 m-0" th:replace="components/footer.html"></footer>
 		</div>
 
 		<script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>

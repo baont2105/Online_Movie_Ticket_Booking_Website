@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Trang Chủ</title>
+	<title>Danh Sách Phim</title>
 
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
@@ -19,7 +19,7 @@
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
-			<div th:replace="html/components/menu.html"></div>
+			<div th:replace="components/menu.html"></div>
 
 		</header>
 
@@ -29,7 +29,7 @@
 
 			<!-- Carousel -->
 			<div class="row">
-				<div th:replace="html/components/carousel.html"></div>
+				<div th:replace="components/carousel.html"></div>
 			</div>
 
 			<!-- Main Content -->
@@ -127,14 +127,14 @@
 
 
 				<!-- Sự kiện -->
-				<div class="row container m-0 p-0 " ng-include="'html/components/event.html'">
+				<div class="row container m-0 p-0 " th:replace="components/event.html">
 				</div>
 
 			</div>
 		</div>
 
 		<!-- Footer -->
-		<footer class="bg-body-tertiary p-0 m-0" th:replace="html/components/footer.html"></footer>
+		<footer class="bg-body-tertiary p-0 m-0" th:replace="components/footer.html"></footer>
 
 		<script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
 </body>
