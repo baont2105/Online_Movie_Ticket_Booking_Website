@@ -56,41 +56,36 @@
 				<aside class="col-sm-0 col-md-2 p-2">
 
 				</aside>
-				<!-- Article -->
+				<!-- Article 
+				-->
 				<article class="col-sm-8">
-					<div class="container-fluid row">
-
-						<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
-							ng-repeat="m in filteredMovies.slice(begin, begin + 8)">
-							<div class="card p-0 m-0" style="width: 14.5rem;">
-								<img ng-src="image/Thumbnail/{{m.thumbnail}}" class="card-img-top" alt="..." width="100"
-									height="300">
-								<div class="card-body p-2">
-									<h5 class="card-title" style="white-space: nowrap;
-			                                    overflow: hidden;
-			                                    text-overflow: ellipsis;">
-										{{m.name | uppercase}}
-									</h5>
-									<div class="row">
-										<label><i class="bi bi-calendar mx-2"></i>{{m.release_date |
-											date:"dd/MM/yyyy"}}</label>
-									</div>
-									<div class="row mt-2">
-										<div class="col-6">
-											<a href="#ticketing/{{m.id}}" class="btn btn-primary ms-2">Đặt vé</a>
-										</div>
-										<div class="col-6">
-											<a href="#movie-detail/{{m.id}}" class="btn btn-primary me-2">Chi tiết</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-
-
-					</div>
+				    <div class="container-fluid row">
+				        <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4" th:each="m : ${movies}">
+				            <div class="card p-0 m-0" style="width: 14.5rem;">
+				                <img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}" class="card-img-top" alt="..." width="100" height="300">
+				                <div class="card-body p-2">
+				                    <h5 class="card-title" th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 17) + '...' : m.name}"></h5>
+									
+									<!-- Hiển thị ngày khởi chiếu của phim
+				                    <div class="row">
+				                        <label><i class="bi bi-calendar mx-2"></i> <span th:text="${#dates.format(m.releaseDate, 'dd/MM/yyyy')}"></span></label>
+				                    </div>
+									-->
+									
+				                    <div class="row mt-2">
+				                        <div class="col-6">
+				                            <a th:href="@{'/ticketing/' + ${m.id}}" class="btn btn-primary ms-2">Đặt vé</a>
+				                        </div>
+				                        <div class="col-6">
+				                            <a th:href="@{'/movie-detail/' + ${m.id}}" class="btn btn-primary me-2">Chi tiết</a>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
 				</article>
+
 
 				<!-- Aside right -->
 				<aside class="col-sm-0 col-md-2 p-2">
