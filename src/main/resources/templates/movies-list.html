@@ -59,31 +59,42 @@
 				<!-- Article 
 				-->
 				<article class="col-sm-8">
-				    <div class="container-fluid row">
-				        <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4" th:each="m : ${movies}">
-				            <div class="card p-0 m-0" style="width: 14.5rem;">
-				                <img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}" class="card-img-top" alt="..." width="100" height="300">
-				                <div class="card-body p-2">
-				                    <h5 class="card-title" th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 17) + '...' : m.name}"></h5>
-									
-									<!-- Hiển thị ngày khởi chiếu của phim
-				                    <div class="row">
-				                        <label><i class="bi bi-calendar mx-2"></i> <span th:text="${#dates.format(m.releaseDate, 'dd/MM/yyyy')}"></span></label>
-				                    </div>
-									-->
-									
-				                    <div class="row mt-2">
-				                        <div class="col-6">
-				                            <a th:href="@{'/ticketing/' + ${m.id}}" class="btn btn-primary ms-2">Đặt vé</a>
-				                        </div>
-				                        <div class="col-6">
-				                            <a th:href="@{'/movie-detail/' + ${m.id}}" class="btn btn-primary me-2">Chi tiết</a>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				        </div>
-				    </div>
+					<div class="container-fluid row">
+						<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4" th:each="m : ${movies}">
+							<div class="card p-0 m-0" style="width: 14.5rem;">
+								<img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}" class="card-img-top" alt="..."
+									width="100" height="300">
+								<div class="card-body p-2">
+									<h5 class="card-title"
+										th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 17) + '...' : m.name}">
+									</h5>
+
+									<!-- Hiển thị ngày khởi chiếu của phim -->
+									<div class="row">
+										<label>
+											<i class="bi bi-calendar mx-2"></i> 
+											<span
+												th:if="${m.releaseDate != null}"
+												th:text="${#temporals.format(m.releaseDate, 'dd/MM/yyyy')}"></span>
+											<span th:unless="${m.releaseDate != null}">Chưa có ngày phát
+												hành</span>
+										</label>
+									</div>
+
+									<div class="row mt-2">
+										<div class="col-6">
+											<a th:href="@{'/ticketing/' + ${m.id}}" class="btn btn-primary ms-2">Đặt
+												vé</a>
+										</div>
+										<div class="col-6">
+											<a th:href="@{'/movie-detail/' + ${m.id}}"
+												class="btn btn-primary me-2">Chi tiết</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</article>
 
 
