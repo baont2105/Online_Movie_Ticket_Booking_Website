@@ -1,15 +1,18 @@
 package com.poly.demo.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.poly.demo.entity.User;
+import com.poly.demo.service.UserService;
 
 @Controller
 public class testController {
-	@RequestMapping("/")
-	public String index() {
-		return "index";
-	}
 
 	@RequestMapping("/ticketing")
 	public String ticketing() {
@@ -49,16 +52,6 @@ public class testController {
 	@RequestMapping("/forgot-password")
 	public String forgotPassword() {
 		return "forgot-pass";
-	}
-
-	@RequestMapping("/login")
-	public String login() {
-		return "login";
-	}
-
-	@RequestMapping("/register")
-	public String register() {
-		return "register";
 	}
 
 	@RequestMapping("/my-tickets")

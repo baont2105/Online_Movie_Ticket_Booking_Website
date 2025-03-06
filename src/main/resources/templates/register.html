@@ -37,33 +37,50 @@
 									style="max-width: 150px;">
 								<!-- Replace with your logo URL -->
 							</div>
+
+							<!-- FORM ĐĂNG KÝ -->
 							<h3 class="text-center mb-4">ĐĂNG KÝ TÀI KHOẢN</h3>
-							<form ng-submit="authCtrl.register()">
-								<div class="form-group">
-									<label for="email">Email</label>
-									<input type="email" id="email" ng-model="authCtrl.user.email"
-										placeholder="Nhập email của bạn" required>
+							<form method="post" th:action="@{/register}" th:object="${user}">
+								<!-- Hiển thị thông báo nếu tạo tài khoản thành công -->
+								<div th:if="${param.success}" class="alert alert-success">
+									Tạo tài khoản thành công!
 								</div>
+
+
 								<div class="form-group">
 									<label for="username">Username</label>
-									<input type="text" id="username" ng-model="authCtrl.user.username"
+									<input type="text" id="username" th:field="*{username}"
 										placeholder="Nhập username của bạn" required>
 								</div>
 								<div class="form-group">
-									<label for="password">Mật khẩu</label>
-									<input type="password" id="password" ng-model="authCtrl.user.password"
-										placeholder="Nhập mật khẩu của bạn" required>
+									<label for="email">Email</label>
+									<input type="email" id="email" th:field="*{email}" placeholder="Nhập email của bạn"
+										required>
 								</div>
 								<div class="form-group">
+									<label for="password">Mật khẩu</label>
+									<input type="password" id="password" th:field="*{password}"
+										placeholder="Nhập mật khẩu của bạn" required>
+								</div>
+								<!--
+									
+								<div class="form-group">
 									<label for="confirmPassword">Xác nhận mật khẩu</label>
-									<input type="password" id="confirmPassword" ng-model="authCtrl.user.confirmPassword"
+									<input type="password" id="confirmPassword" 
 										placeholder="Xác nhận mật khẩu của bạn" required>
 								</div>
+								-->
 								<div class="alternative">
 									<p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
 								</div>
 								<div class="form-group">
-									<button type="submit" class="btn btn-primary">Đăng Ký</button>
+									<button type="submit" class="btn btn-primary" style="width: 100%;
+											                        padding: 10px;
+											                        border: none;
+											                        border-radius: 4px;
+											                        background-color: #007bff;
+											                        color: white;
+											                        cursor: pointer;">Đăng Ký</button>
 								</div>
 							</form>
 						</div>
