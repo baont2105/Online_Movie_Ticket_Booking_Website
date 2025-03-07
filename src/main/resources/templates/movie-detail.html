@@ -83,7 +83,7 @@
 							<p>Diễn viên: <span th:text="${movie.actors}"></span></p>
 						</div>
 						<div class="col-sm-6">
-							<a href="#ticketing/{{searchedMovie.id}}">
+							<a th:href="@{'/ticketing/' + ${movie.id}}">
 								<button class="btn btn-danger p-3">
 									Đặt vé xem phim
 								</button>
