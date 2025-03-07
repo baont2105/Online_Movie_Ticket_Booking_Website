@@ -27,8 +27,68 @@
 		<div class="container-fluid mx-0 p-0" style="margin-top: 65px;">
 			<!-- Nội dung trang web -->
 
-			
-			
+			<div class="container table-container" style="position: relative; margin-top: 100px; min-height: 500px;">
+				<h2 class="form-title">QUẢN LÝ TÀI KHOẢN</h2>
+				<table class="table table-default table-bordered" style="margin-bottom: 100px;">
+					<thead>
+						<tr>
+							<th>Mã vé</th>
+							<th>Tên Phim</th>
+							<th>Chi Nhánh</th>
+							<th>Ghế Ngồi</th>
+							<th>Thời Điểm Đặt Vé</th>
+							<th>Suất Phim</th>
+							<th>Đồ Ăn / Thức Uống</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="ticket in tickets.slice(begin, begin + 8)">
+							<td>{{ticket.ticketID}}</td>
+							<td>{{ticket.movie.name}}</td>
+							<td>{{ticket.city}}</td>
+							<td>
+								<span ng-repeat="seat in ticket.seat">
+									{{seat.id}} - {{seat.type}}{{$last ? '' : '; '}}
+								</span>
+							</td>
+							<td>{{ticket.buy_time | date: "dd/MM/yyyy HH:mm:ss"}}</td>
+							<td>{{ticket.showTime.time}} - {{ticket.showTime.date}}</td>
+							<td>
+								<span ng-repeat="food in ticket.foods">
+									{{food.name}} - {{food.quantity}}{{$last ? '' : '; '}}
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- Pagination -->
+				<div class="row container justify-content-center" style="position: absolute; bottom: 0;">
+					<hr class="my-3" style="width: 50%;">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-center">
+							<li class="page-item mx-2">
+								<button ng-click="first()">&laquo;</button>
+							</li>
+							<li class="page-item mx-2">
+								<button ng-click="prev()">&lt;</button>
+							</li>
+
+							<li class="page-item mx-2">
+								<span class="page-item mx-2 fw-bold" ng-repeat="n in [] | range:pageCount"
+									ng-click="setPage(n)" ng-class="{'active': n === currentPage}">{{ n + 1 }}</span>
+							</li>
+
+							<li class="page-item mx-2">
+								<button ng-click="next()">&gt;</button>
+							</li>
+							<li class="page-item mx-2">
+								<button ng-click="last()">&raquo;</button>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+
 
 			<!-- Footer -->
 			<footer class="bg-body-tertiary p-0 m-0" th:replace="/components/footer.html"></footer>
