@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class DefaultController {
-	@RequestMapping("/")
-	public String index(Model model) {
+@RequestMapping("/booking/")
+public class BookingController {
+	
+	@GetMapping("/step1/{id}")
+	public String step1(@PathVariable Long id, Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (principal instanceof UserDetails) {
@@ -20,11 +22,11 @@ public class DefaultController {
 		} else {
 			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
 		}
-		return "home";
+		return "booking_step1";
 	}
 
-	@RequestMapping("/promotions")
-	public String promotions(Model model) {
+	@GetMapping("/step2/{id}")
+	public String step2(@PathVariable Long id, Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (principal instanceof UserDetails) {
@@ -33,11 +35,10 @@ public class DefaultController {
 		} else {
 			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
 		}
-		return "promotions";
+		return "booking_step2";
 	}
-
-	@RequestMapping("/feedback")
-	public String feedback(Model model) {
+	@GetMapping("/step3/{id}")
+	public String step3(@PathVariable Long id, Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (principal instanceof UserDetails) {
@@ -46,11 +47,10 @@ public class DefaultController {
 		} else {
 			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
 		}
-		return "feedback";
+		return "booking_step3";
 	}
-
-	@RequestMapping("/forgot-password")
-	public String forgotPassword(Model model) {
+	@GetMapping("/step4/{id}")
+	public String step4(@PathVariable Long id, Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (principal instanceof UserDetails) {
@@ -59,32 +59,6 @@ public class DefaultController {
 		} else {
 			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
 		}
-		return "forgot-pass";
-	}
-
-	@RequestMapping("/my-tickets")
-	public String myTickets(Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-		return "my-tickets";
-	}
-
-	@RequestMapping("/account-information")
-	public String accountInformation(Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-		return "account-information";
+		return "booking_step4";
 	}
 }
