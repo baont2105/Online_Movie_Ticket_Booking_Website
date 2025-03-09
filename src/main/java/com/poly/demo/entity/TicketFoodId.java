@@ -12,6 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketFoodId implements Serializable {
-    private Long ticketId;
-    private Long foodItemId;
+    private Integer ticketId;
+    private Integer foodItemId;
 }

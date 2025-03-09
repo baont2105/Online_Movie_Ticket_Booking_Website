@@ -9,6 +9,7 @@ import lombok.Data;
 public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "branch_id")
     private Integer branchId;
 
     private String name;

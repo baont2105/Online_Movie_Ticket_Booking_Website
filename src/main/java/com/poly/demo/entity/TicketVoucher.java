@@ -23,4 +23,10 @@ public class TicketVoucher {
     @MapsId("voucherId")
     @JoinColumn(name = "voucher_id", nullable = false)
     private Voucher voucher;
+    
+    public TicketVoucher(Ticket ticket, Voucher voucher) {
+        this.ticket = ticket;
+        this.voucher = voucher;
+        this.id = new TicketVoucherId(ticket.getTicketId(), voucher.getVoucherId());
+    }
 }
