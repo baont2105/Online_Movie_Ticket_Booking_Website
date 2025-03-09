@@ -13,7 +13,11 @@ public class Branch {
 
     private String name;
     private String address;
+    
+    @Column(name = "phone_number")
     private String phoneNumber;
+    
     private String email;
+    private String city;
     private Boolean visible;
 }

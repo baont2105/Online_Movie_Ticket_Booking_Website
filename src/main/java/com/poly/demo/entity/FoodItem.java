@@ -14,7 +14,7 @@ public class FoodItem {
 
     private String name;
     private String description;
-    private BigDecimal price;
+    private Integer price;
     private String image;
     private Boolean visible;
 }

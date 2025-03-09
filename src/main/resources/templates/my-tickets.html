@@ -48,6 +48,7 @@
 							<th>Thời Điểm Đặt Vé</th>
 							<th>Suất Phim</th>
 							<th>Đồ Ăn / Thức Uống</th>
+							<th>Trạng Thái</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -66,6 +67,9 @@
 								<span ng-repeat="food in ticket.foods">
 									{{food.name}} - {{food.quantity}}{{$last ? '' : '; '}}
 								</span>
+							</td>
+							<td>
+								<button class="btn btn-primary">{Trạng thái}</button>
 							</td>
 						</tr>
 					</tbody>

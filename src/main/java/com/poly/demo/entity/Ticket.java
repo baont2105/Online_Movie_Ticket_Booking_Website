@@ -13,7 +13,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ticketId;
 
-    private BigDecimal price;
+    private Integer price;
 
     @Enumerated(EnumType.STRING)
     private TicketStatus ticketStatus;
