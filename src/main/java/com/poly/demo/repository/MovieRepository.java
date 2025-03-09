@@ -10,4 +10,6 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByNameContaining(String name);
     List<Movie> findByCountry(String country);
+    
+    
 }

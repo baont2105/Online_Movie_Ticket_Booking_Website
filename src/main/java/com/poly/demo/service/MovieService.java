@@ -34,7 +34,7 @@ public class MovieService {
                     movie.setDuration(updatedMovie.getDuration());
                     movie.setReleaseDate(updatedMovie.getReleaseDate());
                     movie.setEndDate(updatedMovie.getEndDate());
-                    movie.setViews(updatedMovie.getViews());
+                    movie.setView_count(updatedMovie.getView_count());
                     movie.setCountry(updatedMovie.getCountry());
                     movie.setProducer(updatedMovie.getProducer());
                     movie.setDirector(updatedMovie.getDirector());
