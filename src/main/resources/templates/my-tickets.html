@@ -53,65 +53,107 @@
 						</tr>
 					</thead>
 					<tbody>
-						
 						<tr th:each="t : ${tickets}">
 							<td th:text="${t.ticketId}"></td>
-							<td th:text="${t.user.name}"></td>
-							<td th:text="${t.showtime.showDate}"></td>
+							<td th:text="${t.showtime.movie.name}"></td>
+							<td th:text="${t.showtime.branch.name}"></td>
 							<td>
-								<span ng-repeat="seat in ticket.seat">
-									{{seat.id}} - {{seat.type}}{{$last ? '' : '; '}}
+								<span th:text="${t.seat.rowNumber} + ${t.seat.seatNumber}"></span>
+							</td>
+							<td th:text="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+							<td th:text="${#temporals.format(t.showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+							<td>
+								<!--
+									
+								<span th:if="${t.foodItems == null}">Không có</span>
+								<span th:each="food, iterStat : ${t.foodItems}">
+									<span th:text="${food.foodItem.name} + ' - SL: ' + ${food.quantity}"></span>
+									<span th:if="${!iterStat.last}">, </span>
 								</span>
-							</td>
-							<td><span th:text="${t.createdAt}"></span></td>
-							<td><span th:text="${t.showtime.showDate} + ' | ' + ${t.showtime.startTime}"></td>
-							<td>
-								<span ng-repeat="food in ticket.foods">
-									{{food.name}} - {{food.quantity}}{{$last ? '' : '; '}}
-								</span>
+								-->
 							</td>
 							<td>
+								<!--
+									
+								<span th:if="${t.voucher != null}" th:text="${t.voucher.code}"></span>
+								<span th:if="${t.voucher == null}">Không có</span>
+								-->
 							</td>
 							<td>
-								<button class="btn btn-primary">{Trạng thái}</button>
+								<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
+								<button th:if="${t.ticketStatus == 'NOT_CHECKED_IN'}" class="btn btn-warning btn-sm"
+									data-bs-toggle="modal" th:attr="data-bs-target='#checkInModal' + ${t.ticketId}">
+									Chưa Check-in
+								</button>
+
+								<!-- Nếu trạng thái là CHECKED_IN, hiển thị trạng thái -->
+								<span th:if="${t.ticketStatus == 'CHECKED_IN'}" class="text-success fw-bold">Đã
+									Check-in</span>
+
+								<!-- Modal nhập mã nhân viên -->
+								<div class="modal fade" th:id="'checkInModal' + ${t.ticketId}" tabindex="-1">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Check-in vé</h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal"></button>
+											</div>
+											<div class="modal-body">
+												<form th:action="@{/ticket/check-in}" method="post">
+												    <input type="hidden" name="ticketId" th:value="${t.ticketId}">
+												    <div class="mb-3">
+												        <label for="staffId" class="form-label">Nhập mã nhân viên (User ID)</label>
+												        <input type="text" id="staffId" name="staffId" class="form-control" required>
+												    </div>
+												    <button type="submit" class="btn btn-success">Xác nhận</button>
+												</form>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Kết thúc Modal -->
 							</td>
 						</tr>
-						
 					</tbody>
 				</table>
-				<!-- Pagination -->
-				<div class="row container justify-content-center" style="position: absolute; bottom: 0;">
-					<hr class="my-3" style="width: 50%;">
-					<nav aria-label="Page navigation example">
-						<ul class="pagination justify-content-center">
-							<li class="page-item mx-2">
-								<button ng-click="first()">&laquo;</button>
-							</li>
-							<li class="page-item mx-2">
-								<button ng-click="prev()">&lt;</button>
-							</li>
+			</div>
 
-							<li class="page-item mx-2">
-								<span class="page-item mx-2 fw-bold" ng-repeat="n in [] | range:pageCount"
-									ng-click="setPage(n)" ng-class="{'active': n === currentPage}">{{ n + 1 }}</span>
-							</li>
+			</table>
+			<!-- Pagination -->
+			<div class="row container justify-content-center" style="position: absolute; bottom: 0;">
+				<hr class="my-3" style="width: 50%;">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						<li class="page-item mx-2">
+							<button ng-click="first()">&laquo;</button>
+						</li>
+						<li class="page-item mx-2">
+							<button ng-click="prev()">&lt;</button>
+						</li>
 
-							<li class="page-item mx-2">
-								<button ng-click="next()">&gt;</button>
-							</li>
-							<li class="page-item mx-2">
-								<button ng-click="last()">&raquo;</button>
-							</li>
-						</ul>
-					</nav>
-				</div>
+						<li class="page-item mx-2">
+							<span class="page-item mx-2 fw-bold" ng-repeat="n in [] | range:pageCount"
+								ng-click="setPage(n)" ng-class="{'active': n === currentPage}">{{ n + 1 }}</span>
+						</li>
+
+						<li class="page-item mx-2">
+							<button ng-click="next()">&gt;</button>
+						</li>
+						<li class="page-item mx-2">
+							<button ng-click="last()">&raquo;</button>
+						</li>
+					</ul>
+				</nav>
 			</div>
 		</div>
+	</div>
 
-		<!-- Footer -->
-		<footer class="bg-body-tertiary p-0 m-0" th:replace="/components/footer.html"></footer>
+	<!-- Footer -->
+	<footer class="bg-body-tertiary p-0 m-0" th:replace="/components/footer.html"></footer>
 
-		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
+	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 
 </html>
