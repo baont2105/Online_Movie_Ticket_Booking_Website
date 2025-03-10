@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class FoodItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "food_id")
     private Integer foodId;
 
     private String name;

@@ -33,7 +33,8 @@ public class Movie {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    private int view_count;
+    @Column(name = "view_count")
+    private int viewCount;
     private String country;
     private String producer;
     private String director;

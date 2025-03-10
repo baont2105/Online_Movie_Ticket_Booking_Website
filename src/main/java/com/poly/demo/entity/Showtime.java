@@ -11,10 +11,16 @@ import java.time.LocalTime;
 public class Showtime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "showtime_id")
     private Integer showtimeId;
 
+    @Column(name = "show_date")
     private LocalDate showDate;
+    
+    @Column(name = "start_time")
     private LocalTime startTime;
+    
+    @Column(name = "end_time")
     private LocalTime endTime;
     private Integer price;
     private Boolean visible;

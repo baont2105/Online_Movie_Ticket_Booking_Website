@@ -11,10 +11,14 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer seatId;
 
+    @Column(name = "row_number")
     private String rowNumber;
+    
+    @Column(name = "seat_number")
     private String seatNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "seat_type")
     private SeatType seatType;
 
     private Integer price;

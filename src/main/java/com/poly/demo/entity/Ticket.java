@@ -11,13 +11,16 @@ import java.time.LocalDateTime;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ticket_id")
     private Integer ticketId;
 
     private Integer price;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "ticket_status")
     private TicketStatus ticketStatus;
 
+    @Column(name = "create_at")
     private LocalDateTime createdAt;
 
     @ManyToOne
