@@ -20,7 +20,7 @@ public class Ticket {
     @Column(name = "ticket_status")
     private TicketStatus ticketStatus;
 
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @ManyToOne
