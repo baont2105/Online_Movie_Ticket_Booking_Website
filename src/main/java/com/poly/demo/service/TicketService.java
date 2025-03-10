@@ -29,31 +29,14 @@ public class TicketService {
     public Ticket addTicket(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
-
-    /*
-     * 
-     * public Movie updateMovie(Long id, Movie updatedMovie) {
-        return ticketRepository.findById(id)
-                .map(movie -> {
-                    movie.setName(updatedMovie.getName());
-                    movie.setTags(updatedMovie.getTags());
-                    movie.setDuration(updatedMovie.getDuration());
-                    movie.setReleaseDate(updatedMovie.getReleaseDate());
-                    movie.setEndDate(updatedMovie.getEndDate());
-                    movie.setViewCount(updatedMovie.getViewCount());
-                    movie.setCountry(updatedMovie.getCountry());
-                    movie.setProducer(updatedMovie.getProducer());
-                    movie.setDirector(updatedMovie.getDirector());
-                    movie.setActors(updatedMovie.getActors());
-                    movie.setDescription(updatedMovie.getDescription());
-                    movie.setThumbnail(updatedMovie.getThumbnail());
-                    movie.setTrailer(updatedMovie.getTrailer());
-                    return movieRepository.save(movie);
-                })
-                .orElse(null);
-    }
-     */
     
+    public Optional<Ticket> getTicketById(Long id) {
+        return ticketRepository.findById(id);
+    }
+
+    public void updateTicket(Ticket ticket) {
+        ticketRepository.save(ticket);
+    }    
 
     public void deleteMovie(Long id) {
     	ticketRepository.deleteById(id);

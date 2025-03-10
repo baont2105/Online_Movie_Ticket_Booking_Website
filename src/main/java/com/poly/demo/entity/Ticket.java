@@ -16,9 +16,8 @@ public class Ticket {
 
     private Integer price;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "ticket_status")
-    private TicketStatus ticketStatus;
+    private String ticketStatus;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -35,7 +34,5 @@ public class Ticket {
     @JoinColumn(name = "seat_id")
     private Seat seat;
 
-    public enum TicketStatus {
-        NOT_CHECKED_IN, CHECKED_IN
-    }
+    
 }
