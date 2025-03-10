@@ -17,12 +17,13 @@ import com.poly.demo.service.MovieService;
 
 
 @Controller
+@RequestMapping("/movies")
 public class MovieController {
 
     @Autowired
     private MovieService movieService;
 
-    @RequestMapping("/movies")
+    @GetMapping("/")
     public String listMovies(Model model) {
         List<Movie> movies = movieService.getAllMovies();
         model.addAttribute("movies", movies);
@@ -38,7 +39,39 @@ public class MovieController {
         return "movies-list"; // Tên file Thymeleaf (movies.html)
     }
     
-    @RequestMapping("/movie-detail/{id}")
+    @GetMapping("/now_showing")
+    public String listMoviesNowShowing(Model model) {
+        List<Movie> movies = movieService.getNowShowingMovies();
+        model.addAttribute("movies", movies);
+        
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			UserDetails user = (UserDetails) principal;
+			model.addAttribute("user", user); // Gửi user đến Thymeleaf
+		} else {
+			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
+		}
+        return "movies-list"; // Tên file Thymeleaf (movies.html)
+    }
+    
+    @GetMapping("/upcomming")
+    public String listMoviesUpcomming(Model model) {
+        List<Movie> movies = movieService.getUpcommingMovies();
+        model.addAttribute("movies", movies);
+        
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			UserDetails user = (UserDetails) principal;
+			model.addAttribute("user", user); // Gửi user đến Thymeleaf
+		} else {
+			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
+		}
+        return "movies-list"; // Tên file Thymeleaf (movies.html)
+    }
+    
+    @GetMapping("/movie-detail/{id}")
     public String MovieDetail(@PathVariable Long id, Model model) {
     	Optional<Movie> movie = movieService.getMovieById(id);
     	model.addAttribute("movie", movie.get());

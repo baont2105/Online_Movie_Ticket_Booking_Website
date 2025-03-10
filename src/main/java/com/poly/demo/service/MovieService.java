@@ -17,6 +17,14 @@ public class MovieService {
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
+    
+    public List<Movie> getNowShowingMovies() {
+        return movieRepository.findNowShowingMovies();
+    }
+    
+    public List<Movie> getUpcommingMovies() {
+        return movieRepository.findUpcomingMovies();
+    }
 
     public Optional<Movie> getMovieById(Long id) {
         return movieRepository.findById(id);
