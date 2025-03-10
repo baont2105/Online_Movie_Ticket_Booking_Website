@@ -103,6 +103,10 @@
 			<!-- lịch chiếu -->
 			<div class="container my-3">
 				<h3>Lịch chiếu</h3>
+				<div th:each="s : ${showtime}">
+				<h1 class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
+													th:text="${s.showDate} + ' | ' + ${s.startTime}"></h1>		
+				</div>
 			</div>
 
 			<!-- Đánh giá phim -->

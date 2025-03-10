@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.poly.demo.entity.Movie;
+import com.poly.demo.entity.Showtime;
 import com.poly.demo.service.MovieService;
+import com.poly.demo.service.ShowtimeService;
 
 
 @Controller
@@ -22,6 +24,9 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
+    
+    @Autowired
+    private ShowtimeService showtimeService;
 
     @GetMapping("/")
     public String listMovies(Model model) {
@@ -71,10 +76,16 @@ public class MovieController {
         return "movies-list"; // Tên file Thymeleaf (movies.html)
     }
     
+    /*
+     * 
+     * */
     @GetMapping("/movie-detail/{id}")
     public String MovieDetail(@PathVariable Long id, Model model) {
     	Optional<Movie> movie = movieService.getMovieById(id);
     	model.addAttribute("movie", movie.get());
+    	
+    	List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
+    	model.addAttribute("showtime", showtime);
     	
     	Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
