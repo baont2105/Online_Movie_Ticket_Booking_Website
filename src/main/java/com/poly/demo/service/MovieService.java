@@ -4,6 +4,7 @@ import com.poly.demo.entity.Movie;
 import com.poly.demo.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class MovieService {
                 })
                 .orElse(null);
     }
+   
 
     public void deleteMovie(Long id) {
         movieRepository.deleteById(id);

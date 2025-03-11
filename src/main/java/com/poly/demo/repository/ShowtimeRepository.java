@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Repository
 public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
-    List<Showtime> findByMovieAndBranch(Movie movie, Branch branch);
+    List<Showtime> findByMovieAndBranch(Optional<Movie> movie, Optional<Branch> branch);
     
     
     @Query("SELECT s FROM Showtime s WHERE s.movie.id = :movieId ORDER BY s.startTime ASC")

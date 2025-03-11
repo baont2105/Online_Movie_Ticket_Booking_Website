@@ -2,10 +2,8 @@ package com.poly.demo.service;
 
 import com.poly.demo.entity.Branch;
 import com.poly.demo.entity.Movie;
-import com.poly.demo.entity.Showtime;
+import com.poly.demo.repository.BranchRepository;
 import com.poly.demo.repository.MovieRepository;
-import com.poly.demo.repository.ShowtimeRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,33 +11,28 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ShowtimeService {
+public class BranchService {
 
     @Autowired
-    private ShowtimeRepository showtimeRepository;
+    private BranchRepository branchRepository;
 
-    public List<Showtime> getAllShowtime() {
-        return showtimeRepository.findAll();
-    }
-    public Showtime getShowtimeById(Long id) {
-        return showtimeRepository.findById(id).orElse(null);
+    public List<Branch> getAllBranches() {
+        return branchRepository.findAll();
     }
     
-    public List<Showtime> getShowtimesByMovieAndBranch(Optional<Movie> movie, Optional<Branch> branch) {
-        return showtimeRepository.findByMovieAndBranch(movie, branch);
+
+    public Optional<Branch> getBranchById(Long id) {
+        return branchRepository.findById(id);
     }
 
-    public List<Showtime> getShowtimesByMovieId(Long movieId) {
-        return showtimeRepository.findShowtimesByMovieId(movieId);
-    }
-
-    public Showtime addShowtime(Showtime showtime) {
-        return showtimeRepository.save(showtime);
+    public Branch addMovie(Branch branch) {
+        return branchRepository.save(branch);
     }
 
     /*
-     * public Movie updateMovie(Long id, Movie updatedMovie) {
-        return showtimeRepository.findById(id)
+     * 
+    public Movie updateMovie(Long id, Movie updatedMovie) {
+        return movieRepository.findById(id)
                 .map(movie -> {
                     movie.setName(updatedMovie.getName());
                     movie.setTags(updatedMovie.getTags());
@@ -58,11 +51,9 @@ public class ShowtimeService {
                 })
                 .orElse(null);
     }
-     * 
      */
-    
 
-    public void deleteShowtime(Long id) {
-    	showtimeRepository.deleteById(id);
+    public void deleteMovie(Long id) {
+    	branchRepository.deleteById(id);
     }
 }
