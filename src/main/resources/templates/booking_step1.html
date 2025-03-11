@@ -43,12 +43,12 @@
         <article class="col-sm-8">
             <form method="post" action="/booking/select-showtime">
                 <h3>Chọn chi nhánh</h3>
-                <select name="branchId">
+                <select class="form-select" name="branchId">
                     <option th:each="branch : ${branches}" th:value="${branch.branchId}" th:text="${branch.name}" th:selected="${branch.branchId == selectedBranch?.branchId}"></option>
                 </select>
                 
-                <h3>Chọn Phim</h3>
-                <select name="movieId">
+                <h3>Chọn phim</h3>
+                <select class="form-select" name="movieId">
                     <option th:each="movie : ${movies}" th:value="${movie.movieId}" th:text="${movie.name}" th:selected="${movie.movieId == selectedMovie?.movieId}"></option>
                 </select>
                 
@@ -59,9 +59,9 @@
             <div th:if="${not #lists.isEmpty(showtimes)}">
                 <form method="post" action="/booking/confirm-showtime">
                     <div th:each="showtime : ${showtimes}">
-                        <label>
-                            <input type="radio" name="showtimeId" th:value="${showtime.showtimeId}">
-                            <span th:text="${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></span>
+                        <label class="input-group-text">
+                            <input class="form-check-input" type="radio" name="showtimeId" th:value="${showtime.showtimeId}">
+                            <span class="fs-5 form-control" th:text="${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></span>
                         </label>
                     </div>
                     <button class="btn btn-primary mt-2" type="submit">Tiếp tục</button>
