@@ -1,0 +1,14 @@
+.seat-layout {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+}
+
+.seat-container {
+    text-align: center;
+}
+
+input[type="checkbox"]:disabled + label {
+    color: red;
+    text-decoration: line-through;
+}

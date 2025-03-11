@@ -2,6 +2,8 @@ package com.poly.demo.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +20,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.Branch;
 import com.poly.demo.entity.Movie;
+import com.poly.demo.entity.Room;
+import com.poly.demo.entity.Seat;
 import com.poly.demo.entity.Showtime;
+import com.poly.demo.entity.Ticket;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.MovieService;
+import com.poly.demo.service.SeatService;
 import com.poly.demo.service.ShowtimeService;
+import com.poly.demo.service.TicketService;
 
 @Controller
 @RequestMapping("/booking/")
@@ -36,6 +43,12 @@ public class BookingController {
 
 	@Autowired
 	private ShowtimeService showtimeService;
+	
+	@Autowired
+    private SeatService seatService;
+	
+	@Autowired
+    private TicketService ticketService;
 
 	/*
 	 * @GetMapping("/step1/{id}") public String step1(@PathVariable Long id, Model
@@ -46,8 +59,33 @@ public class BookingController {
 	 * principal; model.addAttribute("user", user); // Gửi user đến Thymeleaf } else
 	 * { model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null }
 	 * return "booking_step1"; }
+	 * 
+	 * //STEP 2
+	@GetMapping("/step2/{id}")
+	public String step2(@PathVariable Long id, Model model) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			UserDetails user = (UserDetails) principal;
+			model.addAttribute("user", user); // Gửi user đến Thymeleaf
+		} else {
+			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
+		}
+		return "booking_step2";
+	}
 	 */
 
+	//Hàm thêm user vào model
+	private void addUserInfoToModel(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            model.addAttribute("user", (UserDetails) principal);
+        } else {
+            model.addAttribute("user", null);
+        }
+    }
+	
+	//========================================== STEP 1 =============================================
 	@GetMapping("/step1")
 	public String showStep1(Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -101,33 +139,11 @@ public class BookingController {
     @PostMapping("/confirm-showtime")
     public String confirmShowtime(@RequestParam Long showtimeId, RedirectAttributes redirectAttributes) {
         Showtime showtime = showtimeService.getShowtimeById(showtimeId);
-        redirectAttributes.addFlashAttribute("selectedShowtime", showtime);
+        redirectAttributes.addAttribute("showtimeId", showtimeId);
         return "redirect:/booking/step2";
     }
 
-    private void addUserInfoToModel(Model model) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            model.addAttribute("user", (UserDetails) principal);
-        } else {
-            model.addAttribute("user", null);
-        }
-    }
-
-	
-	//STEP 2
-	@GetMapping("/step2/{id}")
-	public String step2(@PathVariable Long id, Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-		return "booking_step2";
-	}
+    
 
 	@GetMapping("/step3/{id}")
 	public String step3(@PathVariable Long id, Model model) {
@@ -154,4 +170,45 @@ public class BookingController {
 		}
 		return "booking_step4";
 	}
+	
+	//========================================== STEP 2 =============================================
+	@GetMapping("/step2")
+    public String showStep2(@RequestParam Long showtimeId, Model model) {
+		addUserInfoToModel(model);
+        Showtime showtime = showtimeService.getShowtimeById(showtimeId);
+        Room room = showtime.getRoom();
+        List<Seat> seats = seatService.getSeatsByRoom(room);
+        List<Ticket> bookedTickets = ticketService.getTicketsByShowtime(showtime);
+        
+        // Lấy danh sách ghế đã được đặt
+        Set<Integer> bookedSeatIds = bookedTickets.stream()
+                .map(ticket -> ticket.getSeat().getSeatId())
+                .collect(Collectors.toSet());
+
+        model.addAttribute("showtime", showtime);
+        model.addAttribute("seats", seats);
+        model.addAttribute("bookedSeatIds", bookedSeatIds);
+
+        return "booking_step2";
+    }
+
+    @PostMapping("/confirm-seats")
+    public String confirmSeats(@RequestParam Long showtimeId, @RequestParam List<Integer> seatIds, Model model) {
+    	addUserInfoToModel(model);
+        Showtime showtime = showtimeService.getShowtimeById(showtimeId);
+
+        for (Integer seatId : seatIds) {
+            Seat seat = new Seat();
+            seat.setSeatId(seatId);
+
+            Ticket ticket = new Ticket();
+            ticket.setShowtime(showtime);
+            ticket.setSeat(seat);
+            ticket.setTicketStatus("NOT_CHECKED_IN");
+
+            ticketService.saveTicket(ticket);
+        }
+
+        return "redirect:/booking/step3";
+    }
 }

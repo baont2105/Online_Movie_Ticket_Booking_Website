@@ -18,14 +18,13 @@ public class Seat {
     @Column(name = "seat_number")
     private String seatNumber;
 
-    @Enumerated(EnumType.STRING)
+    
     @Column(name = "seat_type")
-    private SeatType seatType;
+    private String seatType;
 
     private Integer price;
 
-    @Enumerated(EnumType.STRING)
-    private SeatStatus status;
+    private String status;
 
     private Boolean visible;
 
@@ -33,11 +32,4 @@ public class Seat {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    public enum SeatType {
-        VIP, STANDARD, DELUXE
-    }
-
-    public enum SeatStatus {
-        AVAILABLE, BOOKED, BLOCKED
-    }
 }
