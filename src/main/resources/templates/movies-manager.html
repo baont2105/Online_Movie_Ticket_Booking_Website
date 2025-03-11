@@ -35,6 +35,31 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 100px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ PHIM</h2>
+
+							<button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+								th:attr="data-bs-target='#checkInModal'">
+								Thêm Phim
+							</button>
+							<div class="modal fade" th:id="'checkInModal'" tabindex="-1">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">Thêm Phim</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+										</div>
+										<div class="modal-body">
+											<!--
+												
+											<form th:action="/" method="post">
+
+												<button type="submit" class="btn btn-success">Xác nhận</button>
+											</form>
+											-->
+
+										</div>
+									</div>
+								</div>
+							</div>
 							<table class="table table-default table-bordered" style="margin-bottom: 100px;">
 								<thead>
 									<tr>
