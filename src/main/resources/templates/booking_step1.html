@@ -37,78 +37,63 @@
 						<div class="container-fluid bg-white border rounded-2 mb-5 p-5">
 							<div class="stepper">
 								<!-- Step 1: Chọn Khu Vực / Phim / Suất Chiếu -->
-								<div ng-show="step === 1">
-									<h2 class="form-title">Chọn Khu Vực / Phim / Suất Chiếu</h2>
-									<div class="row">
-										<article class="col-sm-8">
-											<form method="post" action="/booking/select-showtime">
-												<h3>Chọn chi nhánh</h3>
-												<select name="branchId">
-													<option th:each="branch : ${branches}"
-														th:value="${branch.branchId}" th:text="${branch.name}">
-													</option>
-												</select>
-												<h3>Chọn Phim</h3>
-												<select name="movieId">
-													<option th:each="m, iterStat : ${movies}"
-														th:value="${m.movieId}" th:text="${m.name}"
-														th:selected="${iterStat.index == selectedMovie.movieId - 1}"></option>
-												</select>
-												<button class="btn btn-primary" type="submit">Tìm
-													suất chiếu</button>
-											</form>
-											<h3>Chọn suất chiếu</h3>
-											<div th:if="${showtimes}">
-												<form method="post" action="/booking/confirm-showtime">
-													<div th:each="showtime : ${showtimes}">
-														<input type="radio" name="showtimeId"
-															th:value="${showtime.showtimeId}"> <span
-															th:text="${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></span>
-													</div>
-													<button class="btn btn-primary" type="submit">Tiếp
-														tục</button>
-												</form>
-											</div>
-										</article>
+<div ng-show="step === 1">
+    <h2 class="form-title">Chọn Khu Vực / Phim / Suất Chiếu</h2>
+    <div class="row">
+        <article class="col-sm-8">
+            <form method="post" action="/booking/select-showtime">
+                <h3>Chọn chi nhánh</h3>
+                <select name="branchId">
+                    <option th:each="branch : ${branches}" th:value="${branch.branchId}" th:text="${branch.name}" th:selected="${branch.branchId == selectedBranch?.branchId}"></option>
+                </select>
+                
+                <h3>Chọn Phim</h3>
+                <select name="movieId">
+                    <option th:each="movie : ${movies}" th:value="${movie.movieId}" th:text="${movie.name}" th:selected="${movie.movieId == selectedMovie?.movieId}"></option>
+                </select>
+                
+                <button class="btn btn-primary mt-2" type="submit">Tìm suất chiếu</button>
+            </form>
 
-										<aside class="col-sm-4">
-											<div class="movie-info mb-3">
+            <h3>Chọn suất chiếu</h3>
+            <div th:if="${not #lists.isEmpty(showtimes)}">
+                <form method="post" action="/booking/confirm-showtime">
+                    <div th:each="showtime : ${showtimes}">
+                        <label>
+                            <input type="radio" name="showtimeId" th:value="${showtime.showtimeId}">
+                            <span th:text="${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></span>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary mt-2" type="submit">Tiếp tục</button>
+                </form>
+            </div>
+            <div th:if="${#lists.isEmpty(showtimes)}" class="text-danger">Không có suất chiếu nào cho lựa chọn này.</div>
+        </article>
 
-												<div th:if="${selectedMovie}">
-													<img
-														th:src="@{'/image/Thumbnail/' + ${selectedMovie.thumbnail}}"
-														style="max-width: 200px;">
-												</div>
-												<div th:if="${selectedMovie == null}"
-													class="placeholder-glow">
-													<div class="placeholder col-12 rounded"
-														style="min-width: 200px; max-width: 200px; min-height: 200px; max-height: 200px;">
-													</div>
-												</div>
-												<div class=" details" th:if="${selectedMovie} == 'null'">
-													<h5>- TÊN PHIM -</h5>
-													<p>2D - Phụ đề</p>
-													<p>Chi nhánh:</p>
-												</div>
-												<div class=" details" th:if="${selectedMovie}">
-													<h5 th:text="${selectedMovie.name}"></h5>
-													<p>2D - Phụ đề</p>
-													<p th:text="'Chi nhánh: ' + ${selectedBranch.name}"></p>
-												</div>
-											</div>
-											<div class="d-flex justify-content-between">
-												<a th:href="@{/}">
-													<button type="button" class="btn btn-secondary">Quay
-														lại</button>
-												</a> <a th:href="@{/booking/step2/0}">
-													<button type="button" class="btn btn-primary">Tiếp
-														tục</button>
-												</a>
+        <aside class="col-sm-4">
+            <div class="movie-info mb-3">
+                <img th:if="${selectedMovie}" th:src="@{'/image/Thumbnail/' + ${selectedMovie.thumbnail}}" class="img-fluid rounded" style="max-width: 200px;">
+                <div th:unless="${selectedMovie}" class="placeholder-glow">
+                    <div class="placeholder col-12 rounded" style="min-width: 200px; min-height: 200px;"></div>
+                </div>
+                <div class="details">
+                    <h5 th:text="${selectedMovie?.name ?: '- TÊN PHIM -'}"></h5>
+                    <p>2D - Phụ đề</p>
+                    <p th:text="${selectedBranch != null ? 'Chi nhánh: ' + selectedBranch.name : 'Chưa chọn chi nhánh'}"></p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/}">
+                    <button type="button" class="btn btn-secondary">Quay lại</button>
+                </a>
+                <a th:href="@{/booking/step2/0}">
+                    <button type="button" class="btn btn-primary">Tiếp tục</button>
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
 
-											</div>
-										</aside>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>
