@@ -43,7 +43,12 @@
 									<div class="row">
 										<div class="col-sm-9">
 
-											<h3 th:text="'Phòng: ' + ${showtime.room.name}"></h3>
+											<h3
+												th:text="'Phòng: ' + ${showtime.room.name} + ' | ' + 
+               'Chi nhánh: ' + ${showtime.branch.name}"></h3>
+											<h3
+												th:text="'Phim: ' + (${#strings.length(showtime.movie.name) > 20 ? 
+               #strings.substring(showtime.movie.name, 0, 15) + '...' : showtime.movie.name})"></h3>
 											<h3
 												th:text="'Suất chiếu: ' + ${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></h3>
 
