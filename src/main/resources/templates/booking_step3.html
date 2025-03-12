@@ -40,19 +40,15 @@
 										<div class="col-sm-9">
 											<div class="food-select row">
 												<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
-													ng-repeat="food in foods">
+													th:each="food : ${foodItems}">
 													<div class="card">
-														<img ng-src="image/Foods/{{food.image}}" class="card-img-top"
-															alt="..." style="min-width: 100%; height: 200px;">
+														<img th:src="@{'/image/Foods/' + ${food.image}}" style="min-width: 100%; height: 200px;">
 														<div class="card-body">
-															<h5 class="card-title">{{ food.name }}</h5>
-															<p class="card-text">{{ food.price }} VND</p>
+															<h5 class="card-title" th:text="${food.name}"></h5>
+															<p class="card-text" th:text="${food.price} + ' VND'"></p>
 
 															<div class="d-flex justify-content-center align-middle">
-																<button ng-click="removeFood(food)"
-																	ng-disabled="food.quantity === 0">Bớt</button>
-																<span>SL: {{ food.quantity }}</span>
-																<button ng-click="addFood(food)">Thêm</button>
+																<input type="number" name="${food.id}" value="0" min="0">
 															</div>
 														</div>
 													</div>

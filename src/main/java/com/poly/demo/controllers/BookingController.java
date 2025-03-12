@@ -2,6 +2,7 @@ package com.poly.demo.controllers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,16 +21,20 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.Branch;
+import com.poly.demo.entity.FoodItem;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Seat;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
+import com.poly.demo.entity.TicketFood;
 import com.poly.demo.entity.User;
 import com.poly.demo.service.BranchService;
+import com.poly.demo.service.FoodItemService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.SeatService;
 import com.poly.demo.service.ShowtimeService;
+import com.poly.demo.service.TicketFoodService;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
 
@@ -55,32 +60,12 @@ public class BookingController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+    private FoodItemService foodItemService;
 
-
-	/*
-	 * @GetMapping("/step1/{id}") public String step1(@PathVariable Long id, Model
-	 * model) { Object principal =
-	 * SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	 * 
-	 * if (principal instanceof UserDetails) { UserDetails user = (UserDetails)
-	 * principal; model.addAttribute("user", user); // Gửi user đến Thymeleaf } else
-	 * { model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null }
-	 * return "booking_step1"; }
-	 * 
-	 * //STEP 2
-	@GetMapping("/step2/{id}")
-	public String step2(@PathVariable Long id, Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-		return "booking_step2";
-	}
-	 */
+    @Autowired
+    private TicketFoodService ticketFoodService;
 
 	//Hàm thêm user vào model
 	private void addUserInfoToModel(Model model) {
@@ -142,20 +127,6 @@ public class BookingController {
         redirectAttributes.addAttribute("showtimeId", showtimeId);
         return "redirect:/booking/step2";
     }
-
-    
-
-	@GetMapping("/step3/{id}")
-	public String step3(@PathVariable Long id, Model model) {
-		addUserInfoToModel(model);
-		return "booking_step3";
-	}
-
-	@GetMapping("/step4/{id}")
-	public String step4(@PathVariable Long id, Model model) {
-		addUserInfoToModel(model);
-		return "booking_step4";
-	}
 	
 	//========================================== STEP 2 =============================================
 	@GetMapping("/step2")
@@ -220,18 +191,59 @@ public class BookingController {
         }
 	    
 	    // Lưu vé vào database
+        Ticket ticket = new Ticket();
 	    for (Seat seat : selectedSeatList) {
-	        Ticket ticket = new Ticket();
 	        ticket.setUser(user);
 	        ticket.setShowtime(showtime);
 	        ticket.setSeat(seat);
 	        ticket.setPrice(seat.getPrice());
 	        ticket.setTicketStatus("NOT_CHECKED_IN");
 
-	       // ticketService.saveTicket(ticket);
+	       // ticketService.saveTicket(ticket); //hàm lưu vé
 	    }
 
-	    return "test";
+	    return "redirect:/booking/step3";
 	}
+	//========================================== STEP 3 =============================================
+	@GetMapping("/step3")
+    public String showStep3( Model model) {
+		addUserInfoToModel(model);
+        //Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+        List<FoodItem> foodItems = foodItemService.getAllFoodItems();
 
+        //model.addAttribute("ticket", ticket);
+        model.addAttribute("foodItems", foodItems);
+        return "booking_step3";
+    }
+
+    @PostMapping("/confirm-foods")
+    public String confirmFoods(@RequestParam Long ticketId,
+                               @RequestParam Map<String, String> foodSelections, Model model) {
+    	addUserInfoToModel(model);
+        Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+
+        for (Map.Entry<String, String> entry : foodSelections.entrySet()) {
+            Long foodId = Long.parseLong(entry.getKey());
+            int quantity = Integer.parseInt(entry.getValue());
+
+            if (quantity > 0) {
+                FoodItem foodItem = foodItemService.getFoodItemById(foodId);
+                TicketFood ticketFood = new TicketFood();
+                ticketFood.setTicket(ticket.get());
+                ticketFood.setFoodItem(foodItem);
+                ticketFood.setQuantity(quantity);
+               // ticketFoodService.saveTicketFood(ticketFood);
+            }
+        }
+        return "redirect:/booking/step4?ticketId=" + ticketId;
+    }
+
+    
+	//========================================== STEP 4 =============================================
+	@GetMapping("/step4/{id}")
+	public String step4(@PathVariable Long id, Model model) {
+		addUserInfoToModel(model);
+		return "booking_step4";
+	}
+	
 }
