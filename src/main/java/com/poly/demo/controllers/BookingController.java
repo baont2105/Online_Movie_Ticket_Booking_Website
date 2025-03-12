@@ -1,5 +1,6 @@
 package com.poly.demo.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -88,14 +89,7 @@ public class BookingController {
 	//========================================== STEP 1 =============================================
 	@GetMapping("/step1")
 	public String showStep1(Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
 
 		model.addAttribute("movies", movieService.getAllMovies());
 		model.addAttribute("branches", branchService.getAllBranches());
@@ -192,23 +186,40 @@ public class BookingController {
         return "booking_step2";
     }
 
-    @PostMapping("/confirm-seats")
-    public String confirmSeats(@RequestParam Long showtimeId, @RequestParam List<Integer> seatIds, Model model) {
-    	addUserInfoToModel(model);
-        Showtime showtime = showtimeService.getShowtimeById(showtimeId);
+	@PostMapping("/confirm-seats")
+	public String confirmSeats(@RequestParam Long showtimeId, 
+	                           @RequestParam String selectedSeats, 
+	                           Model model) {
+	    addUserInfoToModel(model);
 
-        for (Integer seatId : seatIds) {
-            Seat seat = new Seat();
-            seat.setSeatId(seatId);
+	    // Lấy thông tin suất chiếu
+	    Showtime showtime = showtimeService.getShowtimeById(showtimeId);
 
-            Ticket ticket = new Ticket();
-            ticket.setShowtime(showtime);
-            ticket.setSeat(seat);
-            ticket.setTicketStatus("NOT_CHECKED_IN");
+	    // Chuyển danh sách ghế từ String thành List<Long>
+	    List<Long> seatIds = Arrays.stream(selectedSeats.split(","))
+	                               .map(Long::valueOf)
+	                               .collect(Collectors.toList());
 
-            ticketService.saveTicket(ticket);
-        }
+	    // Nếu getSeatsByIds nhận List<String>, cần chuyển đổi danh sách
+	    List<String> seatIdStrings = seatIds.stream()
+	                                        .map(String::valueOf)
+	                                        .collect(Collectors.toList());
 
-        return "redirect:/booking/step3";
-    }
+	    // Lấy danh sách ghế từ database
+	    List<Seat> selectedSeatList = seatService.getSeatsByIds(seatIdStrings);
+	    model.addAttribute("selectedSeats", selectedSeatList);
+
+	    // Lưu vé vào database
+	    for (Seat seat : selectedSeatList) {
+	        Ticket ticket = new Ticket();
+	        ticket.setShowtime(showtime);
+	        ticket.setSeat(seat);
+	        ticket.setTicketStatus("NOT_CHECKED_IN");
+
+	        ticketService.saveTicket(ticket);
+	    }
+
+	    return "redirect:/test";
+	}
+
 }

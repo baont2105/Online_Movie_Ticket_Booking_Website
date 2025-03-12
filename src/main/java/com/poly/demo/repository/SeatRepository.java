@@ -18,6 +18,8 @@ import java.util.Optional;
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
     List<Seat> findByRoom(Room room);
+    
+    List<Seat> findBySeatIdIn(List<Long> seatIds);
 
     @Query("SELECT s FROM Seat s WHERE s.id NOT IN (SELECT t.seat.id FROM Ticket t WHERE t.showtime = :showtime)")
     List<Seat> findAvailableSeats(@Param("showtime") Showtime showtime);

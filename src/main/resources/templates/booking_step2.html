@@ -43,28 +43,29 @@
 									<div class="row">
 										<div class="col-sm-9">
 
-											<h3
+											<h5
 												th:text="'Phòng: ' + ${showtime.room.name} + ' | ' + 
-               'Chi nhánh: ' + ${showtime.branch.name}"></h3>
-											<h3
+               'Chi nhánh: ' + ${showtime.branch.name}"></h5>
+											<h5
 												th:text="'Phim: ' + (${#strings.length(showtime.movie.name) > 20 ? 
-               #strings.substring(showtime.movie.name, 0, 15) + '...' : showtime.movie.name})"></h3>
-											<h3
-												th:text="'Suất chiếu: ' + ${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></h3>
+               #strings.substring(showtime.movie.name, 0, 15) + '...' : showtime.movie.name})"></h5>
+											<h5
+												th:text="'Suất chiếu: ' + ${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></h5>
+
+											<hr>
+
+											<div class="seat-container">
+												<div th:each="seat : ${seats}"
+													th:data-seat-id="${seat.seatId}"
+													th:data-seat-code="${seat.rowNumber} + ${seat.seatNumber}"
+													th:class="'seat ' + (${seat.seatType} == 'Standard' ? 'standard' : 'vip')"
+													th:text="${seat.rowNumber} + ${seat.seatNumber}"
+													onclick="selectSeat(this)"></div>
+											</div>
 
 											<form method="post" action="/booking/confirm-seats">
 												<input type="hidden" name="showtimeId"
 													th:value="${showtime.showtimeId}">
-
-												<div class="seat-layout">
-													<div th:each="seat : ${seats}" class="seat-container">
-														<input type="checkbox" name="seatIds"
-															th:value="${seat.seatId}"
-															th:disabled="${bookedSeatIds.contains(seat.seatId)}" style="width: 40px;" class="form-check-input">
-														<label th:text="${seat.rowNumber} + ${seat.seatNumber}"></label>
-													</div>
-												</div>
-
 												<button type="submit">Xác nhận ghế</button>
 											</form>
 											<!-- 
@@ -103,10 +104,16 @@
 													<a th:href="@{/booking/step1/0}">
 														<button type="button" class="btn btn-secondary">Quay
 															lại</button>
-													</a> <a th:href="@{/booking/step3/0}">
-														<button type="button" class="btn btn-primary">Tiếp
-															tục</button>
 													</a>
+
+													<form id="seatForm" method="post"
+														action="/booking/confirm-seats">
+														<input type="hidden" name="showtimeId"
+															th:value="${showtime.showtimeId}"> <input
+															type="hidden" name="selectedSeats" id="selectedSeats">
+														<button type="submit" class="btn btn-primary">Tiếp
+															tục</button>
+													</form>
 
 												</div>
 											</div>
@@ -126,6 +133,8 @@
 		<footer class="bg-body-tertiary p-0 m-0"
 			th:replace="/components/footer.html"></footer>
 
+
+		<script th:src="@{'/js/fuctions/seat.js'}"></script>
 		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 

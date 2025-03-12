@@ -18,46 +18,35 @@ import com.poly.demo.service.MovieService;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+	
+	//Hàm thêm user vào model
+		private void addUserInfoToModel(Model model) {
+	        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	        if (principal instanceof UserDetails) {
+	            model.addAttribute("user", (UserDetails) principal);
+	        } else {
+	            model.addAttribute("user", null);
+	        }
+	    }
+	
 	@GetMapping("/")
 	public String AdminPage(Model model) {
-
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
+		
 		return ("dashboard");
 	}
 
 	@GetMapping("/accounts-manager")
 	public String AccountsManager(Model model) {
-
-		// Xác định user hiện tại
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
+		
 		return ("accounts-manager");
 	}
 
 	@GetMapping("/tickets-manager")
 	public String TicketsManager(Model model) {
-
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
+		
 		return ("tickets-manager");
 	}
 
@@ -67,15 +56,7 @@ public class AdminController {
 
 	@GetMapping("/movies-manager")
 	public String MoviesManager(Model model) {
-
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
 		
 		model.addAttribute("movie", new Movie());
 		return ("movies-manager");
@@ -83,8 +64,10 @@ public class AdminController {
 
 	
 	@PostMapping("/movie-manager/add")
-	public String addMovie(@ModelAttribute Movie movie) {
+	public String addMovie(@ModelAttribute Movie movie, Model model) {
+		addUserInfoToModel(model);
+		movie.setThumbnail("absolute_cinema.jpg");
 		movieService.addMovie(movie);
-		return "redirect:/movies-manager"; // Chuyển hướng về danh sách phim
+		return ("movies-manager"); // Chuyển hướng về danh sách phim
 	}
 }

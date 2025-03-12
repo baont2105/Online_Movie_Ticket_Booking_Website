@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SeatService {
@@ -27,5 +28,13 @@ public class SeatService {
 
     public Optional<Seat> getSeatById(Long seatId) {
         return seatRepository.findById(seatId);
+    }
+    
+    public List<Seat> getSeatsByIds(List<String> seatIds) {
+        // Chuyển danh sách String thành danh sách Long
+        List<Long> ids = seatIds.stream()
+                                .map(Long::parseLong)
+                                .collect(Collectors.toList());
+        return seatRepository.findBySeatIdIn(ids);
     }
 }

@@ -17,7 +17,6 @@ public class Seat {
     
     @Column(name = "seat_number")
     private String seatNumber;
-
     
     @Column(name = "seat_type")
     private String seatType;
