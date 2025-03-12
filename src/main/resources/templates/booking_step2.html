@@ -46,8 +46,7 @@
 											<h5
 												th:text="'Phòng: ' + ${showtime.room.name} + ' | ' + 
                'Chi nhánh: ' + ${showtime.branch.name}"></h5>
-											<h5
-												th:text="'Phim: ' + ${showtime.movie.name}"></h5>
+											<h5 th:text="'Phim: ' + ${showtime.movie.name}"></h5>
 											<h5
 												th:text="'Suất chiếu: ' + ${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></h5>
 
@@ -60,49 +59,37 @@
 													th:class="'seat ' + (${seat.seatType} == 'Standard' ? 'standard' : 'vip')"
 													th:data-id="${seat.rowNumber} + ${seat.seatNumber}"
 													th:data-type="${seat.seatType}"
-													th:text="${seat.rowNumber} + ${seat.seatNumber}"
-													></div>
+													th:text="${seat.rowNumber} + ${seat.seatNumber}"></div>
 											</div>
-
-											
-											<!-- 
-											<div class="seat-row" ng-repeat="row in seats">
-												<button ng-repeat="seat in row" ng-class="{
-			                                            'standard': seat.type === 'standard', 
-			                                            'vip': seat.type === 'vip',
-			                                            'booked': seat.status === 'booked',
-			                                            'selected': seat.selected
-			                                        }" ng-disabled="seat.status === 'booked'" ng-click="selectSeat(seat)"
-													style="width: 40px;">
-													{{ seat.id }}
-												</button>
-											</div>
-										 -->
 										</div>
 										<div class="col-sm-3 p-0"
-											style="background-color: #e9ecef; border-radius: 10px; position: relative; max-height: 400px;">
-											<div class="summary p-3">
+											style="background-color: #e9ecef; border-radius: 10px; position: relative; max-height: 400px; display: flex; flex-direction: column;">
+
+											<div class="summary p-3"
+												style="flex-grow: 1; overflow: hidden;">
 												<div class="card-header">
 													<h3 class="fw-bold">Ghế đã chọn</h3>
 												</div>
-												<div class="card-body">
-													<ul>
-														<li><div id="selected-seats"></div></li>
-													</ul>
+
+												<!-- Khu vực danh sách ghế có thể cuộn -->
+												<div class="card-body" id="selected-seats-container">
+													<ul id="selected-seats"></ul>
 												</div>
 											</div>
-											<div
-												style="position: relative; bottom: 0; width: 100%; margin-bottom: 5px;">
-												<p class="mx-3">
-													<p class="px-3">Tổng cộng: <span id="total-price">0 VND</span></p>
+
+											<!-- Phần tổng cộng + nút luôn ở dưới -->
+											<div class="p-3 border-top" style="background: #e9ecef;">
+												<p class="mb-2 fw-bold">
+													Tổng cộng: <span id="total-price">0 VND</span>
 												</p>
+
 												<div class="d-flex justify-content-between">
 													<a th:href="@{/booking/step1/1}">
 														<button type="button" class="btn btn-secondary">Quay
 															lại</button>
 													</a>
 
-													<form class="mx-3 d-flex justify-content-center" id="seatForm" method="post"
+													<form id="seatForm" method="post"
 														action="/booking/confirm-seats">
 														<input type="hidden" name="showtimeId"
 															th:value="${showtime.showtimeId}"> <input
@@ -110,10 +97,10 @@
 														<button type="submit" class="btn btn-primary">Tiếp
 															tục</button>
 													</form>
-
 												</div>
 											</div>
 										</div>
+
 									</div>
 								</div>
 							</div>
