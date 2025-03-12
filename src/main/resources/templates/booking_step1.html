@@ -37,62 +37,74 @@
 						<div class="container-fluid bg-white border rounded-2 mb-5 p-5">
 							<div class="stepper">
 								<!-- Step 1: Chọn Khu Vực / Phim / Suất Chiếu -->
-<div ng-show="step === 1">
-    <h2 class="form-title">Chọn Khu Vực / Phim / Suất Chiếu</h2>
-    <div class="row">
-        <article class="col-sm-8">
-            <form method="post" action="/booking/select-showtime">
-                <h3>Chọn chi nhánh</h3>
-                <select class="form-select" name="branchId">
-                    <option th:each="branch : ${branches}" th:value="${branch.branchId}" th:text="${branch.name}" th:selected="${branch.branchId == selectedBranch?.branchId}"></option>
-                </select>
-                
-                <h3>Chọn phim</h3>
-                <select class="form-select" name="movieId">
-                    <option th:each="movie : ${movies}" th:value="${movie.movieId}" th:text="${movie.name}" th:selected="${movie.movieId == selectedMovie?.movieId}"></option>
-                </select>
-                
-                <button class="btn btn-primary mt-2" type="submit">Tìm suất chiếu</button>
-            </form>
+								<div ng-show="step === 1">
+									<h2 class="form-title">Chọn Khu Vực / Phim / Suất Chiếu</h2>
+									<div class="row">
+										<article class="col-sm-8">
+											<form method="post" action="/booking/select-showtime">
+												<h3>Chọn chi nhánh</h3>
+												<select class="form-select" name="branchId">
+													<option th:each="branch : ${branches}"
+														th:value="${branch.branchId}" th:text="${branch.name}"
+														th:selected="${branch.branchId == selectedBranch?.branchId}"></option>
+												</select>
 
-            <h3>Chọn suất chiếu</h3>
-            <div th:if="${not #lists.isEmpty(showtimes)}">
-                <form method="post" action="/booking/confirm-showtime">
-                    <div th:each="showtime : ${showtimes}">
-                        <label class="input-group-text">
-                            <input class="form-check-input" type="radio" name="showtimeId" th:value="${showtime.showtimeId}">
-                            <span class="fs-5 form-control" th:text="${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></span>
-                        </label>
-                    </div>
-                    <button class="btn btn-primary mt-2" type="submit">Tiếp tục</button>
-                </form>
-            </div>
-            <div th:if="${#lists.isEmpty(showtimes)}" class="text-danger">Không có suất chiếu nào cho lựa chọn này.</div>
-        </article>
+												<h3>Chọn phim</h3>
+												<select class="form-select" name="movieId">
+													<option th:each="movie : ${movies}"
+														th:value="${movie.movieId}" th:text="${movie.name}"
+														th:selected="${movie.movieId == selectedMovie?.movieId}"></option>
+												</select>
 
-        <aside class="col-sm-4">
-            <div class="movie-info mb-3">
-                <img th:if="${selectedMovie}" th:src="@{'/image/Thumbnail/' + ${selectedMovie.thumbnail}}" class="img-fluid rounded" style="max-width: 200px;">
-                <div th:unless="${selectedMovie}" class="placeholder-glow">
-                    <div class="placeholder col-12 rounded" style="min-width: 200px; min-height: 200px;"></div>
-                </div>
-                <div class="details">
-                    <h5 th:text="${selectedMovie?.name ?: '- TÊN PHIM -'}"></h5>
-                    <p>2D - Phụ đề</p>
-                    <p th:text="${selectedBranch != null ? 'Chi nhánh: ' + selectedBranch.name : 'Chưa chọn chi nhánh'}"></p>
-                </div>
-            </div>
-            <div class="d-flex justify-content-between">
-                <a th:href="@{/}">
-                    <button type="button" class="btn btn-secondary">Quay lại</button>
-                </a>
-                <a th:href="@{/booking/step2/0}">
-                    <button type="button" class="btn btn-primary">Tiếp tục</button>
-                </a>
-            </div>
-        </aside>
-    </div>
-</div>
+												<button class="btn btn-primary mt-2" type="submit">Tìm
+													suất chiếu</button>
+											</form>
+
+											<h3>Chọn suất chiếu</h3>
+											<div th:if="${not #lists.isEmpty(showtimes)}">
+												<form method="post" action="/booking/confirm-showtime">
+													<div th:each="showtime : ${showtimes}">
+														<label class="input-group-text"> <input
+															class="form-check-input" type="radio" name="showtimeId"
+															th:value="${showtime.showtimeId}"> <span
+															class="fs-5 form-control"
+															th:text="${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></span>
+														</label>
+													</div>
+													<button class="btn btn-primary mt-2" type="submit">Tiếp
+														tục</button>
+												</form>
+											</div>
+											<div th:if="${#lists.isEmpty(showtimes)}" class="text-danger">Không
+												có suất chiếu nào cho lựa chọn này.</div>
+										</article>
+
+										<aside class="col-sm-4">
+											<div class="movie-info mb-3">
+												<img th:if="${selectedMovie}"
+													th:src="@{'/image/Thumbnail/' + ${selectedMovie.thumbnail}}"
+													class="img-fluid rounded" style="max-width: 200px;">
+												<div th:unless="${selectedMovie}" class="placeholder-glow">
+													<div class="placeholder col-12 rounded"
+														style="min-width: 200px; min-height: 200px;"></div>
+												</div>
+												<div class="details">
+													<h5 th:text="${selectedMovie?.name ?: '- TÊN PHIM -'}"></h5>
+													<p>2D - Phụ đề</p>
+													<p
+														th:text="${selectedBranch != null ? 'Chi nhánh: ' + selectedBranch.name : 'Chưa chọn chi nhánh'}"></p>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between">
+												<a th:href="@{/}">
+													<button type="button" class="btn btn-secondary">Quay
+														lại</button>
+												</a>
+
+											</div>
+										</aside>
+									</div>
+								</div>
 
 							</div>
 						</div>

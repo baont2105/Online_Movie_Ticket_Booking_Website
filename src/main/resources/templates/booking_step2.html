@@ -47,8 +47,7 @@
 												th:text="'Phòng: ' + ${showtime.room.name} + ' | ' + 
                'Chi nhánh: ' + ${showtime.branch.name}"></h5>
 											<h5
-												th:text="'Phim: ' + (${#strings.length(showtime.movie.name) > 20 ? 
-               #strings.substring(showtime.movie.name, 0, 15) + '...' : showtime.movie.name})"></h5>
+												th:text="'Phim: ' + ${showtime.movie.name}"></h5>
 											<h5
 												th:text="'Suất chiếu: ' + ${#temporals.format(showtime.startTime, 'HH:mm dd/MM/yyyy')}"></h5>
 
@@ -59,8 +58,10 @@
 													th:data-seat-id="${seat.seatId}"
 													th:data-seat-code="${seat.rowNumber} + ${seat.seatNumber}"
 													th:class="'seat ' + (${seat.seatType} == 'Standard' ? 'standard' : 'vip')"
+													th:data-id="${seat.rowNumber} + ${seat.seatNumber}"
+													th:data-type="${seat.seatType}"
 													th:text="${seat.rowNumber} + ${seat.seatNumber}"
-													onclick="selectSeat(this)"></div>
+													></div>
 											</div>
 
 											
@@ -86,23 +87,22 @@
 												</div>
 												<div class="card-body">
 													<ul>
-														<li ng-repeat="seat in selectedSeats">{{ seat.id }} -
-															{{ seat.type }}</li>
+														<li><div id="selected-seats"></div></li>
 													</ul>
 												</div>
 											</div>
 											<div
 												style="position: relative; bottom: 0; width: 100%; margin-bottom: 5px;">
-												<p class="px-3">
-													<strong>Tổng cộng:</strong> {{ total }} VND
+												<p class="mx-3">
+													<p class="px-3">Tổng cộng: <span id="total-price">0 VND</span></p>
 												</p>
 												<div class="d-flex justify-content-between">
-													<a th:href="@{/booking/step1/0}">
+													<a th:href="@{/booking/step1/1}">
 														<button type="button" class="btn btn-secondary">Quay
 															lại</button>
 													</a>
 
-													<form id="seatForm" method="post"
+													<form class="mx-3 d-flex justify-content-center" id="seatForm" method="post"
 														action="/booking/confirm-seats">
 														<input type="hidden" name="showtimeId"
 															th:value="${showtime.showtimeId}"> <input
@@ -130,7 +130,7 @@
 			th:replace="/components/footer.html"></footer>
 
 
-		<script th:src="@{'/js/fuctions/seat.js'}"></script>
+		<script th:src="@{'/js/functions/seat.js'}"></script>
 		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 

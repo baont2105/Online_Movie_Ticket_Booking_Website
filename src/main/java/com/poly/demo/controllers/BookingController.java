@@ -191,8 +191,8 @@ public class BookingController {
         }
 	    
 	    // Lưu vé vào database
-        Ticket ticket = new Ticket();
 	    for (Seat seat : selectedSeatList) {
+	    	Ticket ticket = new Ticket();
 	        ticket.setUser(user);
 	        ticket.setShowtime(showtime);
 	        ticket.setSeat(seat);
