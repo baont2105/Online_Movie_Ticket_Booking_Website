@@ -25,11 +25,13 @@ import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Seat;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
+import com.poly.demo.entity.User;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.SeatService;
 import com.poly.demo.service.ShowtimeService;
 import com.poly.demo.service.TicketService;
+import com.poly.demo.service.UserService;
 
 @Controller
 @RequestMapping("/booking/")
@@ -50,6 +52,10 @@ public class BookingController {
 	
 	@Autowired
     private TicketService ticketService;
+	
+	@Autowired
+	private UserService userService;
+
 
 	/*
 	 * @GetMapping("/step1/{id}") public String step1(@PathVariable Long id, Model
@@ -141,27 +147,13 @@ public class BookingController {
 
 	@GetMapping("/step3/{id}")
 	public String step3(@PathVariable Long id, Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
 		return "booking_step3";
 	}
 
 	@GetMapping("/step4/{id}")
 	public String step4(@PathVariable Long id, Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
 		return "booking_step4";
 	}
 	
@@ -188,9 +180,19 @@ public class BookingController {
 
 	@PostMapping("/confirm-seats")
 	public String confirmSeats(@RequestParam Long showtimeId, 
-	                           @RequestParam String selectedSeats, 
+			@RequestParam("selectedSeats") String selectedSeats, 
 	                           Model model) {
-	    addUserInfoToModel(model);
+		
+		// Lấy thông tin người dùng hiện tại từ SecurityContext
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            model.addAttribute("error", "Bạn chưa đăng nhập!");
+            return "redirect:/login"; // Chuyển hướng về trang login nếu chưa đăng nhập
+        }
 
 	    // Lấy thông tin suất chiếu
 	    Showtime showtime = showtimeService.getShowtimeById(showtimeId);
@@ -209,17 +211,27 @@ public class BookingController {
 	    List<Seat> selectedSeatList = seatService.getSeatsByIds(seatIdStrings);
 	    model.addAttribute("selectedSeats", selectedSeatList);
 
+	    //tìm user
+	 // Tìm User theo username
+        User user = userService.findByUsername(username).orElse(null);
+        if (user == null) {
+            model.addAttribute("error", "Không tìm thấy người dùng!");
+            return "error-page"; // Chuyển hướng đến trang lỗi
+        }
+	    
 	    // Lưu vé vào database
 	    for (Seat seat : selectedSeatList) {
 	        Ticket ticket = new Ticket();
+	        ticket.setUser(user);
 	        ticket.setShowtime(showtime);
 	        ticket.setSeat(seat);
+	        ticket.setPrice(seat.getPrice());
 	        ticket.setTicketStatus("NOT_CHECKED_IN");
 
-	        ticketService.saveTicket(ticket);
+	       // ticketService.saveTicket(ticket);
 	    }
 
-	    return "redirect:/test";
+	    return "test";
 	}
 
 }

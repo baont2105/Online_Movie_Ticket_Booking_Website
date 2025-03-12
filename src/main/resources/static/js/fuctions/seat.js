@@ -3,6 +3,8 @@ let selectedSeats = [];
 function selectSeat(seatElement) {
     let seatId = seatElement.getAttribute("data-seat-id");
 
+	console.log("triggered");
+	
     // Kiểm tra nếu ghế đã chọn thì bỏ chọn, ngược lại chọn
     if (selectedSeats.includes(seatId)) {
         selectedSeats = selectedSeats.filter(id => id !== seatId);

@@ -5,6 +5,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Data
 @Table(name = "Tickets")
@@ -19,6 +21,7 @@ public class Ticket {
     @Column(name = "ticket_status")
     private String ticketStatus;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

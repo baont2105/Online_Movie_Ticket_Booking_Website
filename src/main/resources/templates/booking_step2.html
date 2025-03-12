@@ -63,11 +63,7 @@
 													onclick="selectSeat(this)"></div>
 											</div>
 
-											<form method="post" action="/booking/confirm-seats">
-												<input type="hidden" name="showtimeId"
-													th:value="${showtime.showtimeId}">
-												<button type="submit">Xác nhận ghế</button>
-											</form>
+											
 											<!-- 
 											<div class="seat-row" ng-repeat="row in seats">
 												<button ng-repeat="seat in row" ng-class="{
