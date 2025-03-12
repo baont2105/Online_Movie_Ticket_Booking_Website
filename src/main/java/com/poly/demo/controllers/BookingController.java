@@ -151,92 +151,120 @@ public class BookingController {
 
 	@PostMapping("/confirm-seats")
 	public String confirmSeats(@RequestParam Long showtimeId, 
-			@RequestParam("selectedSeats") String selectedSeats, 
-	                           Model model) {
-		
-		// Lấy thông tin người dùng hiện tại từ SecurityContext
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username = null;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            model.addAttribute("error", "Bạn chưa đăng nhập!");
-            return "redirect:/login"; // Chuyển hướng về trang login nếu chưa đăng nhập
-        }
-
-	    // Lấy thông tin suất chiếu
+	                           @RequestParam("selectedSeats") String selectedSeats, 
+	                           RedirectAttributes redirectAttributes, Model model) {
+	    
+	    // Kiểm tra đăng nhập
+	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    if (!(principal instanceof UserDetails)) {
+	        model.addAttribute("error", "Bạn chưa đăng nhập!");
+	        return "redirect:/login";
+	    }
+	    String username = ((UserDetails) principal).getUsername();
+	    
+	    // Lấy dữ liệu
 	    Showtime showtime = showtimeService.getShowtimeById(showtimeId);
-
-	    // Chuyển danh sách ghế từ String thành List<Long>
+	    User user = userService.findByUsername(username).orElse(null);
+	    if (user == null) {
+	        model.addAttribute("error", "Không tìm thấy người dùng!");
+	        return "error-page";
+	    }
+	    
 	    List<Long> seatIds = Arrays.stream(selectedSeats.split(","))
 	                               .map(Long::valueOf)
 	                               .collect(Collectors.toList());
-
-	    // Nếu getSeatsByIds nhận List<String>, cần chuyển đổi danh sách
-	    List<String> seatIdStrings = seatIds.stream()
-	                                        .map(String::valueOf)
-	                                        .collect(Collectors.toList());
-
-	    // Lấy danh sách ghế từ database
-	    List<Seat> selectedSeatList = seatService.getSeatsByIds(seatIdStrings);
-	    model.addAttribute("selectedSeats", selectedSeatList);
-
-	    //tìm user
-	 // Tìm User theo username
-        User user = userService.findByUsername(username).orElse(null);
-        if (user == null) {
-            model.addAttribute("error", "Không tìm thấy người dùng!");
-            return "error-page"; // Chuyển hướng đến trang lỗi
-        }
+	    List<Seat> selectedSeatList = seatService.getSeatsByIds(
+	        seatIds.stream().map(String::valueOf).collect(Collectors.toList())
+	    );
 	    
 	    // Lưu vé vào database
+	    Ticket firstTicket = null; // Lưu vé đầu tiên để truyền sang Step 3
 	    for (Seat seat : selectedSeatList) {
-	    	Ticket ticket = new Ticket();
+	        Ticket ticket = new Ticket();
 	        ticket.setUser(user);
 	        ticket.setShowtime(showtime);
 	        ticket.setSeat(seat);
 	        ticket.setPrice(seat.getPrice());
 	        ticket.setTicketStatus("NOT_CHECKED_IN");
-
-	       // ticketService.saveTicket(ticket); //hàm lưu vé
+	        
+	        ticketService.saveTicket(ticket);
+	        
+	        if (firstTicket == null) {
+	            firstTicket = ticket;
+	        }
+	    }
+	    
+	    // Nếu không có vé nào -> quay lại Step 2
+	    if (firstTicket == null) {
+	        model.addAttribute("error", "Vui lòng chọn ít nhất một ghế!");
+	        return "redirect:/booking/step2?showtimeId=" + showtimeId;
 	    }
 
-	    return "redirect:/booking/step3";
+	    // Chuyển đến Step 3 với ticketId đầu tiên
+	    return "redirect:/booking/step3?ticketId=" + firstTicket.getTicketId();
 	}
+
 	//========================================== STEP 3 =============================================
 	@GetMapping("/step3")
-    public String showStep3( Model model) {
-		addUserInfoToModel(model);
-        //Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
-        List<FoodItem> foodItems = foodItemService.getAllFoodItems();
+	public String showStep3(@RequestParam("ticketId") Long ticketId, Model model) {
+	    addUserInfoToModel(model);
+	    
+	    Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
+	    if (ticketOpt.isEmpty()) {
+	        return "redirect:/booking/step2"; // Nếu ticketId không hợp lệ
+	    }
 
-        //model.addAttribute("ticket", ticket);
-        model.addAttribute("foodItems", foodItems);
-        return "booking_step3";
-    }
+	    Ticket ticket = ticketOpt.get();
+	    List<FoodItem> foodItems = foodItemService.getAllFoodItems();
 
-    @PostMapping("/confirm-foods")
-    public String confirmFoods(@RequestParam Long ticketId,
-                               @RequestParam Map<String, String> foodSelections, Model model) {
-    	addUserInfoToModel(model);
-        Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+	    model.addAttribute("ticket", ticket);
+	    model.addAttribute("foodItems", foodItems);
+	    return "booking_step3";
+	}
 
-        for (Map.Entry<String, String> entry : foodSelections.entrySet()) {
-            Long foodId = Long.parseLong(entry.getKey());
-            int quantity = Integer.parseInt(entry.getValue());
+	@PostMapping("/confirm-foods")
+	public String confirmFoods(@RequestParam Long ticketId, 
+	                           @RequestParam Map<String, String> foodSelections,
+	                           RedirectAttributes redirectAttributes) {
+	    try {
+	        Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+	        
+	        for (Map.Entry<String, String> entry : foodSelections.entrySet()) {
+	            String key = entry.getKey();
+	            System.out.println("FoodSelections: " + foodSelections);
 
-            if (quantity > 0) {
-                FoodItem foodItem = foodItemService.getFoodItemById(foodId);
-                TicketFood ticketFood = new TicketFood();
-                ticketFood.setTicket(ticket.get());
-                ticketFood.setFoodItem(foodItem);
-                ticketFood.setQuantity(quantity);
-               // ticketFoodService.saveTicketFood(ticketFood);
-            }
-        }
-        return "redirect:/booking/step4?ticketId=" + ticketId;
-    }
+	            // Sửa lỗi key chứa dấu ngoặc [] bằng regex
+	            key = key.replaceAll("[^0-9]", ""); // Loại bỏ ký tự không phải số
+
+	            if (key.isEmpty()) {
+	                System.out.println("Bỏ qua key không hợp lệ: " + entry.getKey());
+	                continue;
+	            }
+
+	            Integer foodId = Integer.parseInt(key);
+	            int quantity = Integer.parseInt(entry.getValue());
+
+	            if (quantity > 0) {
+
+	                FoodItem foodItem = foodItemService.getFoodItemById(foodId.longValue());
+	                TicketFood ticketFood = new TicketFood();
+	                ticketFood.setTicket(ticket.get());
+	                ticketFood.setFoodItem(foodItem);
+	                ticketFood.setQuantity(quantity);
+	                System.out.println("WORKED!!!!");
+	               // ticketFoodService.saveTicketFood(ticketFood);
+	            }
+	        }
+
+	        redirectAttributes.addFlashAttribute("message", "Lưu thành công!");
+	        return "redirect:/booking/step3?ticketId=" + ticketId;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra!");
+	        return "redirect:/booking/step3?ticketId=" + ticketId;
+	    }
+	}
+
 
     
 	//========================================== STEP 4 =============================================

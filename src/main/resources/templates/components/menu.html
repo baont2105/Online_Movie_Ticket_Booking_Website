@@ -69,6 +69,11 @@
         <strong>Chú ý!</strong> Bạn cần đăng nhập để thực hiện mua vé.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    <div class="alert alert-success alert-dismissible fade show fixed-top" role="alert"
+        style="margin-top: 65px; z-index: 10;" th:if="${message}">
+        <h5 class="m-0" th:text="${message}"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 </nav>
 
 <style>

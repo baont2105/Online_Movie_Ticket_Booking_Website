@@ -34,7 +34,7 @@ public class Ticket {
     private Showtime showtime;
 
     @ManyToOne
-    @JoinColumn(name = "seat_id")
+    @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
 
     
