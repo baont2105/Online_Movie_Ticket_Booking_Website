@@ -75,6 +75,7 @@
 
 	<!-- Warning nếu chưa đăng nhập 
 		-->
+		
 	<div class="alert alert-warning alert-dismissible fade show fixed-top"
 		role="alert" style="margin-top: 65px; z-index: 10;"
 		th:if="${user == null}">
@@ -84,10 +85,32 @@
 		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
 			aria-label="Close"></button>
 	</div>
+	
+	<!-- BÁO WARNING -->
+	<div class="alert alert-success alert-dismissible fade show fixed-top"
+		role="alert" style="margin-top: 65px; z-index: 10;" th:if="${warning}">
+		<div class="container-fluid d-fex justify-content-center align-middle">
+			<p class="m-0 text-center fw-bold" th:text="${warning}"></p>
+		</div>
+		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+	</div>
+	
+	<!-- BÁO THÀNH CÔNG -->
 	<div class="alert alert-success alert-dismissible fade show fixed-top"
 		role="alert" style="margin-top: 65px; z-index: 10;" th:if="${message}">
 		<div class="container-fluid d-fex justify-content-center align-middle">
 			<p class="m-0 text-center fw-bold" th:text="${message}"></p>
+		</div>
+		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+	</div>
+	
+	<!-- BÁO LỖI -->
+	<div class="alert alert-danger alert-dismissible fade show fixed-top"
+		role="alert" style="margin-top: 65px; z-index: 10;" th:if="${error}">
+		<div class="container-fluid d-fex justify-content-center align-middle">
+			<p class="m-0 text-center fw-bold" th:text="${error}"></p>
 		</div>
 		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
 			aria-label="Close"></button>
