@@ -1,22 +1,14 @@
 package com.poly.demo.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.poly.demo.entity.Movie;
+import com.poly.demo.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import com.poly.demo.entity.Movie;
-import com.poly.demo.entity.Showtime;
-import com.poly.demo.service.MovieService;
-import com.poly.demo.service.ShowtimeService;
-
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/movies")
@@ -24,77 +16,52 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
-    
-    @Autowired
-    private ShowtimeService showtimeService;
 
-    @GetMapping("/")
-    public String listMovies(Model model) {
+    // Hiển thị danh sách phim trong trang quản lý
+    @GetMapping("/manager")
+    public String manageMovies(Model model) {
         List<Movie> movies = movieService.getAllMovies();
+        System.out.print(movies);
         model.addAttribute("movies", movies);
-        
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-        return "movies-list"; // Tên file Thymeleaf (movies.html)
+        return "movies-manager";
     }
-    
-    @GetMapping("/now_showing")
-    public String listMoviesNowShowing(Model model) {
-        List<Movie> movies = movieService.getNowShowingMovies();
-        model.addAttribute("movies", movies);
-        
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-        return "movies-list"; // Tên file Thymeleaf (movies.html)
+    // Hiển thị form thêm phim
+    @GetMapping("/add")
+    public String showAddMovieForm(Model model) {
+        model.addAttribute("movie", new Movie());
+        return "movie-form";
     }
-    
-    @GetMapping("/upcomming")
-    public String listMoviesUpcomming(Model model) {
-        List<Movie> movies = movieService.getUpcommingMovies();
-        model.addAttribute("movies", movies);
-        
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-        return "movies-list"; // Tên file Thymeleaf (movies.html)
+    // Xử lý thêm phim
+    @PostMapping("/add")
+    public String addMovie(@ModelAttribute Movie movie) {
+        movieService.addMovie(movie);
+        return "redirect:/movies/manager";
     }
-    
-    /*
-     * 
-     * */
-    @GetMapping("/movie-detail/{id}")
-    public String MovieDetail(@PathVariable Long id, Model model) {
-    	Optional<Movie> movie = movieService.getMovieById(id);
-    	model.addAttribute("movie", movie.get());
-    	
-    	List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
-    	model.addAttribute("showtime", showtime);
-    	
-    	Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
-    	return "movie-detail";
+    // Hiển thị form cập nhật phim
+    @GetMapping("/edit/{id}")
+    public String showEditMovieForm(@PathVariable Long id, Model model) {
+        Optional<Movie> movie = movieService.getMovieById(id);
+        if (movie.isPresent()) {
+            model.addAttribute("movie", movie.get());
+            return "movie-form";
+        }
+        return "redirect:/movies/manager";
+    }
+
+    // Xử lý cập nhật phim
+    @PostMapping("/edit/{id}")
+    public String updateMovie(@PathVariable Long id, @ModelAttribute Movie movie) {
+        movieService.updateMovie(id, movie);
+        return "redirect:/movies/manager";
+    }
+
+    // Xóa phim
+    @GetMapping("/delete/{id}")
+    public String deleteMovie(@PathVariable Long id) {
+        movieService.deleteMovie(id);
+        return "redirect:/movies/manager";
     }
 }
