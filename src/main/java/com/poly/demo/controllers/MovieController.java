@@ -13,30 +13,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Showtime;
+import com.poly.demo.entity.User;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.ShowtimeService;
+import com.poly.demo.service.UserService;
 
 @Controller
 @RequestMapping("/movies")
 
 public class MovieController {
+	
+	@Autowired
+    private UserService userService;
 
 	@Autowired
 	private MovieService movieService;
 
 	@Autowired
 	private ShowtimeService showtimeService;
+	
+	private void addUserInfoToModel(Model model) {
+	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+	    if (principal instanceof UserDetails) {
+	        UserDetails userDetails = (UserDetails) principal;
+	        String username = userDetails.getUsername(); // Lấy username từ UserDetails
+
+	        // Lấy thông tin User từ database
+	        Optional<User> userOptional = userService.findByUsername(username);
+	        if (userOptional.isPresent()) {
+	            User user = userOptional.get();
+	            model.addAttribute("user", user);
+	            model.addAttribute("name", user.getName()); // Gửi tên đến Thymeleaf
+	            return;
+	        }
+	    }
+	    
+	    // Nếu không tìm thấy user hoặc chưa đăng nhập
+	    model.addAttribute("user", null);
+	    model.addAttribute("name", null);
+	}
 
 	@GetMapping("/")
 	public String listMovies(Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
+		addUserInfoToModel(model);
+		
 		List<Movie> movies = movieService.getAllMovies();
 		 model.addAttribute("movies", movies);
 		return "movies-list"; // Tên file Thymeleaf (movies.html)
@@ -44,33 +65,21 @@ public class MovieController {
 
 	@GetMapping("/now_showing")
 	public String listMoviesNowShowing(Model model) {
+		addUserInfoToModel(model);
+ 
 		List<Movie> movies = movieService.getNowShowingMovies();
 		model.addAttribute("movies", movies);
 
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
 		return "movies-list"; // Tên file Thymeleaf (movies.html)
 	}
 
 	@GetMapping("/upcomming")
 	public String listMoviesUpcomming(Model model) {
+		addUserInfoToModel(model);
+
 		List<Movie> movies = movieService.getUpcomingMovies();
 		model.addAttribute("movies", movies);
 
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
 		return "movies-list"; // Tên file Thymeleaf (movies.html)
 	}
 
@@ -79,20 +88,14 @@ public class MovieController {
 	 * */
 	@GetMapping("/movie-detail/{id}")
 	public String MovieDetail(@PathVariable Long id, Model model) {
+		addUserInfoToModel(model);
+
 		Optional<Movie> movie = movieService.getMovieById(id);
 		model.addAttribute("movie", movie.get());
 
 		List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
 		model.addAttribute("showtime", showtime);
 
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			UserDetails user = (UserDetails) principal;
-			model.addAttribute("user", user); // Gửi user đến Thymeleaf
-		} else {
-			model.addAttribute("user", null); // Nếu chưa đăng nhập, user sẽ là null
-		}
 		return "movie-detail";
 	}
 }

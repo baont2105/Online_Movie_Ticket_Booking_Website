@@ -28,6 +28,10 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return user.getUsername();
     }
+    
+    public String getName() { // Hàm để lấy tên
+        return user.getName();
+    }
 
     @Override
     public boolean isAccountNonExpired() {

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class UserController {
 
     // Lấy thông tin người dùng đăng nhập
     @GetMapping
-    public String getAccountInfo(Model model) {
+    public String getAccountInfo(Model model, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
@@ -33,40 +34,41 @@ public class UserController {
         if (userOptional.isPresent()) {
             model.addAttribute("user", userOptional.get());
         } else {
-            model.addAttribute("error", "Không tìm thấy tài khoản");
+        	redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản");
         }
         return "account-info"; // Tên file Thymeleaf
     }
 
     // Cập nhật thông tin tài khoản
     @PostMapping("/update")
-    public String updateAccount(@ModelAttribute User user, Model model) {
-        Optional<User> userOptional = userService.getUserById(user.getId());
-        System.out.println(userOptional);
+    public String updateAccount(@RequestParam("id") Integer id,
+                                @ModelAttribute User user,
+                                RedirectAttributes redirectAttributes) {
+
+        Optional<User> userOptional = userService.getUserById(id);
         if (userOptional.isPresent()) {
             User existingUser = userOptional.get();
             existingUser.setName(user.getName());
             existingUser.setPhoneNumber(user.getPhoneNumber());
 
             userService.save(existingUser);
-            System.out.println("Cập nhật thành công!");
-            model.addAttribute("message", "Cập nhật thành công!");
+            redirectAttributes.addFlashAttribute("message", "Cập nhật thành công!");
         } else {
-        	System.out.println("Không tìm thấy tài khoản");
-            model.addAttribute("error", "Không tìm thấy tài khoản");
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản");
         }
         return "redirect:/account";
     }
+
 
     // Đổi mật khẩu
     @PostMapping("/change-password")
     public String changePassword(@RequestParam Integer userId, 
                                  @RequestParam String newPassword,
                                  @RequestParam String confirmPassword,
-                                 Model model) {
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
         if (!newPassword.equals(confirmPassword)) {
-        	System.out.println("Mật khẩu xác nhận không khớp!");
-            model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
+        	redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
             return "redirect:/account";
         }
 
@@ -75,11 +77,9 @@ public class UserController {
             User user = userOptional.get();
             user.setPassword(passwordEncoder.encode(newPassword));
             userService.save(user);
-            System.out.println("Đổi mật khẩu thành công!");
-            model.addAttribute("message", "Đổi mật khẩu thành công!");
+            redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
         } else {
-        	System.out.println("Không tìm thấy tài khoản!");
-            model.addAttribute("error", "Không tìm thấy tài khoản!");
+        	redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản!");
         }
 
         return "redirect:/account";

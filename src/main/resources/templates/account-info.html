@@ -33,7 +33,8 @@
 
 				<!-- Form cập nhật tài khoản -->
 				<form action="/account/update" method="post">
-					<input type="hidden" name="userId" th:value="${user.id}">
+					<input type="hidden" name="id" th:value="${user.id}">
+					<!-- Đúng tên thuộc tính của entity User -->
 
 					<div class="row mb-3">
 						<div class="col-md-6">
@@ -43,7 +44,7 @@
 						</div>
 						<div class="col-md-6">
 							<label for="phone" class="form-label">Số điện thoại</label> <input
-								type="text" class="form-control" id="phone" name="phone"
+								type="text" class="form-control" id="phone" name="phoneNumber"
 								th:value="${user.phoneNumber}" placeholder="Nhập Điện Thoại">
 						</div>
 					</div>
@@ -67,6 +68,7 @@
 							nhật</button>
 					</div>
 				</form>
+
 
 				<hr class="fw-bold my-3">
 

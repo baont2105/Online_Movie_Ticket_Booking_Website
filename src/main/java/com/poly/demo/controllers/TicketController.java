@@ -34,13 +34,27 @@ public class TicketController {
 
 	// Hàm thêm user vào model
 	private void addUserInfoToModel(Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof UserDetails) {
-			model.addAttribute("user", (UserDetails) principal);
-		} else {
-			model.addAttribute("user", null);
-		}
+	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+	    if (principal instanceof UserDetails) {
+	        UserDetails userDetails = (UserDetails) principal;
+	        String username = userDetails.getUsername(); // Lấy username từ UserDetails
+
+	        // Lấy thông tin User từ database
+	        Optional<User> userOptional = userService.findByUsername(username);
+	        if (userOptional.isPresent()) {
+	            User user = userOptional.get();
+	            model.addAttribute("user", user);
+	            model.addAttribute("name", user.getName()); // Gửi tên đến Thymeleaf
+	            return;
+	        }
+	    }
+	    
+	    // Nếu không tìm thấy user hoặc chưa đăng nhập
+	    model.addAttribute("user", null);
+	    model.addAttribute("name", null);
 	}
+
 
 	@GetMapping("/my-tickets")
 	public String listTickets(Model model) {
