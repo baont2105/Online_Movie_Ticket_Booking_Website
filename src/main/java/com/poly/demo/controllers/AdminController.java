@@ -2,10 +2,12 @@ package com.poly.demo.controllers;
 
 import com.poly.demo.entity.Branch;
 import com.poly.demo.entity.Movie;
+import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.MovieService;
+import com.poly.demo.service.ShowtimeService;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
 
@@ -54,11 +56,58 @@ public class AdminController {
         
         return "accounts-manager";
     }
+    @Autowired
+    private ShowtimeService showtimeService;
+
+    
     @GetMapping("/showtime-manager")
     public String ShowtimeManager(Model model) {
-    	addUserInfoToModel(model);
-    	return "showtime-manager";
+        addUserInfoToModel(model);
+        
+        List<Showtime> showtimes = showtimeService.getAllShowtime();
+        model.addAttribute("showtimes", showtimes);
+        
+        return "showtime-manager";
     }
+    
+    @PostMapping("/showtime-manager/add")
+    public String addShowtime(@ModelAttribute Showtime showtime) {
+        showtimeService.addShowtime(showtime);
+        return "redirect:/admin/showtime-manager";
+    }
+    
+    @GetMapping("/showtime-manager/edit/{id}")
+    public String showEditShowtimeForm(@PathVariable Long id, Model model) {
+        addUserInfoToModel(model);
+        
+        Showtime showtime = showtimeService.getShowtimeById(id);
+        if (showtime != null) {
+            model.addAttribute("showtime", showtime);
+            return "showtime-form"; // Trang chỉnh sửa suất chiếu
+        }
+        return "redirect:/admin/showtime-manager";
+    }
+    
+    @PostMapping("/showtime-manager/edit/{id}")
+    public String updateShowtime(@PathVariable Long id, @ModelAttribute Showtime showtime) {
+        Showtime existingShowtime = showtimeService.getShowtimeById(id);
+        if (existingShowtime != null) {
+            existingShowtime.setMovie(showtime.getMovie());
+            existingShowtime.setBranch(showtime.getBranch());
+            existingShowtime.setStartTime(showtime.getStartTime());
+            existingShowtime.setPrice(showtime.getPrice());
+
+            showtimeService.addShowtime(existingShowtime);
+        }
+        return "redirect:/admin/showtime-manager";
+    }
+    
+    @GetMapping("/showtime-manager/delete/{id}")
+    public String deleteShowtime(@PathVariable Long id) {
+        showtimeService.deleteShowtime(id);
+        return "redirect:/admin/showtime-manager";
+    }
+    
     @Autowired
     private BranchService branchService;
 
