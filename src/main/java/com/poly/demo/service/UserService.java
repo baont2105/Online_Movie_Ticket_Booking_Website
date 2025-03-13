@@ -19,7 +19,7 @@ public class UserService {
     }
 
     @Transactional
-    public void save(User user) {
+    public void create(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Tên tài khoản đã tồn tại.");
         }
@@ -30,11 +30,17 @@ public class UserService {
         user.setRole("USER");
         userRepository.save(user);
     }
+    
+    public void save(User user) {
+        userRepository.save(user);
+    }
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-    
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
     public Optional<User> getUserById(Integer id) {
         return userRepository.findById(id);
     }
