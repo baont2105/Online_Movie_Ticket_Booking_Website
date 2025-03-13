@@ -1,8 +1,10 @@
 package com.poly.demo.controllers;
 
+import com.poly.demo.entity.Branch;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
+import com.poly.demo.service.BranchService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
@@ -57,10 +59,37 @@ public class AdminController {
     	addUserInfoToModel(model);
     	return "showtime-manager";
     }
+    @Autowired
+    private BranchService branchService;
+
     @GetMapping("/branch-manager")
     public String BranchManager(Model model) {
-    	addUserInfoToModel(model);
-    	return "brach-manager";
+        addUserInfoToModel(model);
+        
+        List<Branch> branches = branchService.getAllBranches();
+        model.addAttribute("branches", branches);
+        
+        return "branch-manager";
+        
+    }
+    @PostMapping("/branch-manager/add")
+    public String addBranch(@ModelAttribute Branch branch) {
+        branchService.addBranch(branch);
+        return "redirect:/admin/branch-manager";
+    }
+    @GetMapping("/branch-manager/edit/{id}")
+    public String showEditBranchForm(@PathVariable Long id, Model model) {
+        Optional<Branch> branch = branchService.getBranchById(id);
+        if (branch.isPresent()) {
+            model.addAttribute("branch", branch.get());
+            return "branch-form"; // Tạo thêm file Thymeleaf branch-form.html
+        }
+        return "redirect:/admin/branch-manager";
+    }
+    @GetMapping("/branch-manager/delete/{id}")
+    public String deleteBranch(@PathVariable Long id) {
+        branchService.deleteBranch(id);
+        return "redirect:/admin/branch-manager";
     }
 
     @Autowired

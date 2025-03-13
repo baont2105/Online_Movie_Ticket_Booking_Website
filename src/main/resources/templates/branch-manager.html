@@ -50,44 +50,29 @@
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-											<form th:action="@{/admin/movie-manager/add}" method="post"
-												th:object="${movie}">
+										<!-- 	<form th:action="@{/admin/branch-manager/add}" method="post"
+												th:object="${branch}">
 												<div class="mb-3">
-													<label class="form-label">Tên phim</label> <input
+													<label class="form-label">Tên Chi Nhánh</label> <input
 														type="text" class="form-control" th:field="*{name}"
 														required>
 												</div>
 
 												<div class="mb-3">
-													<label class="form-label">Mô tả</label>
-													<textarea class="form-control" th:field="*{description}"
-														required></textarea>
-												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Ngày phát hành</label> <input
-														type="date" class="form-control" th:field="*{releaseDate}"
+													<label class="form-label">Địa Chỉ</label> <input
+														type="text" class="form-control" th:field="*{address}"
 														required>
 												</div>
 
 												<div class="mb-3">
-													<label class="form-label">Ngày kết thúc</label> <input
-														type="date" class="form-control" th:field="*{endDate}"
+													<label class="form-label">Số Điện Thoại</label> <input
+														type="text" class="form-control" th:field="*{phone}"
 														required>
 												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Thời lượng (phút)</label> <input
-														type="number" class="form-control" th:field="*{duration}"
-														required>
-												</div>
-
-
-
 
 												<button type="submit" class="btn btn-primary">Thêm
-													phim</button>
-											</form>
+													Chi Nhánh</button>
+											</form> -->
 
 											<!--
 												
@@ -104,35 +89,33 @@
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th>Mã Phim</th>
-										<th>Tên Phim</th>
-										<th>Thể Loại</th>
-										<th>Thời Lượng</th>
-										<th>Ngày Chiếu</th>
-										<th>Ngày Kết Thúc</th>
+										<th>Mã Chi Nhánh</th>
+										<th>Tên Chi Nhánh</th>
+										<th>Địa Chỉ</th>
+										<th>Email</th>
+										<th>Thành Phố</th>
 										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="movie : ${movies}">
-										<td th:text="${movie.movieId}"></td>
-										<td th:text="${movie.name}"></td>
-										<td th:text="${movie.tags}"></td>
-										<td th:text="${movie.duration + ' phút'}"></td>
-										<td
-											th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></td>
-										<td th:text="${#temporals.format(movie.endDate, 'dd/MM/yyyy')}"></td>
+									<tr th:each="branch : ${branches}">
+										<td th:text="${branch.branchId}"></td>
+										<td th:text="${branch.name}"></td>
+										<td th:text="${branch.address}"></td>
+										<td th:text="${branch.email}"></td>
+										<td th:text="${branch.city}"></td>
 										<td><a
-											th:href="@{/admin/movies-manager/edit/{id}(id=${movie.movieId})}"
+											th:href="@{/admin/branch-manager/edit/{id}(id=${branch.branchId})}"
 											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/movies-manager/delete/{id}(id=${movie.movieId})}"
+											th:href="@{/admin/branch-manager/delete/{id}(id=${branch.branchId})}"
 											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa phim này?')">Xóa</a>
+											onclick="return confirm('Bạn có chắc chắn muốn xóa chi nhánh này?')">Xóa</a>
 										</td>
 									</tr>
 								</tbody>
 							</table>
-					
+
+
 						</div>
 					</div>
 				</div>

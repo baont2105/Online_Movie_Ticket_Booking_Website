@@ -25,35 +25,12 @@ public class BranchService {
         return branchRepository.findById(id);
     }
 
-    public Branch addMovie(Branch branch) {
+    public Branch addBranch(Branch branch) {
         return branchRepository.save(branch);
     }
 
-    /*
-     * 
-    public Movie updateMovie(Long id, Movie updatedMovie) {
-        return movieRepository.findById(id)
-                .map(movie -> {
-                    movie.setName(updatedMovie.getName());
-                    movie.setTags(updatedMovie.getTags());
-                    movie.setDuration(updatedMovie.getDuration());
-                    movie.setReleaseDate(updatedMovie.getReleaseDate());
-                    movie.setEndDate(updatedMovie.getEndDate());
-                    movie.setViewCount(updatedMovie.getViewCount());
-                    movie.setCountry(updatedMovie.getCountry());
-                    movie.setProducer(updatedMovie.getProducer());
-                    movie.setDirector(updatedMovie.getDirector());
-                    movie.setActors(updatedMovie.getActors());
-                    movie.setDescription(updatedMovie.getDescription());
-                    movie.setThumbnail(updatedMovie.getThumbnail());
-                    movie.setTrailer(updatedMovie.getTrailer());
-                    return movieRepository.save(movie);
-                })
-                .orElse(null);
-    }
-     */
-
-    public void deleteMovie(Long id) {
-    	branchRepository.deleteById(id);
+    // Xóa chi nhánh theo ID
+    public void deleteBranch(Long id) {
+        branchRepository.deleteById(id);
     }
 }
