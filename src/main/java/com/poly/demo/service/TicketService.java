@@ -3,9 +3,13 @@ package com.poly.demo.service;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
+import com.poly.demo.entity.TicketFood;
+import com.poly.demo.entity.TicketVoucher;
 import com.poly.demo.entity.User;
 import com.poly.demo.repository.MovieRepository;
+import com.poly.demo.repository.TicketFoodRepository;
 import com.poly.demo.repository.TicketRepository;
+import com.poly.demo.repository.TicketVoucherRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,4 +50,20 @@ public class TicketService {
     public void deleteMovie(Long id) {
     	ticketRepository.deleteById(id);
     }
+    
+    //Ticket Food và Ticket Voucher
+    @Autowired
+    private TicketFoodRepository ticketFoodRepository;
+
+    @Autowired
+    private TicketVoucherRepository ticketVoucherRepository;
+
+    public List<TicketFood> getFoodItemsByTicketId(Integer ticketId) {
+        return ticketFoodRepository.findByTicketTicketId(ticketId);
+    }
+
+    public List<TicketVoucher> getVouchersByTicketId(Integer ticketId) {
+        return ticketVoucherRepository.findByTicketTicketId(ticketId);
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.poly.demo.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.demo.entity.User;
 import com.poly.demo.entity.Ticket;
+import com.poly.demo.entity.TicketFood;
+import com.poly.demo.entity.TicketVoucher;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
 
@@ -22,81 +26,103 @@ import com.poly.demo.service.UserService;
 @RequestMapping("/ticket")
 public class TicketController {
 
-    @Autowired
-    private TicketService ticketService;
+	@Autowired
+	private TicketService ticketService;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @GetMapping("/my-tickets")
-    public String listTickets(Model model) {
-        // Lấy thông tin người dùng hiện tại từ SecurityContext
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	// Hàm thêm user vào model
+	private void addUserInfoToModel(Model model) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			model.addAttribute("user", (UserDetails) principal);
+		} else {
+			model.addAttribute("user", null);
+		}
+	}
 
-        String username = null;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            model.addAttribute("error", "Bạn chưa đăng nhập!");
-            return "redirect:/login"; // Chuyển hướng về trang login nếu chưa đăng nhập
-        }
+	@GetMapping("/my-tickets")
+	public String listTickets(Model model) {
+		// Lấy thông tin người dùng hiện tại từ SecurityContext
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Tìm User theo username
-        User user = userService.findByUsername(username).orElse(null);
-        if (user == null) {
-            model.addAttribute("error", "Không tìm thấy người dùng!");
-            return "error-page"; // Chuyển hướng đến trang lỗi
-        }
+		String username = null;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			model.addAttribute("error", "Bạn chưa đăng nhập!");
+			return "redirect:/login"; // Chuyển hướng về trang login nếu chưa đăng nhập
+		}
 
-        // Lấy danh sách vé theo userID
-        List<Ticket> tickets = ticketService.getTicketByUserID(user.getId());
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("user", user); // Gửi thông tin user đến Thymeleaf
+		// Tìm User theo username
+		User user = userService.findByUsername(username).orElse(null);
+		if (user == null) {
+			model.addAttribute("error", "Không tìm thấy người dùng!");
+			return "error-page"; // Chuyển hướng đến trang lỗi
+		}
 
-        return "my-tickets"; // Trả về trang Thymeleaf hiển thị danh sách vé
-    }
-    
-    @PostMapping("/check-in")
-    public String checkInTicket(@RequestParam("ticketId") Long ticketId,
-                                @RequestParam("staffId") Integer staffId,
-                                Model model) {
-        // Lấy thông tin nhân viên từ UserService
-        Optional<User> staffOpt = userService.getUserById(staffId);
+		// Lấy danh sách vé theo userID
+		List<Ticket> tickets = ticketService.getTicketByUserID(user.getId());
 
-        if (staffOpt.isEmpty()) {
-            model.addAttribute("error", "Mã nhân viên không tồn tại!");
-            return "redirect:/ticket/my-tickets"; // Trả về trang vé
-        }
+		// Thêm danh sách đồ ăn/thức uống và voucher cho mỗi vé
+		Map<Integer, List<TicketFood>> foodItemsMap = new HashMap<>();
+		Map<Integer, List<TicketVoucher>> voucherMap = new HashMap<>();
 
-        User staff = staffOpt.get();
+		// Duyệt qua từng vé để lấy danh sách đồ ăn/thức uống và voucher
+		for (Ticket ticket : tickets) {
+			foodItemsMap.put(ticket.getTicketId(), ticketService.getFoodItemsByTicketId(ticket.getTicketId()));
+			voucherMap.put(ticket.getTicketId(), ticketService.getVouchersByTicketId(ticket.getTicketId()));
+		}
 
-        // Kiểm tra quyền của nhân viên
-        if (!staff.getRole().equalsIgnoreCase("STAFF")) {
-            model.addAttribute("error", "Người dùng không có quyền check-in!");
-            return "redirect:/ticket/my-tickets";
-        }
+		model.addAttribute("tickets", tickets);
+		model.addAttribute("user", user); // Gửi thông tin user đến Thymeleaf
+		model.addAttribute("foodItemsMap", foodItemsMap);
+		model.addAttribute("voucherMap", voucherMap);
 
-        // Lấy thông tin vé
-        Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
+		return "my-tickets"; // Trả về trang Thymeleaf hiển thị danh sách vé
+	}
 
-        if (ticketOpt.isEmpty()) {
-            model.addAttribute("error", "Không tìm thấy vé!");
-            return "redirect:/ticket/my-tickets";
-        }
+	@PostMapping("/check-in")
+	public String checkInTicket(@RequestParam("ticketId") Long ticketId, @RequestParam("staffId") Integer staffId,
+			Model model) {
+		// Lấy thông tin nhân viên từ UserService
+		Optional<User> staffOpt = userService.getUserById(staffId);
 
-        Ticket ticket = ticketOpt.get();
+		if (staffOpt.isEmpty()) {
+			model.addAttribute("error", "Mã nhân viên không tồn tại!");
+			return "redirect:/ticket/my-tickets"; // Trả về trang vé
+		}
 
-        // Kiểm tra trạng thái vé
-        if ("CHECKED_IN".equals(ticket.getTicketStatus())) {
-            model.addAttribute("error", "Vé đã được check-in trước đó!");
-            return "redirect:/ticket/my-tickets";
-        }
+		User staff = staffOpt.get();
 
-        // Cập nhật trạng thái vé
-        ticket.setTicketStatus("CHECKED_IN");
-        ticketService.updateTicket(ticket);
+		// Kiểm tra quyền của nhân viên
+		if (!staff.getRole().equalsIgnoreCase("STAFF")) {
+			model.addAttribute("error", "Người dùng không có quyền check-in!");
+			return "redirect:/ticket/my-tickets";
+		}
 
-        model.addAttribute("success", "Check-in thành công!");
-        return "redirect:/ticket/my-tickets";
-    }
+		// Lấy thông tin vé
+		Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
+
+		if (ticketOpt.isEmpty()) {
+			model.addAttribute("error", "Không tìm thấy vé!");
+			return "redirect:/ticket/my-tickets";
+		}
+
+		Ticket ticket = ticketOpt.get();
+
+		// Kiểm tra trạng thái vé
+		if ("CHECKED_IN".equals(ticket.getTicketStatus())) {
+			model.addAttribute("error", "Vé đã được check-in trước đó!");
+			return "redirect:/ticket/my-tickets";
+		}
+
+		// Cập nhật trạng thái vé
+		ticket.setTicketStatus("CHECKED_IN");
+		ticketService.updateTicket(ticket);
+
+		model.addAttribute("success", "Check-in thành công!");
+		return "redirect:/ticket/my-tickets";
+	}
 }

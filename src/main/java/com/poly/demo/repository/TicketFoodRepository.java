@@ -13,4 +13,6 @@ public interface TicketFoodRepository extends JpaRepository<TicketFood, TicketFo
     List<TicketFood> findByTicket(Ticket ticket); // Lấy danh sách đồ ăn theo vé
 
     List<TicketFood> findByTicketIn(List<Ticket> tickets); // Lấy danh sách đồ ăn theo nhiều vé
+    
+    List<TicketFood> findByTicketTicketId(Integer ticketId);
 }

@@ -17,4 +17,6 @@ import java.util.Optional;
 @Repository
 public interface TicketVoucherRepository extends JpaRepository<TicketVoucher, TicketVoucherId> {
     List<TicketVoucher> findByTicket(Ticket ticket);
+    
+    List<TicketVoucher> findByTicketTicketId(Integer ticketId);
 }

@@ -188,7 +188,7 @@ public class BookingController {
 	        ticket.setPrice(seat.getPrice());
 	        ticket.setTicketStatus("NOT_CHECKED_IN");
 	        
-	        //ticketService.saveTicket(ticket); // LƯU VÉ
+	        ticketService.saveTicket(ticket); // LƯU VÉ
 	        
 	        if (firstTicket == null) {
 	            firstTicket = ticket;
