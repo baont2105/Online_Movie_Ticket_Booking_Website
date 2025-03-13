@@ -15,7 +15,8 @@
 </head>
 
 <body>
-	<div class="container-fluid m-0 p-0" style="background: url(/image/Background/bg_pattern.png) repeat left top;">
+	<div class="container-fluid m-0 p-0"
+		style="background: url(/image/Background/bg_pattern.png) repeat left top;">
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
@@ -35,34 +36,31 @@
 			<!-- Main Content -->
 			<div class="row container-fluid m-0 p-0">
 				<!-- Chọn phương thức -->
-				<nav class="navbar navbar-expand-sm my-3" style="background-color:bisque;">
+				<nav class="navbar navbar-expand-sm my-3"
+					style="background-color: bisque;">
 					<div class="container-fluid">
 						<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-							<li class="nav-item mx-2">
-								<a class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
-									th:href="@{'/movies/now_showing'}">Phim đang chiếu</a>
-							</li>
-							<li class="nav-item mx-2">
-								<a
-									class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
-									th:href="@{'/movies/upcomming'}">Phim sắp chiếu</a>
-							</li>
+							<li class="nav-item mx-2"><a
+								class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
+								th:href="@{'/movies/now_showing'}">Phim đang chiếu</a></li>
+							<li class="nav-item mx-2"><a
+								class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
+								th:href="@{'/movies/upcomming'}">Phim sắp chiếu</a></li>
 						</ul>
 					</div>
 				</nav>
 
 				<!-- Aside Left -->
-				<aside class="col-sm-0 col-md-2 p-2">
-
-				</aside>
+				<aside class="col-sm-0 col-md-2 p-2"></aside>
 				<!-- Article 
 				-->
 				<article class="col-sm-8">
 					<div class="container-fluid row">
-						<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4" th:each="m : ${movies}">
+						<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
+							th:each="m : ${movies}">
 							<div class="card p-0 m-0" style="width: 14.5rem;">
-								<img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}" class="card-img-top" alt="..."
-									width="100" height="300">
+								<img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}"
+									class="card-img-top" alt="..." width="100" height="300">
 								<div class="card-body p-2">
 									<h5 class="card-title"
 										th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 15) + '...' : m.name}">
@@ -70,20 +68,18 @@
 
 									<!-- Hiển thị ngày khởi chiếu của phim -->
 									<div class="row">
-										<label>
-											<i class="bi bi-calendar mx-2"></i>
-											<span th:if="${m.releaseDate != null}"
-												th:text="${#temporals.format(m.releaseDate, 'dd/MM/yyyy')}"></span>
-											<span th:unless="${m.releaseDate != null}">Chưa có ngày phát
-												hành</span>
+										<label> <i class="bi bi-calendar mx-2"></i> <span
+											th:if="${m.releaseDate != null}"
+											th:text="${#temporals.format(m.releaseDate, 'dd/MM/yyyy')}"></span>
+											<span th:unless="${m.releaseDate != null}">Chưa có
+												ngày phát hành</span>
 										</label>
 									</div>
 
 									<div class="row mt-2">
 										<div class="col-6">
 											<a th:href="@{'/booking/step1/' + ${m.movieId}}"
-												class="btn btn-primary ms-2">Đặt
-												vé</a>
+												class="btn btn-primary ms-2">Đặt vé</a>
 										</div>
 										<div class="col-6">
 											<a th:href="@{'/movies/movie-detail/' + ${m.movieId}}"
@@ -98,12 +94,10 @@
 
 
 				<!-- Aside right -->
-				<aside class="col-sm-0 col-md-2 p-2">
-
-				</aside>
+				<aside class="col-sm-0 col-md-2 p-2"></aside>
 
 
-				<!-- Pagination -->
+				<!-- Pagination 
 				<div class="row container justify-content-center">
 					<hr class="my-3" style="width: 50%;">
 					<nav aria-label="Page navigation example">
@@ -129,19 +123,20 @@
 						</ul>
 					</nav>
 				</div>
+				-->
 
 
 				<!-- Sự kiện -->
-				<div class="row container m-0 p-0 " th:replace="/components/event.html">
-				</div>
-
+				<div class="row container m-0 p-0 "
+					th:replace="/components/event.html"></div>
 			</div>
 		</div>
-
 		<!-- Footer -->
-		<footer class="bg-body-tertiary p-0 m-0" th:replace="/components/footer.html"></footer>
+		<footer class="bg-body-tertiary p-0 m-0"
+			th:replace="/components/footer.html"></footer>
+	</div>
 
-		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
+	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 
 </html>
