@@ -64,7 +64,7 @@ public class AuthController {
         }
 
         try {
-            userService.save(user);
+            userService.create(user);
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "register";
