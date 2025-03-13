@@ -2,8 +2,10 @@ package com.poly.demo.controllers;
 
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Ticket;
+import com.poly.demo.entity.User;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.TicketService;
+import com.poly.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,9 +40,16 @@ public class AdminController {
         return "dashboard";
     }
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/accounts-manager")
     public String AccountsManager(Model model) {
         addUserInfoToModel(model);
+        
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+        
         return "accounts-manager";
     }
     @GetMapping("/showtime-manager")
