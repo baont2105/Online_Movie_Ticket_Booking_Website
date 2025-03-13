@@ -1,0 +1,22 @@
+#selectedFoodsList {
+    height: 325px; /* Giới hạn chiều cao, nếu nhiều sẽ scroll */
+    overflow-y: auto;  /* Bật scroll khi nội dung quá nhiều */
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 5px;
+}
+
+#aside-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Giữ tổng tiền + nút ở dưới */
+    height: 100%; /* Đảm bảo toàn bộ chiều cao */
+}
+
+#bottom-section {
+    margin-top: auto; /* Đẩy phần này xuống cuối */
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
