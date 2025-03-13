@@ -25,7 +25,7 @@
 
 
 		<!-- Nội dung -->
-		<div class="container mt-5">
+		<div class="container-fluid mt-5" style="width: 95%">
 			<!-- Hiển thị thông báo -->
 
 			<div class="bg-white border rounded-2 p-4">
@@ -37,9 +37,9 @@
 
 					<div class="row">
 						<!-- Danh sách đồ ăn -->
-						<div class="col-md-9">
+						<div class="col-9">
 							<div class="row">
-								<div class="col-lg-4 col-md-6 mb-4"
+								<div class="col-lg-3 col-md-6 mb-4"
 									th:each="food : ${foodItems}">
 									<div class="card">
 										<img th:src="@{'/image/Foods/' + ${food.image}}"
@@ -49,27 +49,30 @@
 											<p class="card-text fw-bold">
 												<span th:text="${food.price}"></span> VND
 											</p>
-											<div class="input-group">
+											<div class="input-group mb-3">
 												<button type="button"
-													class="btn btn-outline-secondary btn-decrease">-</button>
-
+													class="btn btn-outline-danger btn-decrease m-0">
+													<i class="fas fa-minus">-</i>
+												</button>
 
 												<input type="number"
-													class="form-control food-quantity text-center"
+													class="form-control text-center food-quantity"
 													th:name="'foodSelections[' + ${food.foodItemId} + ']'"
 													th:attr="data-food-id=${food.foodItemId}, data-food-name=${food.name}, data-food-price=${food.price}"
 													value="0" min="0" max="10">
 
-
-
 												<button type="button"
-													class="btn btn-outline-secondary btn-increase">+</button>
+													class="btn btn-outline-success btn-increase m-0">
+													<i class="fas fa-plus">+</i>
+												</button>
 											</div>
+
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+
 
 						<!-- Đồ ăn đã chọn -->
 						<div class="col-md-3 bg-light p-3 rounded"
@@ -84,9 +87,58 @@
 
 							<div class="d-flex justify-content-between">
 								<a th:href="@{/booking/step2(showtimeId=1)}"
-									class="btn btn-secondary">Quay lại</a>
-								<button type="submit" class="btn btn-primary" id="confirmButton">Tiếp
-									tục</button>
+									class="btn btn-secondary">Quay lại</a> <a
+									class="btn btn-primary" data-bs-toggle="modal"
+									data-bs-target="#confirmModal">Tiếp tục</a> <input
+									type="hidden" id="confirmButton"></input>
+							</div>
+						</div>
+
+						<!-- Modal xác nhận thông tin -->
+						<div class="modal fade" id="confirmModal" tabindex="-1"
+							aria-labelledby="confirmModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h3 class="modal-title" id="confirmModalLabel">Xác nhận
+											thông tin đặt vé</h3>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<h6>
+											Phim: <span id="movieTitle" th:text="${showtime.movie.name}"></span>
+										</h6>
+										<h6>
+											Suất chiếu: <span id="showtimeInfo"
+												th:text="${#temporals.format(showtime.startTime, 'dd/MM/yyyy HH:mm')}">
+											</span>
+										</h6>
+										<h6>
+											Ghế đã chọn: <span id="selectedSeats"
+												th:text="${seat.rowNumber} + ${seat.seatNumber}"></span>
+										</h6>
+
+										<!-- NHẬP VOUCHER -->
+										<div class="mb-3">
+											<label for="voucherCode" class="form-label">Nhập mã
+												giảm giá:</label> <input type="text" class="form-control"
+												id="voucherCode" name="voucherCode">
+										</div>
+
+
+										<h5>
+											Giá vé: <span id="totalPrice" th:text="${ticket.price}"></span>
+											VND
+										</h5>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary"
+											id="confirmBooking">Xác nhận</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

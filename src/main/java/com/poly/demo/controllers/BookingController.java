@@ -185,7 +185,7 @@ public class BookingController {
 	        ticket.setUser(user);
 	        ticket.setShowtime(showtime);
 	        ticket.setSeat(seat);
-	        ticket.setPrice(seat.getPrice());
+	        ticket.setPrice(seat.getPrice() + showtime.getPrice());
 	        ticket.setTicketStatus("NOT_CHECKED_IN");
 	        
 	        ticketService.saveTicket(ticket); // LƯU VÉ
@@ -210,6 +210,7 @@ public class BookingController {
 	public String showStep3(@RequestParam("ticketId") Long ticketId, Model model) {
 	    addUserInfoToModel(model);
 	    
+	    
 	    Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
 	    if (ticketOpt.isEmpty()) {
 	        return "redirect:/booking/step2"; // Nếu ticketId không hợp lệ
@@ -218,6 +219,9 @@ public class BookingController {
 	    Ticket ticket = ticketOpt.get();
 	    List<FoodItem> foodItems = foodItemService.getAllFoodItems();
 
+	    
+	    model.addAttribute("showtime", ticket.getShowtime());
+        model.addAttribute("seat", ticket.getSeat());
 	    model.addAttribute("ticket", ticket);
 	    model.addAttribute("foodItems", foodItems);
 	    return "booking_step3";
@@ -248,6 +252,8 @@ public class BookingController {
 	                if (quantity > 0) {
 	                    FoodItem foodItem = foodItemService.getFoodItemById(foodId.longValue());
 	                    TicketFood ticketFood = new TicketFood(ticket, foodItem, quantity);
+	                    System.out.println( ticket.getPrice() + " + " + foodItem.getPrice());
+	                    ticket.setPrice(ticket.getPrice() + foodItem.getPrice());
 	                    ticketFoodList.add(ticketFood);
 	                }
 	            } catch (NumberFormatException e) {

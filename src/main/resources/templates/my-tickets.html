@@ -39,8 +39,8 @@
 		<div class="container-fluid mx-0 p-0" style="margin-top: 65px;">
 			<!-- Nội dung trang web -->
 
-			<div class="container table-container"
-				style="position: relative; margin-top: 100px; min-height: 500px;">
+			<div class="container-fluid table-container"
+				style="position: relative; margin-top: 100px; min-height: 500px; width: 95%;">
 				<h2 class="form-title">VÉ CỦA TÔI</h2>
 				<table class="table table-default table-bordered"
 					style="margin-bottom: 100px;">
@@ -54,6 +54,7 @@
 							<th>Suất Phim</th>
 							<th>Đồ Ăn / Thức Uống</th>
 							<th>Voucher</th>
+							<th>Giá vé (VND)</th>
 							<th>Trạng Thái</th>
 						</tr>
 					</thead>
@@ -80,6 +81,7 @@
 									<span th:text="${voucher.voucher.code}"></span> <span
 									th:if="${!iterStat.last}">, </span>
 							</span></td>
+							<td th:text="${t.price}"></td>
 							<td>
 								<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
 								<button th:if="${t.ticketStatus == 'NOT_CHECKED_IN'}"
