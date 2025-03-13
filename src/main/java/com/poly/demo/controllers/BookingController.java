@@ -1,5 +1,6 @@
 package com.poly.demo.controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -187,7 +188,7 @@ public class BookingController {
 	        ticket.setPrice(seat.getPrice());
 	        ticket.setTicketStatus("NOT_CHECKED_IN");
 	        
-	        ticketService.saveTicket(ticket);
+	        //ticketService.saveTicket(ticket); // LƯU VÉ
 	        
 	        if (firstTicket == null) {
 	            firstTicket = ticket;
@@ -223,47 +224,52 @@ public class BookingController {
 	}
 
 	@PostMapping("/confirm-foods")
-	public String confirmFoods(@RequestParam Long ticketId, 
+	public String confirmFoods(@RequestParam Integer ticketId, 
 	                           @RequestParam Map<String, String> foodSelections,
 	                           RedirectAttributes redirectAttributes) {
 	    try {
-	        Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
-	        
+	        Optional<Ticket> optionalTicket = ticketService.getTicketById(ticketId.longValue());
+	        if (optionalTicket.isEmpty()) {
+	            redirectAttributes.addFlashAttribute("error", "Vé không tồn tại!");
+	            return "redirect:/booking/step3?ticketId=" + ticketId;
+	        }
+
+	        Ticket ticket = optionalTicket.get();
+	        List<TicketFood> ticketFoodList = new ArrayList<>();
+
 	        for (Map.Entry<String, String> entry : foodSelections.entrySet()) {
-	            String key = entry.getKey();
-	            System.out.println("FoodSelections: " + foodSelections);
+	            try {
+	                String key = entry.getKey().replaceAll("[^0-9]", ""); // Lọc số từ key
+	                if (key.isEmpty()) continue;
 
-	            // Sửa lỗi key chứa dấu ngoặc [] bằng regex
-	            key = key.replaceAll("[^0-9]", ""); // Loại bỏ ký tự không phải số
+	                Integer foodId = Integer.parseInt(key);
+	                int quantity = Integer.parseInt(entry.getValue());
 
-	            if (key.isEmpty()) {
-	                System.out.println("Bỏ qua key không hợp lệ: " + entry.getKey());
-	                continue;
-	            }
-
-	            Integer foodId = Integer.parseInt(key);
-	            int quantity = Integer.parseInt(entry.getValue());
-
-	            if (quantity > 0) {
-
-	                FoodItem foodItem = foodItemService.getFoodItemById(foodId.longValue());
-	                TicketFood ticketFood = new TicketFood();
-	                ticketFood.setTicket(ticket.get());
-	                ticketFood.setFoodItem(foodItem);
-	                ticketFood.setQuantity(quantity);
-	                System.out.println("WORKED!!!!");
-	               // ticketFoodService.saveTicketFood(ticketFood);
+	                if (quantity > 0) {
+	                    FoodItem foodItem = foodItemService.getFoodItemById(foodId.longValue());
+	                    TicketFood ticketFood = new TicketFood(ticket, foodItem, quantity);
+	                    ticketFoodList.add(ticketFood);
+	                }
+	            } catch (NumberFormatException e) {
+	                System.out.println("Lỗi parse dữ liệu: " + entry.getKey() + " - " + entry.getValue());
 	            }
 	        }
 
-	        redirectAttributes.addFlashAttribute("message", "Lưu thành công!");
+	        if (!ticketFoodList.isEmpty()) {
+	            ticketFoodService.saveAllTicketFoods(ticketFoodList); // Lưu tất cả cùng lúc
+	            redirectAttributes.addFlashAttribute("message", "Lưu thành công!");
+	        } else {
+	            redirectAttributes.addFlashAttribute("error", "Không có món ăn nào được chọn!");
+	        }
+
 	        return "redirect:/booking/step3?ticketId=" + ticketId;
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra!");
+	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi lưu dữ liệu!");
 	        return "redirect:/booking/step3?ticketId=" + ticketId;
 	    }
 	}
+
 
 
     
