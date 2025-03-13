@@ -82,9 +82,9 @@
 														required>
 												</div>
 
-												
 
-												
+
+
 												<button type="submit" class="btn btn-primary">Thêm
 													phim</button>
 											</form>
@@ -101,67 +101,38 @@
 									</div>
 								</div>
 							</div>
-							<table class="table table-default table-bordered"
-								style="margin-bottom: 100px;">
+							<table class="table table-bordered">
 								<thead>
 									<tr>
 										<th>Mã Phim</th>
 										<th>Tên Phim</th>
-										<th>Tag</th>
+										<th>Thể Loại</th>
 										<th>Thời Lượng</th>
-										<th>Ngày Khởi Chiếu</th>
+										<th>Ngày Chiếu</th>
 										<th>Ngày Kết Thúc</th>
-										<th>Lượt Xem</th>
-										<th>Quốc Gia</th>
-										<th>Nhà XS</th>
-										<th>Đạo Diễn</th>
-										<th>Diễn Viên</th>
-										<th>Mô Tả</th>
-										<th>Ảnh</th>
-										<th>Trailer</th>
+										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="ticket in tickets.slice(begin, begin + 8)">
-										<td>{{ticket.ticketID}}</td>
-										<td>{{ticket.movie.name}}</td>
-										<td>{{ticket.city}}</td>
-										<td><span ng-repeat="seat in ticket.seat">
-												{{seat.id}} - {{seat.type}}{{$last ? '' : '; '}} </span></td>
-										<td>{{ticket.buy_time | date: "dd/MM/yyyy HH:mm:ss"}}</td>
-										<td>{{ticket.showTime.time}} - {{ticket.showTime.date}}</td>
-										<td><span ng-repeat="food in ticket.foods">
-												{{food.name}} - {{food.quantity}}{{$last ? '' : '; '}} </span></td>
+									<tr th:each="movie : ${movies}">
+										<td th:text="${movie.movieId}"></td>
+										<td th:text="${movie.name}"></td>
+										<td th:text="${movie.tags}"></td>
+										<td th:text="${movie.duration + ' phút'}"></td>
+										<td
+											th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></td>
+										<td th:text="${#temporals.format(movie.endDate, 'dd/MM/yyyy')}"></td>
+										<td><a
+											th:href="@{/admin/movies-manager/edit/{id}(id=${movie.movieId})}"
+											class="btn btn-warning btn-sm">Sửa</a> <a
+											th:href="@{/admin/movies-manager/delete/{id}(id=${movie.movieId})}"
+											class="btn btn-danger btn-sm"
+											onclick="return confirm('Bạn có chắc chắn muốn xóa phim này?')">Xóa</a>
+										</td>
 									</tr>
 								</tbody>
 							</table>
-							<!-- Pagination -->
-							<div class="row container justify-content-center"
-								style="position: absolute; bottom: 0;">
-								<hr class="my-3" style="width: 50%;">
-								<nav aria-label="Page navigation example">
-									<ul class="pagination justify-content-center">
-										<li class="page-item mx-2">
-											<button ng-click="first()">&laquo;</button>
-										</li>
-										<li class="page-item mx-2">
-											<button ng-click="prev()">&lt;</button>
-										</li>
-
-										<li class="page-item mx-2"><span
-											class="page-item mx-2 fw-bold"
-											ng-repeat="n in [] | range:pageCount" ng-click="setPage(n)"
-											ng-class="{'active': n === currentPage}">{{ n + 1 }}</span></li>
-
-										<li class="page-item mx-2">
-											<button ng-click="next()">&gt;</button>
-										</li>
-										<li class="page-item mx-2">
-											<button ng-click="last()">&raquo;</button>
-										</li>
-									</ul>
-								</nav>
-							</div>
+					
 						</div>
 					</div>
 				</div>
