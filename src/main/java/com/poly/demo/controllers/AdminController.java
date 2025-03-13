@@ -1,7 +1,10 @@
 package com.poly.demo.controllers;
 
 import com.poly.demo.entity.Movie;
+import com.poly.demo.entity.Ticket;
 import com.poly.demo.service.MovieService;
+import com.poly.demo.service.TicketService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,9 +54,15 @@ public class AdminController {
     	return "brach-manager";
     }
 
+    @Autowired
+    private TicketService ticketService;
     @GetMapping("/tickets-manager")
     public String TicketsManager(Model model) {
         addUserInfoToModel(model);
+        
+        List<Ticket> tickets = ticketService.getAllTicket();
+        model.addAttribute("tickets", tickets);
+        
         return "tickets-manager";
     }
 
