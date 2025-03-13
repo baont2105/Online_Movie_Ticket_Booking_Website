@@ -40,6 +40,16 @@ public class AdminController {
         addUserInfoToModel(model);
         return "accounts-manager";
     }
+    @GetMapping("/showtime-manager")
+    public String ShowtimeManager(Model model) {
+    	addUserInfoToModel(model);
+    	return "showtime-manager";
+    }
+    @GetMapping("/branch-manager")
+    public String BranchManager(Model model) {
+    	addUserInfoToModel(model);
+    	return "brach-manager";
+    }
 
     @GetMapping("/tickets-manager")
     public String TicketsManager(Model model) {
