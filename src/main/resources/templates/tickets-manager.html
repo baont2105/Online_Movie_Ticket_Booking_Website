@@ -58,7 +58,7 @@
 										<td th:text="${ticket.user.id}"></td>
 										<td th:text="${ticket.showtime.showtimeId}"></td>
 										<td><span th:each="seat : ${ticket.seat}"
-											th:text="${seat.seatId} + ' - ' + ${seat.seatType} + '; '"></span></td>
+											th:text="${seat.rowNumber} + ${seat.seatNumber} + ' - ' + ${seat.seatType}"></span></td>
 										<td th:text="${ticket.price}"></td>
 										<td
 											th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></td>

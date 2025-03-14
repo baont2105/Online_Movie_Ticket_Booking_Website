@@ -37,58 +37,53 @@
 					<div class="col-10">
 						<div class="container table-container"
 							style="position: relative; margin-top: 100px; min-height: 500px;">
-							<h2 class="form-title">QUẢN LÝ PHIM</h2>
+							<h2 class="form-title">QUẢN LÝ PHÒNG CHIẾU</h2>
 
 							<button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-								th:attr="data-bs-target='#checkInModal'">Thêm Phim</button>
+								th:attr="data-bs-target='#checkInModal'">Thêm Phòng
+								Chiếu</button>
 							<div class="modal fade" th:id="'checkInModal'" tabindex="-1">
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<h5 class="modal-title">Thêm Phim</h5>
+											<h5 class="modal-title">Thêm Phòng Chiếu</h5>
 											<button type="button" class="btn-close"
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-											<form th:action="@{/admin/movie-manager/add}" method="post"
-												th:object="${movie}">
+											<!-- 	<form th:action="@{/admin/showtime-manager/add}"
+												method="post" th:object="${showtime}">
 												<div class="mb-3">
-													<label class="form-label">Tên phim</label> <input
-														type="text" class="form-control" th:field="*{name}"
+													<label class="form-label">Phim</label> <select
+														class="form-control" th:field="*{movie}">
+														<option th:each="movie : ${movies}"
+															th:value="${movie.movieId}" th:text="${movie.name}"></option>
+													</select>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Chi nhánh</label> <select
+														class="form-control" th:field="*{branch}">
+														<option th:each="branch : ${branches}"
+															th:value="${branch.branchId}" th:text="${branch.name}"></option>
+													</select>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Thời gian bắt đầu</label> <input
+														type="datetime-local" class="form-control"
+														th:field="*{startTime}" required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Giá vé</label> <input
+														type="number" class="form-control" th:field="*{price}"
 														required>
 												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Mô tả</label>
-													<textarea class="form-control" th:field="*{description}"
-														required></textarea>
-												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Ngày phát hành</label> <input
-														type="date" class="form-control" th:field="*{releaseDate}"
-														required>
-												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Ngày kết thúc</label> <input
-														type="date" class="form-control" th:field="*{endDate}"
-														required>
-												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Thời lượng (phút)</label> <input
-														type="number" class="form-control" th:field="*{duration}"
-														required>
-												</div>
-
-
-
 
 												<button type="submit" class="btn btn-primary">Thêm
-													phim</button>
-											</form>
-
+													suất chiếu</button>
+											</form> -->
 											<!--
 												
 											<form th:action="/" method="post">
@@ -104,44 +99,35 @@
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th>Mã Phim</th>
-										<th>Tên Phim</th>
-										<th>Thể Loại</th>
-										<th>Thời Lượng</th>
-										<th>Ngày Chiếu</th>
-										<th>Ngày Kết Thúc</th>
+										<th>ID</th>
+										<th>Tên Phòng Chiếu</th>
+										<th>Tên Chi Nhánh</th>
 										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="movie : ${movies}">
-										<td th:text="${movie.movieId}"></td>
-										<td th:text="${movie.name}"></td>
-										<td th:text="${movie.tags}"></td>
-										<td th:text="${movie.duration + ' phút'}"></td>
-										<td
-											th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></td>
-										<td
-											th:text="${#temporals.format(movie.endDate, 'dd/MM/yyyy')}"></td>
+									<tr th:each="room : ${rooms}">
+										<td th:text="${room.roomId}"></td>
+										<td th:text="${room.name}"></td>
+										<td th:text="${room.branch.name}"></td>
 										<td><a
-											th:href="@{/admin/movies-manager/edit/{id}(id=${movie.movieId})}"
+											th:href="@{/admin/room-manager/edit/{id}(id=${room.roomId})}"
 											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/movies-manager/delete/{id}(id=${movie.movieId})}"
+											th:href="@{/admin/room-manager/delete/{id}(id=${room.roomId})}"
 											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa phim này?')">Xóa</a>
+											onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
 										</td>
 									</tr>
 								</tbody>
 							</table>
-
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Footer -->
-			<footer class="bg-body-tertiary p-0 m-0"
-				th:replace="/components/footer.html"></footer>
+		<footer class="bg-body-tertiary p-0 m-0"
+			th:replace="/components/footer.html"></footer>
 	</div>
 
 	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>

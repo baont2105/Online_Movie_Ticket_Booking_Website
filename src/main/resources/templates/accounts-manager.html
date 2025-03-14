@@ -45,16 +45,17 @@
 										<th>Mã Tài Khoản</th>
 										<th>Họ Tên</th>
 										<th>Tên Tài Khoản</th>
-										<th>Mật Khẩu</th>
 										<th>Email</th>
 										<th>Số Điện Thoại</th>
 										<th>Vai Trò</th>
+										<th>Trạng Thái</th>
 										<th>Chỉnh Sửa</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="user : ${users}">
 										<td th:text="${user.id}"></td>
+										<td th:text="${user.name}"></td>										
 										<td th:text="${user.username}"></td>
 										<td th:text="${user.email}"></td>
 										<td th:text="${user.phoneNumber}"></td>

@@ -17,4 +17,6 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findByBranch(Branch branch);
+    Optional<Room> findByRoomId(Integer id);
+    void deleteByRoomId(Integer id);
 }

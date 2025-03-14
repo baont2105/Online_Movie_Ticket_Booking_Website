@@ -40,12 +40,12 @@
 							<h2 class="form-title">QUẢN LÝ SUẤT CHIẾU</h2>
 
 							<button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-								th:attr="data-bs-target='#checkInModal'">Thêm Phim</button>
+								th:attr="data-bs-target='#checkInModal'">Thêm Suất Chiếu</button>
 							<div class="modal fade" th:id="'checkInModal'" tabindex="-1">
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<h5 class="modal-title">Thêm Phim</h5>
+											<h5 class="modal-title">Thêm Suất Chiếu</h5>
 											<button type="button" class="btn-close"
 												data-bs-dismiss="modal"></button>
 										</div>
@@ -99,11 +99,13 @@
 								<thead>
 									<tr>
 										<th>ID</th>
-										<th>Phim</th>
-										<th>Chi nhánh</th>
-										<th>Thời gian bắt đầu</th>
-										<th>Giá vé</th>
-										<th>Hành động</th>
+										<th>Tên Phim</th>
+										<th>Tên Chi Nhánh</th>
+										<th>Tên Phòng Chiếu</th>
+										<th>Thời Gian Bắt Đầu</th>
+										<th>Thời Gian Kết Thúc</th>
+										<th>Giá Vé</th>
+										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -111,8 +113,11 @@
 										<td th:text="${showtime.showtimeId}"></td>
 										<td th:text="${showtime.movie.name}"></td>
 										<td th:text="${showtime.branch.name}"></td>
+										<td th:text="${showtime.room.name}"></td>
 										<td
 											th:text="${#temporals.format(showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+										<td
+											th:text="${#temporals.format(showtime.endTime, 'dd/MM/yyyy HH:mm')}"></td>
 										<td th:text="${showtime.price} + ' VNĐ'"></td>
 										<td><a
 											th:href="@{/admin/showtime-manager/edit/{id}(id=${showtime.showtimeId})}"
