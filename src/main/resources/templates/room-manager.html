@@ -51,46 +51,29 @@
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-											<!-- 	<form th:action="@{/admin/showtime-manager/add}"
-												method="post" th:object="${showtime}">
+											<form th:action="@{/admin/room-manager/add}" method="post"
+												th:object="${room}">
 												<div class="mb-3">
-													<label class="form-label">Phim</label> <select
-														class="form-control" th:field="*{movie}">
-														<option th:each="movie : ${movies}"
-															th:value="${movie.movieId}" th:text="${movie.name}"></option>
-													</select>
+													<label class="form-label">Tên phòng</label> <input
+														type="text" class="form-control" th:field="*{name}"
+														required>
 												</div>
 
 												<div class="mb-3">
 													<label class="form-label">Chi nhánh</label> <select
-														class="form-control" th:field="*{branch}">
+														class="form-control" th:field="*{branch.branchId}"
+														required>
 														<option th:each="branch : ${branches}"
 															th:value="${branch.branchId}" th:text="${branch.name}"></option>
 													</select>
 												</div>
 
-												<div class="mb-3">
-													<label class="form-label">Thời gian bắt đầu</label> <input
-														type="datetime-local" class="form-control"
-														th:field="*{startTime}" required>
-												</div>
-
-												<div class="mb-3">
-													<label class="form-label">Giá vé</label> <input
-														type="number" class="form-control" th:field="*{price}"
-														required>
-												</div>
+												
 
 												<button type="submit" class="btn btn-primary">Thêm
-													suất chiếu</button>
-											</form> -->
-											<!--
-												
-											<form th:action="/" method="post">
-
-												<button type="submit" class="btn btn-success">Xác nhận</button>
+													phòng</button>
 											</form>
-											-->
+
 
 										</div>
 									</div>

@@ -191,7 +191,9 @@ public class AdminController {
 	public String listRooms(Model model) {
 		addUserInfoToModel(model);
 		List<Room> rooms = roomService.findAllRooms();
+		model.addAttribute("branches", branchService.getAllBranches());
 		model.addAttribute("rooms", rooms);
+		model.addAttribute("room", new Room());
 		return "room-manager";
 	}
 
@@ -214,6 +216,11 @@ public class AdminController {
 	public String deleteRoom(@PathVariable Integer id) {
 		roomService.deleteRoom(id);
 		return "redirect:/admin/room-manager";
+	}
+	@PostMapping("/room-manager/add")
+	public String addRoom(@ModelAttribute Room room) {
+	    roomService.addRoomWithSeats(room);
+	    return "redirect:/admin/room-manager";
 	}
 
 	// ================================= VÉ ========================================
