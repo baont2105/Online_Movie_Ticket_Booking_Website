@@ -202,7 +202,7 @@ public class AdminController {
 
 	@PostMapping("/room-manager/save")
 	public String saveRoom(@ModelAttribute Room room) {
-		roomService.saveRoom(room);
+		roomService.addRoomWithSeats(room);
 		return "redirect:/admin/room-manager";
 	}
 

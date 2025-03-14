@@ -14,78 +14,82 @@
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-				<li class="nav-item mx-2"><a
-					class="nav-link fw-bold border rounded rounded-4 px-4 text-center"
-					href="/booking/step1/1">Mua vé</a></li>
+				<th:block sec:authorize="hasRole('USER')">
+					<li class="nav-item mx-2"><a
+						class="nav-link fw-bold border rounded rounded-4 px-4 text-center"
+						href="/booking/step1/1">Mua vé</a></li>
+				</th:block>
 				<li class="nav-item mx-2"><a
 					class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center"
 					href="/movies/">Phim</a></li>
 				<li class="nav-item mx-2"><a
 					class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center"
 					href="/promotions">Khuyến mãi</a></li>
-				<li class="nav-item mx-2"><a
-					class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center"
-					href="/feedback">Liên hệ</a></li>
+				<th:block sec:authorize="hasRole('USER')">
+					<li class="nav-item mx-2"><a
+						class="nav-link border border-2 fw-bold rounded rounded-4 px-4 text-center"
+						href="/feedback">Liên hệ</a></li>
+				</th:block>
 			</ul>
-
-			<!-- Nếu chưa đăng nhập -->
-			<ul class="navbar-nav" th:if="${user == null}">
-				<li><a style="text-decoration: none; font-weight: bold;"
-					href="/login">Đăng nhập</a></li>
-				<li><a style="text-decoration: none; font-weight: bold;"
-					href="/register">Đăng ký</a></li>
-			</ul>
-
-			<!-- Nếu đã đăng nhập -->
-			<div class="nav-item dropdown" th:if="${user != null}">
-				<a class="nav-link dropdown-toggle" role="button"
-					data-bs-toggle="dropdown" aria-expanded="false"> <img
-					src="/image/Content/avartar.png" width="50px" height="50px"
-					class="border rounded rounded-5" alt="avartar">
-				</a>
-				<div>
-					<ul class="dropdown-menu dropdown-menu-end px-3">
-						<li class="w-100"><span
-							class="dropdown-item m-0 py-3 fw-bold"
-							th:text="'Xin chào, '+${user.name}"></span></li>
-						<th:block sec:authorize="hasRole('ADMIN')">
-							<li class="w-100"><a
-								class="dropdown-item nav-link py-2 ps-2" href="/admin/"> <strong
-									class="text-danger">A</strong> <span>QUẢN LÝ TÀI KHOẢN</span>
-							</a></li>
-						</th:block>
-						<th:block sec:authorize="hasRole('USER')">
-							<li class="w-100 py-2"><a
-								class="dropdown-item nav-link py-2 ps-2"
-								href="/ticket/my-tickets">Vé của tôi</a></li>
-						</th:block>
-						<hr>
-						<li class="w-100 m-0"><a
-							class="dropdown-item nav-link py-2 ps-2"
-							href="/account">Thông tin tài khoản</a></li>
-						<li class="w-100 m-0"><a
-							class="dropdown-item nav-link py-2 ps-2" th:href="@{/logout}">Đăng
-								xuất</a></li>
-					</ul>
-				</div>
-			</div>
-
 		</div>
+
+		<!-- Nếu chưa đăng nhập -->
+		<ul class="navbar-nav" th:if="${user == null}">
+			<li><a style="text-decoration: none; font-weight: bold;"
+				href="/login">Đăng nhập</a></li>
+			<li><a style="text-decoration: none; font-weight: bold;"
+				href="/register">Đăng ký</a></li>
+		</ul>
+
+		<!-- Nếu đã đăng nhập -->
+		<div class="nav-item dropdown" th:if="${user != null}">
+			<a class="nav-link dropdown-toggle" role="button"
+				data-bs-toggle="dropdown" aria-expanded="false"> <img
+				src="/image/Content/avartar.png" width="50px" height="50px"
+				class="border rounded rounded-5" alt="avartar">
+			</a>
+			<div>
+				<ul class="dropdown-menu dropdown-menu-end px-3">
+					<li class="w-100"><span class="dropdown-item m-0 py-3 fw-bold"
+						th:text="'Xin chào, '+${user.name}"></span></li>
+					<th:block sec:authorize="hasRole('ADMIN')">
+						<li class="w-100"><a class="dropdown-item nav-link py-2 ps-2"
+							href="/admin/"> <strong class="text-danger">A</strong> <span>QUẢN
+									LÝ TÀI KHOẢN</span>
+						</a></li>
+					</th:block>
+					<th:block sec:authorize="hasRole('USER')">
+						<li class="w-100 py-2"><a
+							class="dropdown-item nav-link py-2 ps-2"
+							href="/ticket/my-tickets">Vé của tôi</a></li>
+					</th:block>
+					<hr>
+					<li class="w-100 m-0"><a
+						class="dropdown-item nav-link py-2 ps-2" href="/account">Thông
+							tin tài khoản</a></li>
+					<li class="w-100 m-0"><a
+						class="dropdown-item nav-link py-2 ps-2" th:href="@{/logout}">Đăng
+							xuất</a></li>
+				</ul>
+			</div>
+		</div>
+
+
 	</div>
 
-	<!-- Warning nếu chưa đăng nhập 
-		-->
-		
+	<!-- Warning nếu chưa đăng nhập -->
+
 	<div class="alert alert-warning alert-dismissible fade show fixed-top"
 		role="alert" style="margin-top: 65px; z-index: 10;"
 		th:if="${user == null}">
-		<div class="container-fluid d-fex justify-content-center align-middle text-center">
-		<strong>Chú ý!</strong> Bạn cần đăng nhập để thực hiện mua vé.
+		<div
+			class="container-fluid d-fex justify-content-center align-middle text-center">
+			<strong>Chú ý!</strong> Bạn cần đăng nhập để thực hiện mua vé.
 		</div>
 		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
 			aria-label="Close"></button>
 	</div>
-	
+
 	<!-- BÁO WARNING -->
 	<div class="alert alert-success alert-dismissible fade show fixed-top"
 		role="alert" style="margin-top: 65px; z-index: 10;" th:if="${warning}">
@@ -95,7 +99,7 @@
 		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
 			aria-label="Close"></button>
 	</div>
-	
+
 	<!-- BÁO THÀNH CÔNG -->
 	<div class="alert alert-success alert-dismissible fade show fixed-top"
 		role="alert" style="margin-top: 65px; z-index: 10;" th:if="${message}">
@@ -105,7 +109,7 @@
 		<button type="button" class="btn-close m-0" data-bs-dismiss="alert"
 			aria-label="Close"></button>
 	</div>
-	
+
 	<!-- BÁO LỖI -->
 	<div class="alert alert-danger alert-dismissible fade show fixed-top"
 		role="alert" style="margin-top: 65px; z-index: 10;" th:if="${error}">

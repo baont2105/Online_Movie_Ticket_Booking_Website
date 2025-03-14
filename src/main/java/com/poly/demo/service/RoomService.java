@@ -10,6 +10,8 @@ import com.poly.demo.repository.RoomRepository;
 import com.poly.demo.repository.SeatRepository;
 import com.poly.demo.repository.ShowtimeRepository;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,33 +34,47 @@ public class RoomService {
 	}
 
 	public Room saveRoom(Room room) {
+		addRoomWithSeats(room);
 		return roomRepository.save(room);
 	}
 
 	public void deleteRoom(Integer id) {
 		roomRepository.deleteByRoomId(id);
 	}
-	    @Autowired
-	    private SeatRepository seatRepository;
 
-	    public void addRoomWithSeats(Room room) {
-	        // Lưu phòng chiếu vào database
-	        Room savedRoom = roomRepository.save(room);
+	@Autowired
+	private SeatRepository seatRepository;
 
-	        // Tạo ghế tự động cho phòng chiếu
-	        createSeatsForRoom(savedRoom);
-	    }
+	public void addRoomWithSeats(Room room) {
+		// Lưu phòng chiếu vào database
+		Room savedRoom = roomRepository.save(room);
 
-	    private void createSeatsForRoom(Room room) {
-	        char[] rows = {'A', 'B', 'C', 'D', 'E'};
-	        for (char row : rows) {
-	            for (int num = 1; num <= 10; num++) {
-	                Seat seat = new Seat();
-	                seat.setSeatNumber(row + String.valueOf(num));
-	                seat.setRoom(room);
-	                seat.setSeatType(row == 'A' ? "VIP" : "Regular"); // Hàng A là ghế VIP
-	                seatRepository.save(seat);
-	            }
-	            }
-	    }
+		// Tạo ghế tự động cho phòng chiếu
+		createSeatsForRoom(savedRoom);
+	}
+
+	@Transactional
+	private void createSeatsForRoom(Room room) {
+		char[] rows = { 'A', 'B', 'C', 'D', 'E' };
+		for (char row : rows) {
+			for (int num = 1; num <= 10; num++) {
+				Seat seat = new Seat();
+				seat.setRoom(room);
+				seat.setRowNumber(String.valueOf(row)); // Hàng ghế: "A", "B", "C"...
+				seat.setSeatNumber(String.valueOf(num)); // Số ghế: "1", "2", "3"...
+				seat.setSeatType(row == 'A' ? "VIP" : "Standard"); // Hàng A là ghế VIP
+				seat.setPrice(row == 'A' ? 20000 : 0);
+				seat.setStatus("AVAILABLE");
+				seat.setVisible(true);
+				System.out.println("CALLED!!!: " + seat);
+				try {
+				    seatRepository.save(seat);
+				    seatRepository.flush();
+				    System.out.println("Saved Seat ID: " + seat.getSeatId());
+				} catch (Exception e) {
+				    System.err.println("Lỗi khi lưu ghế: " + e.getMessage());
+				}
+			}
+		}
+	}
 }
