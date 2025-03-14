@@ -87,11 +87,24 @@ public class AdminController {
 		return "showtime-manager";
 	}
 
+	@GetMapping("/showtime-manager/add")
+	public String showAddShowtimeForm(Model model) {
+	    addUserInfoToModel(model);
+	    
+	    model.addAttribute("showtime", new Showtime());
+	    model.addAttribute("movies", movieService.getAllMovies());
+	    model.addAttribute("branches", branchService.getAllBranches());
+	    model.addAttribute("rooms", roomService.findAllRooms());
+
+	    return "showtime-form"; // Hiển thị form thêm suất chiếu
+	}
+
 	@PostMapping("/showtime-manager/add")
 	public String addShowtime(@ModelAttribute Showtime showtime) {
-		showtimeService.addShowtime(showtime);
-		return "redirect:/admin/showtime-manager";
+	    showtimeService.addShowtime(showtime);
+	    return "redirect:/admin/showtime-manager";
 	}
+
 
 	@GetMapping("/showtime-manager/edit/{id}")
 	public String showEditShowtimeForm(@PathVariable Long id, Model model) {
@@ -130,7 +143,7 @@ public class AdminController {
 	private BranchService branchService;
 
 	@GetMapping("/branch-manager")
-	public String BranchManager(Model model) {
+	public String BranchManager( Model model) {
 		addUserInfoToModel(model);
 
 		List<Branch> branches = branchService.getAllBranches();
@@ -140,10 +153,12 @@ public class AdminController {
 
 	}
 
-	@PostMapping("/branch-manager/add")
-	public String addBranch(@ModelAttribute Branch branch) {
-		branchService.addBranch(branch);
-		return "redirect:/admin/branch-manager";
+
+	@GetMapping("/branch-manager/add")
+	public String showAddBranchForm(@ModelAttribute Branch branch ,Model model) {
+	    addUserInfoToModel(model); // Thêm thông tin user nếu có
+	    model.addAttribute("branch", new Branch()); // Thêm đối tượng branch mới vào model
+	    return "branch-form"; // Trả về template form thêm chi nhánh
 	}
 
 	@GetMapping("/branch-manager/edit/{id}")

@@ -51,46 +51,60 @@
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-											<!-- 	<form th:action="@{/admin/showtime-manager/add}"
+											<!-- <form th:action="@{/admin/showtime-manager/add}"
 												method="post" th:object="${showtime}">
 												<div class="mb-3">
 													<label class="form-label">Phim</label> <select
-														class="form-control" th:field="*{movie}">
+														class="form-control" th:field="*{movie.movieId}" required>
 														<option th:each="movie : ${movies}"
 															th:value="${movie.movieId}" th:text="${movie.name}"></option>
 													</select>
 												</div>
 
 												<div class="mb-3">
-													<label class="form-label">Chi nhánh</label> <select
-														class="form-control" th:field="*{branch}">
+													<label class="form-label">Chi Nhánh</label> <select
+														class="form-control" th:field="*{branch.branchId}"
+														required>
 														<option th:each="branch : ${branches}"
 															th:value="${branch.branchId}" th:text="${branch.name}"></option>
 													</select>
 												</div>
 
 												<div class="mb-3">
-													<label class="form-label">Thời gian bắt đầu</label> <input
-														type="datetime-local" class="form-control"
-														th:field="*{startTime}" required>
+													<label class="form-label">Phòng Chiếu</label> <select
+														class="form-control" th:field="*{room.roomId}" required>
+														<option th:each="room : ${rooms}"
+															th:value="${room.roomId}" th:text="${room.name}"></option>
+													</select>
 												</div>
 
 												<div class="mb-3">
-													<label class="form-label">Giá vé</label> <input
+													<label class="form-label">Ngày Chiếu</label> <input
+														type="date" class="form-control" th:field="*{showDate}"
+														required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Giờ Bắt Đầu</label> <input
+														type="time" class="form-control" th:field="*{startTime}"
+														required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Giờ Kết Thúc</label> <input
+														type="time" class="form-control" th:field="*{endTime}"
+														required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Giá Vé</label> <input
 														type="number" class="form-control" th:field="*{price}"
 														required>
 												</div>
 
-												<button type="submit" class="btn btn-primary">Thêm
-													suất chiếu</button>
+												<button type="submit" class="btn btn-primary">Thêm Suất Chiếu</button>
 											</form> -->
-											<!--
-												
-											<form th:action="/" method="post">
 
-												<button type="submit" class="btn btn-success">Xác nhận</button>
-											</form>
-											-->
 
 										</div>
 									</div>

@@ -50,7 +50,7 @@
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-											<!-- 	<form th:action="@{/admin/branch-manager/add}" method="post"
+											<!-- <form th:action="@{/admin/branch-manager/add}" method="post"
 												th:object="${branch}">
 												<div class="mb-3">
 													<label class="form-label">Tên Chi Nhánh</label> <input
@@ -66,21 +66,35 @@
 
 												<div class="mb-3">
 													<label class="form-label">Số Điện Thoại</label> <input
-														type="text" class="form-control" th:field="*{phone}"
+														type="text" class="form-control" th:field="*{phoneNumber}"
 														required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Email</label> <input type="email"
+														class="form-control" th:field="*{email}" required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Thành Phố</label> <input
+														type="text" class="form-control" th:field="*{city}"
+														required>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Trạng Thái</label> <select
+														class="form-control" th:field="*{visible}">
+														<option th:value="true">Hoạt động</option>
+														<option th:value="false">Không hoạt động</option>
+													</select>
 												</div>
 
 												<button type="submit" class="btn btn-primary">Thêm
 													Chi Nhánh</button>
-											</form> -->
-
-											<!--
-												
-											<form th:action="/" method="post">
-
-												<button type="submit" class="btn btn-success">Xác nhận</button>
 											</form>
-											-->
+ -->
+
+
 
 										</div>
 									</div>
