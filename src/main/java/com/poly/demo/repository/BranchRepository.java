@@ -14,6 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BranchRepository extends JpaRepository<Branch, Long> {
+public interface BranchRepository extends JpaRepository<Branch, Integer> {
     Optional<Branch> findByName(String name);
 }

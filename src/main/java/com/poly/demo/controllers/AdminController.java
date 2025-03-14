@@ -148,7 +148,7 @@ public class AdminController {
 
 		List<Branch> branches = branchService.getAllBranches();
 		model.addAttribute("branches", branches);
-
+		model.addAttribute("branch", new Branch());
 		return "branch-manager";
 
 	}
@@ -157,12 +157,18 @@ public class AdminController {
 	@GetMapping("/branch-manager/add")
 	public String showAddBranchForm(@ModelAttribute Branch branch ,Model model) {
 	    addUserInfoToModel(model); // Thêm thông tin user nếu có
-	    model.addAttribute("branch", new Branch()); // Thêm đối tượng branch mới vào model
+	    branchService.addBranch(branch);
 	    return "branch-form"; // Trả về template form thêm chi nhánh
 	}
+	@PostMapping("/branch-manager/add")
+	public String addBranch(@ModelAttribute Branch branch) {
+	    branchService.addBranch(branch);
+	    return "redirect:/admin/branch-manager"; // Chuyển hướng về trang quản lý chi nhánh
+	}
+
 
 	@GetMapping("/branch-manager/edit/{id}")
-	public String showEditBranchForm(@PathVariable Long id, Model model) {
+	public String showEditBranchForm(@PathVariable Integer id, Model model) {
 		Optional<Branch> branch = branchService.getBranchById(id);
 		if (branch.isPresent()) {
 			model.addAttribute("branch", branch.get());
@@ -172,7 +178,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/branch-manager/delete/{id}")
-	public String deleteBranch(@PathVariable Long id) {
+	public String deleteBranch(@PathVariable Integer id) {
 		branchService.deleteBranch(id);
 		return "redirect:/admin/branch-manager";
 	}

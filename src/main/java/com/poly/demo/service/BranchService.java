@@ -19,9 +19,8 @@ public class BranchService {
     public List<Branch> getAllBranches() {
         return branchRepository.findAll();
     }
-    
 
-    public Optional<Branch> getBranchById(Long id) {
+    public Optional<Branch> getBranchById(Integer id) { // Đổi từ Long sang Integer
         return branchRepository.findById(id);
     }
 
@@ -29,8 +28,8 @@ public class BranchService {
         return branchRepository.save(branch);
     }
 
-    // Xóa chi nhánh theo ID
-    public void deleteBranch(Long id) {
+    public void deleteBranch(Integer id) { // Đổi từ Long sang Integer
         branchRepository.deleteById(id);
     }
 }
+
