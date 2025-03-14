@@ -106,7 +106,7 @@ public class BookingController {
 		addUserInfoToModel(model);
 
 		Movie movie = movieService.getMovieById(id).orElseThrow(() -> new IllegalArgumentException("Invalid movie ID"));
-		Branch branch = branchService.getBranchById(1L)
+		Branch branch = branchService.getBranchById(1)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid branch ID"));
 
 		List<Showtime> showtimes = showtimeService.getShowtimesByMovieAndBranch(Optional.of(movie),
@@ -122,7 +122,7 @@ public class BookingController {
 	}
 
 	@PostMapping("/select-showtime")
-	public String selectShowtime(@RequestParam Long movieId, @RequestParam Long branchId, Model model) {
+	public String selectShowtime(@RequestParam Long movieId, @RequestParam Integer branchId, Model model) {
 		addUserInfoToModel(model);
 
 		Movie movie = movieService.getMovieById(movieId)
