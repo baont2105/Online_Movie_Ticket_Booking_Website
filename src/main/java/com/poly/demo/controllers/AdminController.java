@@ -213,6 +213,7 @@ public class AdminController {
 		return "room-manager";
 	}
 
+	 
 	@GetMapping("/room-manager/delete/{id}")
 	public String deleteRoom(@PathVariable Integer id) {
 		roomService.deleteRoom(id);
