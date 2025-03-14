@@ -222,11 +222,12 @@ public class AdminController {
 	// THÊM PHIM
 	@PostMapping("/movies-manager/add")
 	public String addMovie(@ModelAttribute Movie movie, Model model) {
-		addUserInfoToModel(model);
-		movie.setThumbnail("absolute_cinema.jpg"); // Ảnh mặc định nếu chưa có upload
-		movieService.addMovie(movie);
-		return "redirect:/admin/movies-manager"; // Chuyển hướng về trang danh sách phim
+	    addUserInfoToModel(model); // Thêm thông tin user vào model
+	    movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail()); // Ảnh mặc định nếu rỗng
+	    movieService.addMovie(movie); // Lưu phim vào database
+	    return "redirect:/admin/movies-manager"; // Chuyển hướng về trang danh sách phim
 	}
+
 
 	// CHỈNH SỬA PHIM - HIỂN THỊ FORM
 	@GetMapping("/movies-manager/edit/{id}")

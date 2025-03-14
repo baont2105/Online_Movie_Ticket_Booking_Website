@@ -50,7 +50,7 @@
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-											<form th:action="@{/admin/movie-manager/add}" method="post"
+											<form th:action="@{/admin/movies-manager/add}" method="post"
 												th:object="${movie}">
 												<div class="mb-3">
 													<label class="form-label">Tên phim</label> <input
@@ -82,12 +82,46 @@
 														required>
 												</div>
 
+												<div class="mb-3">
+													<label class="form-label">Quốc gia</label> <input
+														type="text" class="form-control" th:field="*{country}"
+														required>
+												</div>
 
+												<div class="mb-3">
+													<label class="form-label">Nhà sản xuất</label> <input
+														type="text" class="form-control" th:field="*{producer}">
+												</div>
 
+												<div class="mb-3">
+													<label class="form-label">Đạo diễn</label> <input
+														type="text" class="form-control" th:field="*{director}">
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Diễn viên</label>
+													<textarea class="form-control" th:field="*{actors}"></textarea>
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Thể loại</label> <input
+														type="text" class="form-control" th:field="*{tags}">
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Ảnh đại diện (URL)</label> <input
+														type="text" class="form-control" th:field="*{thumbnail}">
+												</div>
+
+												<div class="mb-3">
+													<label class="form-label">Trailer (URL YouTube)</label> <input
+														type="text" class="form-control" th:field="*{trailer}">
+												</div>
 
 												<button type="submit" class="btn btn-primary">Thêm
 													phim</button>
 											</form>
+
 
 											<!--
 												
@@ -140,8 +174,8 @@
 			</div>
 		</div>
 		<!-- Footer -->
-			<footer class="bg-body-tertiary p-0 m-0"
-				th:replace="/components/footer.html"></footer>
+		<footer class="bg-body-tertiary p-0 m-0"
+			th:replace="/components/footer.html"></footer>
 	</div>
 
 	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
