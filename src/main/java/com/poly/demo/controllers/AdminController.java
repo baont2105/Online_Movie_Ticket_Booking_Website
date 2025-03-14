@@ -82,8 +82,11 @@ public class AdminController {
 		addUserInfoToModel(model);
 
 		List<Showtime> showtimes = showtimeService.getAllShowtime();
+        model.addAttribute("movies", movieService.getAllMovies());
+        model.addAttribute("branches", branchService.getAllBranches());
+        model.addAttribute("rooms", roomService.findAllRooms());
 		model.addAttribute("showtimes", showtimes);
-
+		model.addAttribute("showtime", new Showtime());
 		return "showtime-manager";
 	}
 
@@ -216,7 +219,7 @@ public class AdminController {
 		return "redirect:/admin/room-manager";
 	}
 
-	// ================================= VÉ ========================================
+	// ================================= VÉ ==================================
 	@Autowired
 	private TicketService ticketService;
 
