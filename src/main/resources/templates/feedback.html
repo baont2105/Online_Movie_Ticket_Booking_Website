@@ -15,7 +15,8 @@
 </head>
 
 <body>
-	<div class="container-fluid m-0 p-0" style="background: url(/image/Background/bg_pattern.png) repeat left top;">
+	<div class="container-fluid m-0 p-0"
+		style="background: url(/image/Background/bg_pattern.png) repeat left top;">
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
@@ -32,22 +33,25 @@
 				<form>
 					<div class="row mb-3">
 						<div class="col-md-6">
-							<label for="name" class="form-label">Họ tên</label>
-							<input type="text" class="form-control" id="name" placeholder="Nhập Họ Tên">
+							<label for="name" class="form-label">Họ tên</label> <input
+								type="text" class="form-control" id="name"
+								placeholder="Nhập Họ Tên">
 						</div>
 						<div class="col-md-6">
-							<label for="phone" class="form-label">Số điện thoại</label>
-							<input type="text" class="form-control" id="phone" placeholder="Nhập Điện Thoại">
+							<label for="phone" class="form-label">Số điện thoại</label> <input
+								type="text" class="form-control" id="phone"
+								placeholder="Nhập Điện Thoại">
 						</div>
 					</div>
 					<div class="row mb-3">
 						<div class="col-md-6">
-							<label for="email" class="form-label">Email</label>
-							<input type="email" class="form-control" id="email" placeholder="Nhập Email">
+							<label for="email" class="form-label">Email</label> <input
+								type="email" class="form-control" id="email"
+								placeholder="Nhập Email">
 						</div>
 						<div class="col-md-6">
-							<label for="service" class="form-label">Chọn dịch vụ</label>
-							<select class="form-select" id="service">
+							<label for="service" class="form-label">Chọn dịch vụ</label> <select
+								class="form-select" id="service">
 								<option>MUA VÉ NHÓM</option>
 								<option>MUA VÉ CÁ NHÂN</option>
 								<option>ĐẶT PHÒNG RIÊNG</option>
@@ -56,8 +60,8 @@
 					</div>
 					<div class="row mb-3">
 						<div class="col-md-6">
-							<label for="region" class="form-label">Chọn khu vực</label>
-							<select class="form-select" id="region">
+							<label for="region" class="form-label">Chọn khu vực</label> <select
+								class="form-select" id="region">
 								<option>ALL</option>
 								<option>Hà Nội</option>
 								<option>TP HCM</option>
@@ -65,8 +69,8 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-							<label for="subservice" class="form-label">--- </label>
-							<select class="form-select" id="subservice">
+							<label for="subservice" class="form-label">--- </label> <select
+								class="form-select" id="subservice">
 								<option>---</option>
 								<option>Dịch vụ 1</option>
 								<option>Dịch vụ 2</option>
@@ -87,9 +91,11 @@
 		</div>
 
 		<!-- Footer -->
-		<footer class="bg-body-tertiary p-0 m-0" th:replace="/components/footer.html"></footer>
+		<footer class="bg-body-tertiary p-0 m-0"
+			th:replace="/components/footer.html"></footer>
+	</div>
 
-		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
+	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 
 </html>

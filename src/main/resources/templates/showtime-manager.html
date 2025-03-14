@@ -40,7 +40,8 @@
 							<h2 class="form-title">QUẢN LÝ SUẤT CHIẾU</h2>
 
 							<button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-								th:attr="data-bs-target='#checkInModal'">Thêm Suất Chiếu</button>
+								th:attr="data-bs-target='#checkInModal'">Thêm Suất
+								Chiếu</button>
 							<div class="modal fade" th:id="'checkInModal'" tabindex="-1">
 								<div class="modal-dialog">
 									<div class="modal-content">
@@ -50,7 +51,7 @@
 												data-bs-dismiss="modal"></button>
 										</div>
 										<div class="modal-body">
-										<!-- 	<form th:action="@{/admin/showtime-manager/add}"
+											<!-- 	<form th:action="@{/admin/showtime-manager/add}"
 												method="post" th:object="${showtime}">
 												<div class="mb-3">
 													<label class="form-label">Phim</label> <select
@@ -133,16 +134,13 @@
 					</div>
 				</div>
 			</div>
-
-
-
-
-			<!-- Footer -->
-			<footer class="bg-body-tertiary p-0 m-0"
-				th:replace="/components/footer.html"></footer>
 		</div>
+		<!-- Footer -->
+		<footer class="bg-body-tertiary p-0 m-0"
+			th:replace="/components/footer.html"></footer>
+	</div>
 
-		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
+	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 
 </html>

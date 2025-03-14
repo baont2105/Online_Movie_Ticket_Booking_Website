@@ -55,7 +55,7 @@
 								<tbody>
 									<tr th:each="user : ${users}">
 										<td th:text="${user.id}"></td>
-										<td th:text="${user.name}"></td>										
+										<td th:text="${user.name}"></td>
 										<td th:text="${user.username}"></td>
 										<td th:text="${user.email}"></td>
 										<td th:text="${user.phoneNumber}"></td>
@@ -71,8 +71,8 @@
 									</tr>
 								</tbody>
 							</table>
-							
-							
+
+
 							<!-- 
 							<div class="row container justify-content-center"
 								style="position: absolute; bottom: 0;">
@@ -100,16 +100,13 @@
 									</ul>
 								</nav>
 							</div> -->
-							
+
 						</div>
 					</div>
 				</div>
 			</div>
-
-
-
-
-			<!-- Footer -->
+		</div>
+		<!-- Footer -->
 			<footer class="bg-body-tertiary p-0 m-0"
 				th:replace="/components/footer.html"></footer>
 		</div>

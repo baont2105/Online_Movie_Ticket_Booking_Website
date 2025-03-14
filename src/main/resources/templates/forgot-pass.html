@@ -30,8 +30,7 @@
 		<!-- Body -->
 		<div class="container-fluid mx-0 p-0" style="margin-top: 65px;">
 			<!-- Nội dung trang web -->
-			<div class="container-fluid"
-				ng-controller="AuthController as authCtrl">
+			<div class="container-fluid">
 				<div class="row background-image">
 					<div
 						class="col-md-6 d-flex justify-content-center align-items-center">
@@ -42,22 +41,21 @@
 								<!-- Replace with your logo URL -->
 							</div>
 							<h3 class="text-center mb-4">QUÊN MẬT KHẨU</h3>
-							<form ng-submit="authCtrl.resetPassword()">
+							<form >
 								<div class="form-group">
 									<label for="resetEmail">Email</label> <input type="email"
-										id="resetEmail" ng-model="authCtrl.resetInfo.email"
+										id="resetEmail" 
 										placeholder="Nhập email của bạn" required>
 								</div>
 								<div class="form-group">
 									<label for="newPassword">Mật khẩu mới</label> <input
 										type="password" id="newPassword"
-										ng-model="authCtrl.resetInfo.newPassword"
+										
 										placeholder="Nhập mật khẩu mới của bạn" required>
 								</div>
 								<div class="form-group">
 									<label for="confirmNewPassword">Xác nhận mật khẩu mới</label> <input
 										type="password" id="confirmNewPassword"
-										ng-model="authCtrl.resetInfo.confirmNewPassword"
 										placeholder="Xác nhận mật khẩu mới của bạn" required>
 								</div>
 								<div class="alternative">
