@@ -267,7 +267,7 @@ public class BookingController {
 						FoodItem foodItem = foodItemService.getFoodItemById(foodId.longValue());
 						TicketFood ticketFood = new TicketFood(ticket, foodItem, quantity);
 						System.out.println(ticket.getPrice() + " + " + foodItem.getPrice());
-						ticket.setPrice(ticket.getPrice() + foodItem.getPrice());
+						ticket.setPrice(ticket.getPrice() + (foodItem.getPrice() * quantity));
 						ticketFoodList.add(ticketFood);
 					}
 				} catch (NumberFormatException e) {

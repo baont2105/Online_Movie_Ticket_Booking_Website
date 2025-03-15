@@ -4,6 +4,9 @@ import com.poly.demo.entity.Seat;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +17,8 @@ import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    
+	Page<Ticket> findAll(Pageable pageable);
+	
     @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId ORDER BY t.showtime.startTime DESC")
     List<Ticket> findTicketsByUserId(@Param("userId") Integer userId);
     

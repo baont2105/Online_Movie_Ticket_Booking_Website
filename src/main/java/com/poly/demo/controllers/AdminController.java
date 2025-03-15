@@ -6,6 +6,7 @@ import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
+import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.RoomService;
@@ -15,6 +16,9 @@ import com.poly.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -64,12 +68,20 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@GetMapping("/accounts-manager")
-	public String AccountsManager(Model model) {
+	public String AccountsManager(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size, Model model) {
 		addUserInfoToModel(model);
 
-		List<User> users = userService.getAllUsers();
-		model.addAttribute("users", users);
+		Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+		Page<User> userPage = userRepository.findAll(pageable);
+
+		model.addAttribute("users", userPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", userPage.getTotalPages());
 
 		return "accounts-manager";
 	}
@@ -84,10 +96,10 @@ public class AdminController {
 		addUserInfoToModel(model);
 
 		Page<Showtime> showtimePage = showtimeService.getShowtimesPaginated(page, size);
-        model.addAttribute("showtimePage", showtimePage);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", showtimePage.getTotalPages());
-		
+		model.addAttribute("showtimePage", showtimePage);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", showtimePage.getTotalPages());
+
 		List<Showtime> showtimes = showtimeService.getAllShowtime();
 		model.addAttribute("movies", movieService.getAllMovies());
 		model.addAttribute("branches", branchService.getAllBranches());
@@ -152,11 +164,15 @@ public class AdminController {
 	private BranchService branchService;
 
 	@GetMapping("/branch-manager")
-	public String BranchManager(Model model) {
+	public String BranchManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
 		addUserInfoToModel(model);
 
-		List<Branch> branches = branchService.getAllBranches();
-		model.addAttribute("branches", branches);
+		Page<Branch> branchPage = branchService.getBranches(page, size);
+
+		model.addAttribute("branches", branchPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", branchPage.getTotalPages());
 		model.addAttribute("branch", new Branch());
 		return "branch-manager";
 
@@ -196,11 +212,14 @@ public class AdminController {
 	private RoomService roomService;
 
 	@GetMapping("/room-manager")
-	public String listRooms(Model model) {
+	public String listRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
 		addUserInfoToModel(model);
-		List<Room> rooms = roomService.findAllRooms();
+		Page<Room> roomPage = roomService.getRooms(page, size);
 		model.addAttribute("branches", branchService.getAllBranches());
-		model.addAttribute("rooms", rooms);
+		model.addAttribute("rooms", roomPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", roomPage.getTotalPages());
 		model.addAttribute("room", new Room());
 		return "room-manager";
 	}
@@ -237,21 +256,28 @@ public class AdminController {
 	private TicketService ticketService;
 
 	@GetMapping("/tickets-manager")
-	public String TicketsManager(Model model) {
+	public String TicketsManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
 		addUserInfoToModel(model);
 
-		List<Ticket> tickets = ticketService.getAllTicket();
-		model.addAttribute("tickets", tickets);
+		Page<Ticket> ticketPage = ticketService.getTickets(page, size);
+
+		model.addAttribute("tickets", ticketPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", ticketPage.getTotalPages());
 
 		return "tickets-manager";
 	}
 
 	// ============================ PHIM ======================================
 	@GetMapping("/movies-manager")
-	public String MoviesManager(Model model) {
+	public String MoviesManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
 		addUserInfoToModel(model);
-		List<Movie> movies = movieService.getAllMovies();
-		model.addAttribute("movies", movies);
+		Page<Movie> moviePage = movieService.getMovies(page, size);
+		model.addAttribute("movies", moviePage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", moviePage.getTotalPages());
 		model.addAttribute("movie", new Movie()); // Để dùng trong form thêm mới
 		return "movies-manager";
 	}

@@ -5,6 +5,10 @@ import com.poly.demo.entity.Movie;
 import com.poly.demo.repository.BranchRepository;
 import com.poly.demo.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +22,11 @@ public class BranchService {
 
     public List<Branch> getAllBranches() {
         return branchRepository.findAll();
+    }
+    
+    public Page<Branch> getBranches(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("branchId").ascending());
+        return branchRepository.findAll(pageable);
     }
 
     public Optional<Branch> getBranchById(Integer id) { // Đổi từ Long sang Integer

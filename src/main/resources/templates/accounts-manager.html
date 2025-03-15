@@ -72,34 +72,34 @@
 								</tbody>
 							</table>
 
+							<!-- PHÂN TRANG -->
+							<div class="d-flex justify-content-center pagination">
+								<div>
+									<nav aria-label="Page navigation">
+										<ul class="pagination">
+											<li class="page-item"
+												th:classappend="${currentPage == 0} ? 'disabled'"><a
+												class="page-link"
+												th:href="@{/admin/accounts-manager(page=${currentPage - 1})}">Trước</a>
+											</li>
 
-							<!-- 
-							<div class="row container justify-content-center"
-								style="position: absolute; bottom: 0;">
-								<hr class="my-3" style="width: 50%;">
-								<nav aria-label="Page navigation example">
-									<ul class="pagination justify-content-center">
-										<li class="page-item mx-2">
-											<button ng-click="first()">&laquo;</button>
-										</li>
-										<li class="page-item mx-2">
-											<button ng-click="prev()">&lt;</button>
-										</li>
+											<li class="page-item"
+												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+												th:classappend="${pageNum == currentPage} ? 'active'"><a
+												class="page-link"
+												th:href="@{/admin/accounts-manager(page=${pageNum})}"
+												th:text="${pageNum + 1}"></a></li>
 
-										<li class="page-item mx-2"><span
-											class="page-item mx-2 fw-bold"
-											ng-repeat="n in [] | range:pageCount" ng-click="setPage(n)"
-											ng-class="{'active': n === currentPage}">{{ n + 1 }}</span></li>
+											<li class="page-item"
+												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+												<a class="page-link"
+												th:href="@{/admin/accounts-manager(page=${currentPage + 1})}">Sau</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
 
-										<li class="page-item mx-2">
-											<button ng-click="next()">&gt;</button>
-										</li>
-										<li class="page-item mx-2">
-											<button ng-click="last()">&raquo;</button>
-										</li>
-									</ul>
-								</nav>
-							</div> -->
 
 						</div>
 					</div>
@@ -107,11 +107,11 @@
 			</div>
 		</div>
 		<!-- Footer -->
-			<footer class="bg-body-tertiary p-0 m-0"
-				th:replace="/components/footer.html"></footer>
-		</div>
+		<footer class="bg-body-tertiary p-0 m-0"
+			th:replace="/components/footer.html"></footer>
+	</div>
 
-		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
+	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 
 </html>

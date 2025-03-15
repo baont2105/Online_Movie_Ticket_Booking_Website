@@ -68,7 +68,7 @@
 													</select>
 												</div>
 
-												
+
 
 												<button type="submit" class="btn btn-primary">Thêm
 													phòng</button>
@@ -103,6 +103,35 @@
 									</tr>
 								</tbody>
 							</table>
+
+							<!-- PHÂN TRANG -->
+							<div class="d-flex justify-content-center pagination">
+								<div>
+									<nav aria-label="Page navigation">
+										<ul class="pagination">
+											<li class="page-item"
+												th:classappend="${currentPage == 0} ? 'disabled'"><a
+												class="page-link"
+												th:href="@{/admin/rooms-manager(page=${currentPage - 1})}">Trước</a>
+											</li>
+
+											<li class="page-item"
+												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+												th:classappend="${pageNum == currentPage} ? 'active'"><a
+												class="page-link"
+												th:href="@{/admin/rooms-manager(page=${pageNum})}"
+												th:text="${pageNum + 1}"></a></li>
+
+											<li class="page-item"
+												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+												<a class="page-link"
+												th:href="@{/admin/rooms-manager(page=${currentPage + 1})}">Sau</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</div>

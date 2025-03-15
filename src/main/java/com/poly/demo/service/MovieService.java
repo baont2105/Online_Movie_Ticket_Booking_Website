@@ -3,6 +3,10 @@ package com.poly.demo.service;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +39,11 @@ public class MovieService {
 
     public Movie addMovie(Movie movie) {
         return movieRepository.save(movie);
+    }
+    
+    public Page<Movie> getMovies(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("movieId").ascending());
+        return movieRepository.findAll(pageable);
     }
 
     public Movie updateMovie(Long id, Movie updatedMovie) {

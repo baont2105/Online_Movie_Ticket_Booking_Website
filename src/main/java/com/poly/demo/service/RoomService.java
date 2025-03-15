@@ -13,6 +13,10 @@ import com.poly.demo.repository.ShowtimeRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +28,9 @@ public class RoomService {
 
 	@Autowired
 	private RoomRepository roomRepository;
+
+	@Autowired
+	private SeatRepository seatRepository;
 
 	public List<Room> findAllRooms() {
 		return roomRepository.findAll();
@@ -42,8 +49,10 @@ public class RoomService {
 		roomRepository.deleteByRoomId(id);
 	}
 
-	@Autowired
-	private SeatRepository seatRepository;
+	public Page<Room> getRooms(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("roomId").ascending());
+        return roomRepository.findAll(pageable);
+    }
 
 	public void addRoomWithSeats(Room room) {
 		// Lưu phòng chiếu vào database
