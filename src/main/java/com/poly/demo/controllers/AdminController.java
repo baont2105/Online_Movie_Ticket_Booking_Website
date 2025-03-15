@@ -14,6 +14,7 @@ import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -78,13 +79,19 @@ public class AdminController {
 
 	// ======================= SUẤT CHIẾU =======================
 	@GetMapping("/showtime-manager")
-	public String ShowtimeManager(Model model) {
+	public String ShowtimeManager(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size, Model model) {
 		addUserInfoToModel(model);
 
+		Page<Showtime> showtimePage = showtimeService.getShowtimesPaginated(page, size);
+        model.addAttribute("showtimePage", showtimePage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", showtimePage.getTotalPages());
+		
 		List<Showtime> showtimes = showtimeService.getAllShowtime();
-        model.addAttribute("movies", movieService.getAllMovies());
-        model.addAttribute("branches", branchService.getAllBranches());
-        model.addAttribute("rooms", roomService.findAllRooms());
+		model.addAttribute("movies", movieService.getAllMovies());
+		model.addAttribute("branches", branchService.getAllBranches());
+		model.addAttribute("rooms", roomService.findAllRooms());
 		model.addAttribute("showtimes", showtimes);
 		model.addAttribute("showtime", new Showtime());
 		return "showtime-manager";
@@ -92,22 +99,21 @@ public class AdminController {
 
 	@GetMapping("/showtime-manager/add")
 	public String showAddShowtimeForm(Model model) {
-	    addUserInfoToModel(model);
-	    
-	    model.addAttribute("showtime", new Showtime());
-	    model.addAttribute("movies", movieService.getAllMovies());
-	    model.addAttribute("branches", branchService.getAllBranches());
-	    model.addAttribute("rooms", roomService.findAllRooms());
+		addUserInfoToModel(model);
 
-	    return "showtime-form"; // Hiển thị form thêm suất chiếu
+		model.addAttribute("showtime", new Showtime());
+		model.addAttribute("movies", movieService.getAllMovies());
+		model.addAttribute("branches", branchService.getAllBranches());
+		model.addAttribute("rooms", roomService.findAllRooms());
+
+		return "showtime-form"; // Hiển thị form thêm suất chiếu
 	}
 
 	@PostMapping("/showtime-manager/add")
 	public String addShowtime(@ModelAttribute Showtime showtime) {
-	    showtimeService.addShowtime(showtime);
-	    return "redirect:/admin/showtime-manager";
+		showtimeService.addShowtime(showtime);
+		return "redirect:/admin/showtime-manager";
 	}
-
 
 	@GetMapping("/showtime-manager/edit/{id}")
 	public String showEditShowtimeForm(@PathVariable Long id, Model model) {
@@ -146,7 +152,7 @@ public class AdminController {
 	private BranchService branchService;
 
 	@GetMapping("/branch-manager")
-	public String BranchManager( Model model) {
+	public String BranchManager(Model model) {
 		addUserInfoToModel(model);
 
 		List<Branch> branches = branchService.getAllBranches();
@@ -156,19 +162,18 @@ public class AdminController {
 
 	}
 
-
 	@GetMapping("/branch-manager/add")
-	public String showAddBranchForm(@ModelAttribute Branch branch ,Model model) {
-	    addUserInfoToModel(model); // Thêm thông tin user nếu có
-	    branchService.addBranch(branch);
-	    return "branch-form"; // Trả về template form thêm chi nhánh
+	public String showAddBranchForm(@ModelAttribute Branch branch, Model model) {
+		addUserInfoToModel(model); // Thêm thông tin user nếu có
+		branchService.addBranch(branch);
+		return "branch-form"; // Trả về template form thêm chi nhánh
 	}
+
 	@PostMapping("/branch-manager/add")
 	public String addBranch(@ModelAttribute Branch branch) {
-	    branchService.addBranch(branch);
-	    return "redirect:/admin/branch-manager"; // Chuyển hướng về trang quản lý chi nhánh
+		branchService.addBranch(branch);
+		return "redirect:/admin/branch-manager"; // Chuyển hướng về trang quản lý chi nhánh
 	}
-
 
 	@GetMapping("/branch-manager/edit/{id}")
 	public String showEditBranchForm(@PathVariable Integer id, Model model) {
@@ -215,16 +220,16 @@ public class AdminController {
 		return "room-manager";
 	}
 
-	 
 	@GetMapping("/room-manager/delete/{id}")
 	public String deleteRoom(@PathVariable Integer id) {
 		roomService.deleteRoom(id);
 		return "redirect:/admin/room-manager";
 	}
+
 	@PostMapping("/room-manager/add")
 	public String addRoom(@ModelAttribute Room room) {
-	    roomService.addRoomWithSeats(room);
-	    return "redirect:/admin/room-manager";
+		roomService.addRoomWithSeats(room);
+		return "redirect:/admin/room-manager";
 	}
 
 	// ================================= VÉ ==================================
@@ -254,12 +259,13 @@ public class AdminController {
 	// THÊM PHIM
 	@PostMapping("/movies-manager/add")
 	public String addMovie(@ModelAttribute Movie movie, Model model) {
-	    addUserInfoToModel(model); // Thêm thông tin user vào model
-	    movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail()); // Ảnh mặc định nếu rỗng
-	    movieService.addMovie(movie); // Lưu phim vào database
-	    return "redirect:/admin/movies-manager"; // Chuyển hướng về trang danh sách phim
+		addUserInfoToModel(model); // Thêm thông tin user vào model
+		movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail()); // Ảnh mặc
+																											// định nếu
+																											// rỗng
+		movieService.addMovie(movie); // Lưu phim vào database
+		return "redirect:/admin/movies-manager"; // Chuyển hướng về trang danh sách phim
 	}
-
 
 	// CHỈNH SỬA PHIM - HIỂN THỊ FORM
 	@GetMapping("/movies-manager/edit/{id}")

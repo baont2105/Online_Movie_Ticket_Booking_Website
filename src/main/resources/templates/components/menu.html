@@ -53,21 +53,21 @@
 					<li class="w-100"><span class="dropdown-item m-0 py-3 fw-bold"
 						th:text="'Xin chào, '+${user.name}"></span></li>
 					<th:block sec:authorize="hasRole('ADMIN')">
-						<li class="w-100"><a class="dropdown-item nav-link py-2 ps-2"
-							href="/admin/"> <strong class="text-danger">A</strong> <span>QUẢN
-									LÝ TÀI KHOẢN</span>
+						<li class="w-100 head-nav-li"><a
+							class="dropdown-item nav-link py-2 ps-2" href="/admin/"> <strong
+								class="text-danger">A</strong> <span>QUẢN LÝ TÀI KHOẢN</span>
 						</a></li>
 					</th:block>
 					<th:block sec:authorize="hasRole('USER')">
-						<li class="w-100 py-2"><a
+						<li class="w-100 py-2 head-nav-li"><a
 							class="dropdown-item nav-link py-2 ps-2"
 							href="/ticket/my-tickets">Vé của tôi</a></li>
 					</th:block>
 					<hr>
 					<li class="w-100 m-0"><a
-						class="dropdown-item nav-link py-2 ps-2" href="/account">Thông
-							tin tài khoản</a></li>
-					<li class="w-100 m-0"><a
+						class="dropdown-item nav-link py-2 ps-2 head-nav-li"
+						href="/account">Thông tin tài khoản</a></li>
+					<li class="w-100 m-0 head-nav-li"><a
 						class="dropdown-item nav-link py-2 ps-2" th:href="@{/logout}">Đăng
 							xuất</a></li>
 				</ul>

@@ -12,7 +12,7 @@ body {
 	position: relative;
 }
 
-nav ul li {
+.head-nav-li {
 	margin-right: 50px;
 }
 
