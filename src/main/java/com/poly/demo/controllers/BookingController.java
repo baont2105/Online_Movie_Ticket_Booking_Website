@@ -98,7 +98,7 @@ public class BookingController {
 
 		model.addAttribute("movies", movieService.getAllMovies());
 		model.addAttribute("branches", branchService.getAllBranches());
-		return "booking_step1";
+		return "booking/step1";
 	}
 
 	@GetMapping("/step1/{id}")
@@ -118,7 +118,7 @@ public class BookingController {
 		model.addAttribute("selectedBranch", branch);
 		model.addAttribute("showtimes", showtimes);
 
-		return "booking_step1";
+		return "booking/step1";
 	}
 
 	@PostMapping("/select-showtime")
@@ -138,7 +138,7 @@ public class BookingController {
 		model.addAttribute("selectedBranch", branch);
 		model.addAttribute("showtimes", showtimes);
 
-		return "booking_step1";
+		return "booking/step1";
 	}
 
 	@PostMapping("/confirm-showtime")
@@ -166,7 +166,7 @@ public class BookingController {
 		model.addAttribute("seats", seats);
 		model.addAttribute("bookedSeatIds", bookedSeatIds);
 
-		return "booking_step2";
+		return "booking/step2";
 	}
 
 	@PostMapping("/confirm-seats")
@@ -238,7 +238,7 @@ public class BookingController {
 		model.addAttribute("seat", ticket.getSeat());
 		model.addAttribute("ticket", ticket);
 		model.addAttribute("foodItems", foodItems);
-		return "booking_step3";
+		return "booking/step3";
 	}
 
 	@PostMapping("/confirm-foods")

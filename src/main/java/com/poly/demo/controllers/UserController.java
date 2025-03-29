@@ -36,7 +36,7 @@ public class UserController {
         } else {
         	redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản");
         }
-        return "account-info"; // Tên file Thymeleaf
+        return "account/account-info"; // Tên file Thymeleaf
     }
 
     // Cập nhật thông tin tài khoản

@@ -94,7 +94,7 @@ public class TicketController {
 		model.addAttribute("foodItemsMap", foodItemsMap);
 		model.addAttribute("voucherMap", voucherMap);
 
-		return "my-tickets"; // Trả về trang Thymeleaf hiển thị danh sách vé
+		return "ticket/my-tickets"; // Trả về trang Thymeleaf hiển thị danh sách vé
 	}
 
 	@PostMapping("/check-in")

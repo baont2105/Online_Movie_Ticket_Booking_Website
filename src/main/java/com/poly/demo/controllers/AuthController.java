@@ -34,7 +34,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "account/login";
     }
 
     @PostMapping("/login")
@@ -54,20 +54,20 @@ public class AuthController {
     @GetMapping("/register")
     public String registerForm(Model model) {
         model.addAttribute("user", new User());
-        return "register";
+        return "account/register";
     }
 
     @PostMapping("/register")
     public String processRegister(@ModelAttribute("user") User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "register";
+            return "account/register";
         }
 
         try {
             userService.create(user);
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "register";
+            return "account/register";
         }
 
         return "redirect:/register?success";

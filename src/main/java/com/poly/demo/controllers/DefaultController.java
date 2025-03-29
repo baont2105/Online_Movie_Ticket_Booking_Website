@@ -49,24 +49,24 @@ public class DefaultController {
 	@RequestMapping("/")
 	public String index(Model model) {
 		addUserInfoToModel(model);
-		return "home";
+		return "home/home";
 	}
 
 	@RequestMapping("/promotions")
 	public String promotions(Model model) {
 		addUserInfoToModel(model);
-		return "promotions";
+		return "home/promotions";
 	}
 
 	@RequestMapping("/feedback")
 	public String feedback(Model model) {
 		addUserInfoToModel(model);
-		return "feedback";
+		return "home/feedback";
 	}
 
 	@RequestMapping("/forgot-password")
 	public String forgotPassword(Model model) {
 		addUserInfoToModel(model);
-		return "forgot-pass";
+		return "account/forgot-password";
 	}
 }

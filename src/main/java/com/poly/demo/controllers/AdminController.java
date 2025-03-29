@@ -61,7 +61,7 @@ public class AdminController {
 	@GetMapping("/")
 	public String AdminPage(Model model) {
 		addUserInfoToModel(model);
-		return "dashboard";
+		return "admin/dashboard";
 	}
 
 	// ======================= TÀI KHOẢN =======================
@@ -83,7 +83,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 
-		return "accounts-manager";
+		return "admin/accounts-manager";
 	}
 
 	@Autowired
@@ -106,7 +106,7 @@ public class AdminController {
 		model.addAttribute("rooms", roomService.findAllRooms());
 		model.addAttribute("showtimes", showtimes);
 		model.addAttribute("showtime", new Showtime());
-		return "showtime-manager";
+		return "admin/showtime-manager";
 	}
 
 	@GetMapping("/showtime-manager/add")
@@ -174,7 +174,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", branchPage.getTotalPages());
 		model.addAttribute("branch", new Branch());
-		return "branch-manager";
+		return "admin/branch-manager";
 
 	}
 
@@ -182,7 +182,7 @@ public class AdminController {
 	public String showAddBranchForm(@ModelAttribute Branch branch, Model model) {
 		addUserInfoToModel(model); // Thêm thông tin user nếu có
 		branchService.addBranch(branch);
-		return "branch-form"; // Trả về template form thêm chi nhánh
+		return "admin/branch-form"; // Trả về template form thêm chi nhánh
 	}
 
 	@PostMapping("/branch-manager/add")
@@ -221,7 +221,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", roomPage.getTotalPages());
 		model.addAttribute("room", new Room());
-		return "room-manager";
+		return "admin/room-manager";
 	}
 
 	@PostMapping("/room-manager/save")
@@ -236,7 +236,7 @@ public class AdminController {
 		if (room == null)
 			return "redirect:/admin/rooms";
 		model.addAttribute("room", room);
-		return "room-manager";
+		return "admin/room-manager";
 	}
 
 	@GetMapping("/room-manager/delete/{id}")
@@ -266,7 +266,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", ticketPage.getTotalPages());
 
-		return "tickets-manager";
+		return "admin/tickets-manager";
 	}
 
 	// ============================ PHIM ======================================
@@ -279,7 +279,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", moviePage.getTotalPages());
 		model.addAttribute("movie", new Movie()); // Để dùng trong form thêm mới
-		return "movies-manager";
+		return "admin/movies-manager";
 	}
 
 	// THÊM PHIM

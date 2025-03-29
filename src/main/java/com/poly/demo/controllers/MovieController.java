@@ -65,7 +65,7 @@ public class MovieController {
 		model.addAttribute("movies", moviePage.getContent());
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", moviePage.getTotalPages());
-		return "movies-list"; // Tên file Thymeleaf (movies.html)
+		return "movie/movies-list"; // Tên file Thymeleaf (movies.html)
 	}
 
 	@GetMapping("/now_showing")
@@ -78,7 +78,7 @@ public class MovieController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", moviePage.getTotalPages());
 
-		return "movies-list"; // Tên file Thymeleaf (movies.html)
+		return "movie/movies-list"; // Tên file Thymeleaf (movies.html)
 	}
 
 	@GetMapping("/upcomming")
@@ -91,7 +91,7 @@ public class MovieController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", moviePage.getTotalPages());
 
-		return "movies-list"; // Tên file Thymeleaf (movies.html)
+		return "movie/movies-list"; // Tên file Thymeleaf (movies.html)
 	}
 
 	/*
@@ -107,6 +107,6 @@ public class MovieController {
 		List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
 		model.addAttribute("showtime", showtime);
 
-		return "movie-detail";
+		return "movie/movie-detail";
 	}
 }
