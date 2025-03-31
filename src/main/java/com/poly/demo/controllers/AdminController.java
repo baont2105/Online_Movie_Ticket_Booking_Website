@@ -1,5 +1,25 @@
 package com.poly.demo.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.poly.demo.entity.Branch;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Room;
@@ -13,20 +33,6 @@ import com.poly.demo.service.RoomService;
 import com.poly.demo.service.ShowtimeService;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -127,34 +133,64 @@ public class AdminController {
 		return "redirect:/admin/showtime-manager";
 	}
 
-	@GetMapping("/showtime-manager/edit/{id}")
-	public String showEditShowtimeForm(@PathVariable Long id, Model model) {
-		addUserInfoToModel(model);
+	/*
+	 * @GetMapping("/showtime-manager/edit/{id}") public String
+	 * showEditShowtimeForm(@PathVariable Integer id, Model model) {
+	 * addUserInfoToModel(model);
+	 * 
+	 * Showtime showtime = showtimeService.getShowtimeById(id); if (showtime !=
+	 * null) { model.addAttribute("showtime", showtime); return "showtime-form"; //
+	 * Trang chỉnh sửa suất chiếu } return "redirect:/admin/showtime-manager"; }
+	 */
 
-		Showtime showtime = showtimeService.getShowtimeById(id);
-		if (showtime != null) {
-			model.addAttribute("showtime", showtime);
-			return "showtime-form"; // Trang chỉnh sửa suất chiếu
+	@GetMapping("/showtime-manager/edit/{id}")
+	public String showEditShowtimeForm(@PathVariable("id") Integer id, Model model) {
+		Optional<Showtime> optionalShowtime = showtimeService.getShowtimeById(id);
+
+		if (optionalShowtime.isPresent()) {
+			model.addAttribute("showtime", optionalShowtime.get());
+			return "redirect:/admin/showtime-manager"; // Trả về trang chỉnh sửa suất chiếu
+		} else {
+			model.addAttribute("errorMessage", "Không tìm thấy suất chiếu có ID: " + id);
+			return "error"; // Trả về trang lỗi hoặc thông báo
 		}
-		return "redirect:/admin/showtime-manager";
 	}
 
-	@PostMapping("/showtime-manager/edit/{id}")
-	public String updateShowtime(@PathVariable Long id, @ModelAttribute Showtime showtime) {
-		Showtime existingShowtime = showtimeService.getShowtimeById(id);
-		if (existingShowtime != null) {
-			existingShowtime.setMovie(showtime.getMovie());
-			existingShowtime.setBranch(showtime.getBranch());
-			existingShowtime.setStartTime(showtime.getStartTime());
-			existingShowtime.setPrice(showtime.getPrice());
+	/*
+	 * @PostMapping("/showtime-manager/edit/{id}") public String
+	 * updateShowtime(@PathVariable Integer id, @ModelAttribute Showtime showtime) {
+	 * Showtime existingShowtime = showtimeService.getShowtimeById(id); if
+	 * (existingShowtime != null) { existingShowtime.setMovie(showtime.getMovie());
+	 * existingShowtime.setBranch(showtime.getBranch());
+	 * existingShowtime.setStartTime(showtime.getStartTime());
+	 * existingShowtime.setPrice(showtime.getPrice());
+	 * 
+	 * showtimeService.addShowtime(existingShowtime); } return
+	 * "redirect:/admin/showtime-manager"; }
+	 */
 
-			showtimeService.addShowtime(existingShowtime);
+	@PostMapping("/showtime-manager/edit/{id}")
+	public String updateShowtime(@PathVariable("id") Integer id, @ModelAttribute Showtime updatedShowtime,
+			RedirectAttributes redirectAttributes) {
+		if (!showtimeService.existsById(id)) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy suất chiếu có ID: " + id);
+			return "redirect:/admin/showtimes"; // Chuyển hướng về danh sách suất chiếu
 		}
+
+		Showtime showtime = showtimeService.getShowtimeById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy suất chiếu có ID: " + id));
+
+		// Cập nhật thông tin suất chiếu
+		showtime.setMovie(updatedShowtime.getMovie());
+
+		showtimeService.addShowtime(showtime);
+		redirectAttributes.addFlashAttribute("successMessage", "Cập nhật suất chiếu thành công!");
+
 		return "redirect:/admin/showtime-manager";
 	}
 
 	@GetMapping("/showtime-manager/delete/{id}")
-	public String deleteShowtime(@PathVariable Long id) {
+	public String deleteShowtime(@PathVariable Integer id) {
 		showtimeService.deleteShowtime(id);
 		return "redirect:/admin/showtime-manager";
 	}
@@ -295,7 +331,7 @@ public class AdminController {
 
 	// CHỈNH SỬA PHIM - HIỂN THỊ FORM
 	@GetMapping("/movies-manager/edit/{id}")
-	public String showEditMovieForm(@PathVariable Long id, Model model) {
+	public String showEditMovieForm(@PathVariable Integer id, Model model) {
 		addUserInfoToModel(model);
 		Optional<Movie> movie = movieService.getMovieById(id);
 		if (movie.isPresent()) {
@@ -307,14 +343,14 @@ public class AdminController {
 
 	// XỬ LÝ CẬP NHẬT PHIM
 	@PostMapping("/movies-manager/edit/{id}")
-	public String updateMovie(@PathVariable Long id, @ModelAttribute Movie movie) {
+	public String updateMovie(@PathVariable Integer id, @ModelAttribute Movie movie) {
 		movieService.updateMovie(id, movie);
 		return "redirect:/admin/movies-manager";
 	}
 
 	// XÓA PHIM
 	@GetMapping("/movies-manager/delete/{id}")
-	public String deleteMovie(@PathVariable Long id) {
+	public String deleteMovie(@PathVariable Integer id) {
 		movieService.deleteMovie(id);
 		return "redirect:/admin/movies-manager";
 	}

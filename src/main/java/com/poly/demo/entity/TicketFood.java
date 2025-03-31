@@ -1,43 +1,33 @@
 package com.poly.demo.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
-@Table(name = "Ticket_Foods")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(exclude = {"ticket", "foodItem"}) // Tránh lỗi vòng lặp
-@Builder
+@Table(name = "Ticket_Foods")
 public class TicketFood {
+	@EmbeddedId
+	private TicketFoodId id;
 
-    @EmbeddedId
-    private TicketFoodId id;
+	@Column(nullable = false)
+	private Integer quantity;
 
-    @ManyToOne
-    @MapsId("ticketId") // Khớp với ticketId trong TicketFoodId
-    @JoinColumn(name = "ticket_id", nullable = false)
-    @ToString.Exclude
-    private Ticket ticket;
+	@ManyToOne
+	@MapsId("ticketId")
+	@JoinColumn(name = "ticket_id", nullable = false)
+	private Ticket ticket;
 
-    @ManyToOne
-    @MapsId("foodId") // Khớp với foodId trong TicketFoodId
-    @JoinColumn(name = "food_id", nullable = false)
-    @ToString.Exclude
-    private FoodItem foodItem;
+	@ManyToOne
+	@MapsId("foodId")
+	@JoinColumn(name = "food_id", nullable = false)
+	private FoodItem foodItem;
 
-    @Column(nullable = false)
-    private int quantity;
-
-    // Constructor tiện dụng không cần truyền TicketFoodId
-    public TicketFood(Ticket ticket, FoodItem foodItem, int quantity) {
-        if (ticket == null || foodItem == null || quantity <= 0) {
-            throw new IllegalArgumentException("Invalid TicketFood data!");
-        }
-        this.id = new TicketFoodId(ticket.getTicketId(), foodItem.getFoodItemId());
-        this.ticket = ticket;
-        this.foodItem = foodItem;
-        this.quantity = quantity;
-    }
+	// Getters & Setters
 }

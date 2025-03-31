@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.poly.demo.entity.User;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.TicketFood;
 import com.poly.demo.entity.TicketVoucher;
+import com.poly.demo.entity.User;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
 
@@ -34,27 +34,26 @@ public class TicketController {
 
 	// Hàm thêm user vào model
 	private void addUserInfoToModel(Model model) {
-	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	    if (principal instanceof UserDetails) {
-	        UserDetails userDetails = (UserDetails) principal;
-	        String username = userDetails.getUsername(); // Lấy username từ UserDetails
+		if (principal instanceof UserDetails) {
+			UserDetails userDetails = (UserDetails) principal;
+			String username = userDetails.getUsername(); // Lấy username từ UserDetails
 
-	        // Lấy thông tin User từ database
-	        Optional<User> userOptional = userService.findByUsername(username);
-	        if (userOptional.isPresent()) {
-	            User user = userOptional.get();
-	            model.addAttribute("user", user);
-	            model.addAttribute("name", user.getName()); // Gửi tên đến Thymeleaf
-	            return;
-	        }
-	    }
-	    
-	    // Nếu không tìm thấy user hoặc chưa đăng nhập
-	    model.addAttribute("user", null);
-	    model.addAttribute("name", null);
+			// Lấy thông tin User từ database
+			Optional<User> userOptional = userService.findByUsername(username);
+			if (userOptional.isPresent()) {
+				User user = userOptional.get();
+				model.addAttribute("user", user);
+				model.addAttribute("name", user.getName()); // Gửi tên đến Thymeleaf
+				return;
+			}
+		}
+
+		// Nếu không tìm thấy user hoặc chưa đăng nhập
+		model.addAttribute("user", null);
+		model.addAttribute("name", null);
 	}
-
 
 	@GetMapping("/my-tickets")
 	public String listTickets(Model model) {
@@ -77,7 +76,7 @@ public class TicketController {
 		}
 
 		// Lấy danh sách vé theo userID
-		List<Ticket> tickets = ticketService.getTicketByUserID(user.getId());
+		List<Ticket> tickets = ticketService.getTicketByUserID(user.getUserId());
 
 		// Thêm danh sách đồ ăn/thức uống và voucher cho mỗi vé
 		Map<Integer, List<TicketFood>> foodItemsMap = new HashMap<>();
@@ -98,7 +97,7 @@ public class TicketController {
 	}
 
 	@PostMapping("/check-in")
-	public String checkInTicket(@RequestParam("ticketId") Long ticketId, @RequestParam("staffId") Integer staffId,
+	public String checkInTicket(@RequestParam("ticketId") Integer ticketId, @RequestParam("staffId") Integer staffId,
 			Model model) {
 		// Lấy thông tin nhân viên từ UserService
 		Optional<User> staffOpt = userService.getUserById(staffId);

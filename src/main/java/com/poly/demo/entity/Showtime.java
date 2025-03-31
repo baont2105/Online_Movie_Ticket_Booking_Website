@@ -1,39 +1,52 @@
 package com.poly.demo.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+
 @Entity
-@Data
 @Table(name = "Showtimes")
+@Data
 public class Showtime {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "showtime_id")
-    private Integer showtimeId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "showtime_id")
+	private Integer showtimeId;
 
-    @Column(name = "show_date")
-    private LocalDate showDate;
-    
-    @Column(name = "start_time")
-    private LocalTime startTime;
-    
-    @Column(name = "end_time")
-    private LocalTime endTime;
-    private Integer price;
-    private Boolean visible;
+	@Column(nullable = false, name = "show_date")
+	private LocalDate showDate;
 
-    @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
+	@Column(nullable = false, name = "start_time")
+	private LocalTime startTime;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id", nullable = false)
-    private Branch branch;
+	@Column(nullable = false, name = "end_time")
+	private LocalTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
+	@Column(nullable = false)
+	private Integer price;
+
+	private Boolean visible = true;
+
+	@ManyToOne
+	@JoinColumn(name = "movie_id", nullable = false)
+	private Movie movie;
+
+	@ManyToOne
+	@JoinColumn(name = "branch_id", nullable = false)
+	private Branch branch;
+
+	@ManyToOne
+	@JoinColumn(name = "room_id", nullable = false)
+	private Room room;
+
+	// Getters & Setters
 }

@@ -1,10 +1,7 @@
 package com.poly.demo.service;
 
-import com.poly.demo.entity.Branch;
-import com.poly.demo.entity.Movie;
-import com.poly.demo.entity.Showtime;
-import com.poly.demo.repository.MovieRepository;
-import com.poly.demo.repository.ShowtimeRepository;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,8 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.poly.demo.entity.Branch;
+import com.poly.demo.entity.Movie;
+import com.poly.demo.entity.Showtime;
+import com.poly.demo.repository.ShowtimeRepository;
 
 @Service
 public class ShowtimeService {
@@ -26,23 +25,37 @@ public class ShowtimeService {
 		return showtimeRepository.findAll();
 	}
 
-	public Showtime getShowtimeById(Long id) {
-		return showtimeRepository.findById(id).orElse(null);
+	public Optional<Showtime> getShowtimeById(Integer id) {
+		return showtimeRepository.findById(id);
 	}
 
-	public List<Showtime> getShowtimesByMovieAndBranch(Optional<Movie> movie, Optional<Branch> branch) {
-		return showtimeRepository.findByMovieAndBranch(movie, branch);
+	public boolean existsById(Integer id) {
+		return showtimeRepository.existsById(id);
 	}
 
-	public List<Showtime> getShowtimesByMovieId(Long movieId) {
+	public List<Showtime> getShowtimesByMovieAndBranch(Movie movie, Branch branch) {
+		return showtimeRepository.findByMovieAndBranch(Optional.ofNullable(movie), Optional.ofNullable(branch));
+	}
+
+	public List<Showtime> getShowtimesByMovieId(Integer movieId) {
 		return showtimeRepository.findShowtimesByMovieId(movieId);
+	}
+
+	public List<Showtime> getShowtimesByMovie(Movie movie) {
+		if (movie == null) {
+			throw new IllegalArgumentException("Phim không được để trống!");
+		}
+		return showtimeRepository.findByMovie(movie);
 	}
 
 	public Showtime addShowtime(Showtime showtime) {
 		return showtimeRepository.save(showtime);
 	}
 
-	public void deleteShowtime(Long id) {
+	public void deleteShowtime(Integer id) {
+		if (!showtimeRepository.existsById(id)) {
+			throw new IllegalArgumentException("Không tìm thấy suất chiếu có ID: " + id);
+		}
 		showtimeRepository.deleteById(id);
 	}
 

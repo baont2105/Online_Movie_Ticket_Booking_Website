@@ -8,20 +8,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
 @Data
-@Table(name = "Vouchers")
-public class Voucher {
+@Entity
+@Table(name = "Categories")
+public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "voucher_id")
-	private Integer voucherId;
+	@Column(name = "category_id")
+	private Integer categoryId;
 
-	@Column(unique = true, nullable = false)
-	private String code;
-
-	@Column(nullable = false)
-	private Integer discountAmount;
+	@Column(nullable = false, unique = true)
+	private String name;
 
 	// Getters & Setters
 }

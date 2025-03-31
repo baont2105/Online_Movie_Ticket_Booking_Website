@@ -2,6 +2,7 @@ package com.poly.demo.controllers;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -69,7 +70,8 @@ public class MovieController {
 	}
 
 	@GetMapping("/now_showing")
-	public String listMoviesNowShowing(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size,Model model) {
+	public String listMoviesNowShowing(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "8") int size, Model model) {
 		addUserInfoToModel(model);
 
 		List<Movie> movies = movieService.getNowShowingMovies();
@@ -82,7 +84,8 @@ public class MovieController {
 	}
 
 	@GetMapping("/upcomming")
-	public String listMoviesUpcomming(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size,Model model) {
+	public String listMoviesUpcomming(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "8") int size, Model model) {
 		addUserInfoToModel(model);
 
 		List<Movie> movies = movieService.getUpcomingMovies();
@@ -98,7 +101,7 @@ public class MovieController {
 	 * 
 	 * */
 	@GetMapping("/movie-detail/{id}")
-	public String MovieDetail(@PathVariable Long id, Model model) {
+	public String MovieDetail(@PathVariable Integer id, Model model) {
 		addUserInfoToModel(model);
 
 		Optional<Movie> movie = movieService.getMovieById(id);
