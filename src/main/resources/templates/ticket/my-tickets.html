@@ -63,8 +63,10 @@
 							<td th:text="${t.ticketId}"></td>
 							<td th:text="${t.showtime.movie.name}"></td>
 							<td th:text="${t.showtime.branch.name}"></td>
-							<td><span
-								th:text="${t.seat.rowNumber} + ${t.seat.seatNumber}"></span></td>
+							<td><span th:each="ticketSeat, iterStat : ${t.ticketSeats}"> <span
+									th:text="${ticketSeat.seat.rowNumber} + ${ticketSeat.seat.seatNumber}"></span>
+									<span th:if="${!iterStat.last}">, </span>
+							</span></td>
 							<td
 								th:text="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
 							<td

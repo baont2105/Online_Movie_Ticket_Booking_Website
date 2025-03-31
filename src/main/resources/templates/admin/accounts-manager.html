@@ -54,7 +54,7 @@
 								</thead>
 								<tbody>
 									<tr th:each="user : ${users}">
-										<td th:text="${user.id}"></td>
+										<td th:text="${user.userId}"></td>
 										<td th:text="${user.name}"></td>
 										<td th:text="${user.username}"></td>
 										<td th:text="${user.email}"></td>
@@ -62,9 +62,9 @@
 										<td th:text="${user.role}"></td>
 										<td th:text="${user.visible ? 'Hoạt động' : 'Bị khóa'}"></td>
 										<td><a
-											th:href="@{/admin/accounts-manager/edit/{id}(id=${user.id})}"
+											th:href="@{/admin/accounts-manager/edit/{id}(id=${user.userId})}"
 											class="btn btn-primary">Sửa</a> <a
-											th:href="@{/admin/accounts-manager/delete/{id}(id=${user.id})}"
+											th:href="@{/admin/accounts-manager/delete/{id}(id=${user.userId})}"
 											class="btn btn-danger"
 											onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?');">Xóa</a>
 										</td>

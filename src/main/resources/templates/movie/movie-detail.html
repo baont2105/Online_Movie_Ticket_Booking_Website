@@ -76,9 +76,7 @@
 							<p><i class="bi bi-star-fill text-warning"></i> 8.6 (62 votes)</p>
 							<p>Quốc gia: <span th:text="${movie.country}"></span></p>
 							<p>Nhà sản xuất: <span th:text="${movie.producer}"></span></p>
-							<p>Thể loại: <span class="badge bg-primary">Giả Tưởng</span> <span
-									class="badge bg-primary">Hành
-									Động</span> <span class="badge bg-primary">Phiêu Lưu</span></p>
+							<p>Thể loại: <span class="badge bg-primary" th:text="${movie.category.name}"></span>
 							<p>Đạo diễn: <span th:text="${movie.director}"></span></p>
 							<p>Diễn viên: <span th:text="${movie.actors}"></span></p>
 						</div>
@@ -103,15 +101,53 @@
 			<!-- lịch chiếu -->
 			<div class="container my-3">
 				<h3>Lịch chiếu</h3>
-				<div th:each="s : ${showtime}">
-				<h1 class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
-													th:text="${s.showDate} + ' | ' + ${s.startTime}"></h1>		
+				<div class="d-flex">
+					<div th:each="s : ${showtime}">
+						<h1
+							class="border border-2 fw-bold rounded rounded-4 px-4 py-2 text-center btn btn-primary"
+							th:text="${s.showDate} + ' | ' + ${s.startTime}"></h1>
+					</div>
 				</div>
 			</div>
 
-			<!-- Đánh giá phim -->
+			<!-- Phim cùng thể loại -->
 			<div class="container my-3">
-				<h3>Đánh giá phim</h3>
+				<h3>Phim cùng thể loại</h3>
+				<div class="container-fluid row">
+						<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
+							th:each="m : ${relatedMovies}">
+							<div class="card p-0 m-0" style="width: 14.5rem;">
+								<img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}"
+									class="card-img-top" alt="..." width="100" height="300">
+								<div class="card-body p-2">
+									<h5 class="card-title"
+										th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 15) + '...' : m.name}">
+									</h5>
+
+									<!-- Hiển thị ngày khởi chiếu của phim -->
+									<div class="row">
+										<label> <i class="bi bi-calendar mx-2"></i> <span
+											th:if="${m.releaseDate != null}"
+											th:text="${#temporals.format(m.releaseDate, 'dd/MM/yyyy')}"></span>
+											<span th:unless="${m.releaseDate != null}">Chưa có
+												ngày phát hành</span>
+										</label>
+									</div>
+
+									<div class="row mt-2">
+										<div class="col-6">
+											<a th:href="@{'/booking/step1/' + ${m.movieId}}"
+												class="btn btn-primary ms-2">Đặt vé</a>
+										</div>
+										<div class="col-6">
+											<a th:href="@{'/movies/movie-detail/' + ${m.movieId}}"
+												class="btn btn-primary me-2">Chi tiết</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 			</div>
 		</div>
 	</div>

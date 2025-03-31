@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.poly.demo.entity.Category;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.repository.MovieRepository;
 
@@ -43,6 +44,12 @@ public class MovieService {
 		}
 		return movieRepository.findByNameContaining(name);
 	}
+
+	public List<Movie> findMoviesByCategory(Category category) {
+		return movieRepository.findByCategory(category);
+	}
+
+	// =========== CRUD ============
 
 	public Movie addMovie(Movie movie) {
 		if (movie == null || movie.getName() == null || movie.getName().trim().isEmpty()) {

@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.Branch;
+import com.poly.demo.entity.Category;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
+import com.poly.demo.repository.CategoryRepository;
 import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.MovieService;
@@ -82,7 +84,7 @@ public class AdminController {
 			@RequestParam(defaultValue = "5") int size, Model model) {
 		addUserInfoToModel(model);
 
-		Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+		Pageable pageable = PageRequest.of(page, size, Sort.by("userId").ascending());
 		Page<User> userPage = userRepository.findAll(pageable);
 
 		model.addAttribute("users", userPage.getContent());
@@ -305,7 +307,26 @@ public class AdminController {
 		return "admin/tickets-manager";
 	}
 
-	// ============================ PHIM ======================================
+	// ==================== THỂ LOẠI ======================
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@GetMapping("/categories-manager")
+	public String CategoriesManager(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size, Model model) {
+		addUserInfoToModel(model);
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by("categoryId").ascending());
+		Page<Category> categoryPage = categoryRepository.findAll(pageable);
+
+		model.addAttribute("categories", categoryPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", categoryPage.getTotalPages());
+
+		return "admin/categories-manager";
+	}
+
+	// ==================== PHIM ======================
 	@GetMapping("/movies-manager")
 	public String MoviesManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
 			Model model) {

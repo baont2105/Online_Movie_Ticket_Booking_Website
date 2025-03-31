@@ -59,8 +59,8 @@ public class TicketController {
 	public String listTickets(Model model) {
 		// Lấy thông tin người dùng hiện tại từ SecurityContext
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
 		String username = null;
+
 		if (principal instanceof UserDetails) {
 			username = ((UserDetails) principal).getUsername();
 		} else {
@@ -75,7 +75,7 @@ public class TicketController {
 			return "error-page"; // Chuyển hướng đến trang lỗi
 		}
 
-		// Lấy danh sách vé theo userID
+		// Lấy danh sách vé theo userID, bao gồm cả TicketSeat
 		List<Ticket> tickets = ticketService.getTicketByUserID(user.getUserId());
 
 		// Thêm danh sách đồ ăn/thức uống và voucher cho mỗi vé

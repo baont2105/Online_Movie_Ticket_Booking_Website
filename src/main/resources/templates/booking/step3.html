@@ -116,7 +116,10 @@
 										</h6>
 										<h6>
 											Ghế đã chọn: <span id="selectedSeats"
-												th:text="${seat.rowNumber} + ${seat.seatNumber}"></span>
+												th:each="ticketSeat, iterStat : ${t.ticketSeats}"> <span
+												th:text="${ticketSeat.seat.rowNumber} + ${ticketSeat.seat.seatNumber}"></span>
+												<span th:if="${!iterStat.last}">, </span>
+											</span>
 										</h6>
 
 										<!-- NHẬP VOUCHER -->

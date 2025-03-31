@@ -33,7 +33,7 @@
 
 				<!-- Form cập nhật tài khoản -->
 				<form action="/account/update" method="post">
-					<input type="hidden" name="id" th:value="${user.id}">
+					<input type="hidden" name="id" th:value="${user.userId}">
 					<!-- Đúng tên thuộc tính của entity User -->
 
 					<div class="row mb-3">
@@ -74,7 +74,7 @@
 
 				<!-- Form đổi mật khẩu -->
 				<form action="/account/change-password" method="post" class="mt-4">
-					<input type="hidden" name="userId" th:value="${user.id}">
+					<input type="hidden" name="userId" th:value="${user.userId}">
 
 					<h5 class="text-center">ĐỔI MẬT KHẨU</h5>
 					<div class="row mb-3">

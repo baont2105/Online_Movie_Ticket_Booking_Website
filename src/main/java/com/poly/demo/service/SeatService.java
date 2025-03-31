@@ -20,6 +20,10 @@ public class SeatService {
 		return seatRepository.findByRoom(room);
 	}
 
+	public List<Seat> saveAll(List<Seat> seats) {
+		return seatRepository.saveAll(seats);
+	}
+
 	public Optional<Seat> getSeatById(Integer seatId) { // 🔥 Sửa từ Long → Integer
 		return seatRepository.findById(seatId);
 	}

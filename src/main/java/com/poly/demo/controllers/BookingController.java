@@ -195,9 +195,9 @@ public class BookingController {
 				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng!"));
 
 		// Chuyển đổi danh sách ghế từ String → List<Integer>
-		List<Integer> seatIds = Arrays.stream(selectedSeats.split(",")).map(Integer::parseInt) // 🔥 Đổi từ `valueOf`
-																								// sang `parseInt` để
-																								// tránh lỗi
+		List<Integer> seatIds = Arrays.stream(selectedSeats.split(",")).map(Integer::parseInt) // Đổi từ `valueOf` sang
+																								// `parseInt` để tránh
+																								// lỗi
 				.collect(Collectors.toList());
 
 		List<Seat> selectedSeatList = seatService.getSeatsByIds(seatIds);
@@ -212,13 +212,13 @@ public class BookingController {
 		Ticket ticket = new Ticket();
 		ticket.setUser(user);
 		ticket.setShowtime(showtime);
-		ticket.setPrice(BigDecimal.ZERO); // 🔥 Đổi từ `0.0` thành `BigDecimal.ZERO`
+		ticket.setPrice(BigDecimal.ZERO); // Đổi từ `0.0` thành `BigDecimal.ZERO`
 		ticket.setTicketStatus("NOT_CHECKED_IN");
 
 		ticketService.saveTicket(ticket);
 
 		// Tạo danh sách Ticket_Seat và tính tổng giá vé
-		BigDecimal totalPrice = BigDecimal.ZERO; // 🔥 Đổi từ `double` sang `BigDecimal`
+		BigDecimal totalPrice = BigDecimal.ZERO; // Đổi từ `double` sang `BigDecimal`
 		List<TicketSeat> ticketSeats = new ArrayList<>();
 
 		for (Seat seat : selectedSeatList) {
@@ -230,14 +230,20 @@ public class BookingController {
 			// Tính tổng giá vé (Seat.price là Integer, cần chuyển sang BigDecimal)
 			totalPrice = totalPrice.add(BigDecimal.valueOf(seat.getPrice()))
 					.add(BigDecimal.valueOf(showtime.getPrice()));
+
+			// Cập nhật trạng thái ghế sang BOOKED
+			seat.setStatus("BOOKED");
 		}
 
 		// Lưu danh sách ghế vào bảng Ticket_Seat
-		ticketSeatService.saveAllTicketSeats(ticketSeats); // 🔥 Đổi `saveAll()` thành `saveAllTicketSeats()`
+		ticketSeatService.saveAllTicketSeats(ticketSeats); // Đổi `saveAll()` thành `saveAllTicketSeats()`
 
 		// Cập nhật lại giá vé tổng
 		ticket.setPrice(totalPrice);
 		ticketService.saveTicket(ticket);
+
+		// Cập nhật trạng thái ghế
+		seatService.saveAll(selectedSeatList); // Lưu lại danh sách ghế đã được cập nhật
 
 		// Chuyển đến Step 3 với ticketId
 		return "redirect:/booking/step3?ticketId=" + ticket.getTicketId();

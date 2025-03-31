@@ -22,6 +22,11 @@
     cursor: pointer;
 }
 
+.seat.disabled {
+    background-color: gray; /* Màu xám cho ghế bị vô hiệu hóa */
+    cursor: not-allowed; /* Con trỏ khi di chuột qua ghế không khả dụng */
+}
+
 .standard {
     background-color: blue;
     color: white;

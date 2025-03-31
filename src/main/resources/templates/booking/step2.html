@@ -56,10 +56,14 @@
 												<div th:each="seat : ${seats}"
 													th:data-seat-id="${seat.seatId}"
 													th:data-seat-code="${seat.rowNumber} + ${seat.seatNumber}"
-													th:class="'seat ' + (${seat.seatType} == 'Standard' ? 'standard' : 'vip')"
+													th:class="'seat ' + (${seat.seatType} == 'Standard' ? 'standard' : 'vip') + 
+                   (${seat.status != 'AVAILABLE' ? ' disabled' : ''})"
 													th:data-id="${seat.rowNumber} + ${seat.seatNumber}"
 													th:data-type="${seat.seatType}"
-													th:text="${seat.rowNumber} + ${seat.seatNumber}"></div>
+													th:text="${seat.rowNumber} + ${seat.seatNumber}"
+													th:attr="disabled=${seat.status != 'AVAILABLE'}"
+													th:style="${seat.status != 'AVAILABLE' ? 'pointer-events: none; opacity: 0.5;' : ''}">
+												</div>
 											</div>
 										</div>
 
@@ -119,7 +123,7 @@
 
 
 	<script th:src="@{'/js/functions/seat.js'}"></script>
-		<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
+	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
 
 </html>

@@ -100,16 +100,27 @@ public class MovieController {
 	/*
 	 * 
 	 * */
+	// MovieController.java
 	@GetMapping("/movie-detail/{id}")
 	public String MovieDetail(@PathVariable Integer id, Model model) {
 		addUserInfoToModel(model);
 
-		Optional<Movie> movie = movieService.getMovieById(id);
-		model.addAttribute("movie", movie.get());
+		Optional<Movie> movieOpt = movieService.getMovieById(id);
+		if (movieOpt.isPresent()) {
+			Movie movie = movieOpt.get();
+			model.addAttribute("movie", movie);
 
-		List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
-		model.addAttribute("showtime", showtime);
+			// Lấy phim cùng thể loại
+			List<Movie> relatedMovies = movieService.findMoviesByCategory(movie.getCategory());
+			model.addAttribute("relatedMovies", relatedMovies);
 
-		return "movie/movie-detail";
+			// Lấy suất chiếu
+			List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
+			model.addAttribute("showtime", showtime);
+
+			return "movie/movie-detail";
+		}
+		return "redirect:/movies"; // Trả về danh sách phim nếu không tìm thấy
 	}
+
 }
