@@ -54,7 +54,7 @@
 							<th>Suất Phim</th>
 							<th>Đồ Ăn / Thức Uống</th>
 							<th>Voucher</th>
-							<th>Giá vé (VND)</th>
+							<th>Tổng cộng (VND)</th>
 							<th>Trạng Thái</th>
 						</tr>
 					</thead>
@@ -83,7 +83,9 @@
 									<span th:text="${voucher.voucher.code}"></span> <span
 									th:if="${!iterStat.last}">, </span>
 							</span></td>
-							<td th:text="${t.price}"></td>
+							<td th:text="${#numbers.formatDecimal(t.price, 0, 'COMMA', 0, 'POINT')}"></td>
+
+
 							<td>
 								<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
 								<button th:if="${t.ticketStatus == 'NOT_CHECKED_IN'}"

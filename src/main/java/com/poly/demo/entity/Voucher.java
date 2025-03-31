@@ -20,7 +20,7 @@ public class Voucher {
 	@Column(unique = true, nullable = false)
 	private String code;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "discount_amount")
 	private Integer discountAmount;
 
 	// Getters & Setters

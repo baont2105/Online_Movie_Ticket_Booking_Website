@@ -28,5 +28,11 @@ public class TicketSeat {
 	@JoinColumn(name = "seat_id", nullable = false)
 	private Seat seat;
 
+	@Override
+	public String toString() {
+		return "TicketSeat{" + "seat=" + (seat != null ? seat.getSeatId() : "null") + ", ticketId="
+				+ (ticket != null ? ticket.getTicketId() : "null") + '}';
+	}
+
 	// Getters & Setters
 }

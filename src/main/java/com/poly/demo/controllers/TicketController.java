@@ -20,6 +20,7 @@ import com.poly.demo.entity.TicketFood;
 import com.poly.demo.entity.TicketVoucher;
 import com.poly.demo.entity.User;
 import com.poly.demo.service.TicketService;
+import com.poly.demo.service.TicketVoucherService;
 import com.poly.demo.service.UserService;
 
 @Controller
@@ -31,6 +32,8 @@ public class TicketController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private TicketVoucherService ticketVoucherService;
 
 	// Hàm thêm user vào model
 	private void addUserInfoToModel(Model model) {
@@ -84,8 +87,11 @@ public class TicketController {
 
 		// Duyệt qua từng vé để lấy danh sách đồ ăn/thức uống và voucher
 		for (Ticket ticket : tickets) {
+			// Lấy danh sách đồ ăn/thức uống cho từng vé
 			foodItemsMap.put(ticket.getTicketId(), ticketService.getFoodItemsByTicketId(ticket.getTicketId()));
-			voucherMap.put(ticket.getTicketId(), ticketService.getVouchersByTicketId(ticket.getTicketId()));
+
+			// Lấy danh sách voucher cho từng vé
+			voucherMap.put(ticket.getTicketId(), ticketVoucherService.getVouchersByTicket(ticket)); // Thay đổi ở đây
 		}
 
 		model.addAttribute("tickets", tickets);

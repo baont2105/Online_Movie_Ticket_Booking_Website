@@ -46,5 +46,12 @@ public class Ticket {
 	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TicketSeat> ticketSeats = new ArrayList<>();
 
+	@Override
+	public String toString() {
+		return "Ticket{" + "ticketId=" + ticketId + ", showtime="
+				+ (showtime != null ? showtime.getShowtimeId() : "null") + ", user="
+				+ (user != null ? user.getUserId() : "null") + '}';
+	}
+
 	// Getters & Setters
 }

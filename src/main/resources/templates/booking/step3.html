@@ -116,7 +116,8 @@
 										</h6>
 										<h6>
 											Ghế đã chọn: <span id="selectedSeats"
-												th:each="ticketSeat, iterStat : ${t.ticketSeats}"> <span
+												th:each="ticketSeat, iterStat : ${ticket.ticketSeats}">
+												<span
 												th:text="${ticketSeat.seat.rowNumber} + ${ticketSeat.seat.seatNumber}"></span>
 												<span th:if="${!iterStat.last}">, </span>
 											</span>
@@ -128,6 +129,7 @@
 												giảm giá:</label> <input type="text" class="form-control"
 												id="voucherCode" name="voucherCode">
 										</div>
+
 
 
 										<h5>

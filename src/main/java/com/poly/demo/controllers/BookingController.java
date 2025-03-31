@@ -29,8 +29,11 @@ import com.poly.demo.entity.Seat;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.TicketFood;
+import com.poly.demo.entity.TicketFoodId;
 import com.poly.demo.entity.TicketSeat;
+import com.poly.demo.entity.TicketVoucher;
 import com.poly.demo.entity.User;
+import com.poly.demo.entity.Voucher;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.FoodItemService;
 import com.poly.demo.service.MovieService;
@@ -39,7 +42,9 @@ import com.poly.demo.service.ShowtimeService;
 import com.poly.demo.service.TicketFoodService;
 import com.poly.demo.service.TicketSeatService;
 import com.poly.demo.service.TicketService;
+import com.poly.demo.service.TicketVoucherService;
 import com.poly.demo.service.UserService;
+import com.poly.demo.service.VoucherService;
 
 @Controller
 @RequestMapping("/booking/")
@@ -71,6 +76,11 @@ public class BookingController {
 	private TicketFoodService ticketFoodService;
 	@Autowired
 	private TicketSeatService ticketSeatService;
+
+	@Autowired
+	private VoucherService voucherService;
+	@Autowired
+	private TicketVoucherService ticketVoucherService;
 
 	private void addUserInfoToModel(Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -253,7 +263,6 @@ public class BookingController {
 	}
 
 	// ========================= STEP 3 ===========================
-	// ========================= STEP 3 ===========================
 	@GetMapping("/step3")
 	public String showStep3(@RequestParam("ticketId") Integer ticketId, Model model) {
 		addUserInfoToModel(model);
@@ -279,8 +288,9 @@ public class BookingController {
 
 	@PostMapping("/confirm-foods")
 	public String confirmFoods(@RequestParam Integer ticketId, @RequestParam Map<String, String> foodSelections,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam(required = false) String voucherCode, RedirectAttributes redirectAttributes) {
 		try {
+			// Lấy thông tin vé
 			Optional<Ticket> optionalTicket = ticketService.getTicketById(ticketId);
 			if (optionalTicket.isEmpty()) {
 				redirectAttributes.addFlashAttribute("error", "Vé không tồn tại!");
@@ -289,8 +299,12 @@ public class BookingController {
 
 			Ticket ticket = optionalTicket.get();
 			List<TicketFood> ticketFoodList = new ArrayList<>();
-			BigDecimal totalFoodPrice = BigDecimal.ZERO; // Biến lưu tổng giá món ăn
+			BigDecimal totalFoodPrice = BigDecimal.ZERO;
 
+			// Xóa các món ăn cũ của vé trước khi lưu mới
+			ticketFoodService.deleteByTicketId(ticketId);
+
+			// Xử lý danh sách món ăn được chọn
 			for (Map.Entry<String, String> entry : foodSelections.entrySet()) {
 				try {
 					String key = entry.getKey().replaceAll("[^0-9]", ""); // Lọc số từ key
@@ -304,13 +318,12 @@ public class BookingController {
 						FoodItem foodItem = foodItemService.getFoodItemById(foodId).orElseThrow(
 								() -> new IllegalArgumentException("Không tìm thấy món ăn với ID: " + foodId));
 
-						TicketFood ticketFood = new TicketFood();
-						ticketFood.setTicket(ticket);
-						ticketFood.setFoodItem(foodItem);
-						ticketFood.setQuantity(quantity);
+						// Tạo ID cho TicketFood
+						TicketFoodId ticketFoodId = new TicketFoodId(ticket.getTicketId(), foodItem.getFoodItemId());
+						TicketFood ticketFood = new TicketFood(ticketFoodId, ticket, foodItem, quantity);
 						ticketFoodList.add(ticketFood);
 
-						// Cập nhật giá món ăn
+						// Cộng giá tiền món ăn vào tổng tiền
 						totalFoodPrice = totalFoodPrice.add(foodItem.getPrice().multiply(BigDecimal.valueOf(quantity)));
 					}
 				} catch (NumberFormatException e) {
@@ -318,15 +331,37 @@ public class BookingController {
 				}
 			}
 
+			// Lưu món ăn vào TicketFoods
 			if (!ticketFoodList.isEmpty()) {
-				ticketFoodService.saveAllTicketFoods(ticketFoodList); // Lưu tất cả cùng lúc
-				ticket.setPrice(ticket.getPrice().add(totalFoodPrice)); // Cập nhật tổng giá vé
-				ticketService.saveTicket(ticket); // Lưu vé với giá đã cập nhật
-				redirectAttributes.addFlashAttribute("message", "Lưu thành công!");
-			} else {
-				redirectAttributes.addFlashAttribute("error", "Không có món ăn nào được chọn!");
+				ticketFoodService.saveAllTicketFoods(ticketFoodList);
 			}
 
+			// Cập nhật giá vé dựa trên tổng giá thức ăn
+			BigDecimal ticketPrice = ticket.getPrice() != null ? ticket.getPrice() : BigDecimal.ZERO;
+			ticket.setPrice(ticketPrice.add(totalFoodPrice));
+
+			// Xử lý voucher nếu có
+			if (voucherCode != null && !voucherCode.trim().isEmpty()) {
+				Optional<Voucher> optionalVoucher = voucherService.getVoucherByCode(voucherCode.trim());
+				if (optionalVoucher.isPresent()) {
+					Voucher voucher = optionalVoucher.get();
+					BigDecimal discountAmount = BigDecimal.valueOf(voucher.getDiscountAmount());
+
+					// Cập nhật giá vé sau khi trừ giảm giá
+					ticket.setPrice(ticket.getPrice().subtract(discountAmount).max(BigDecimal.ZERO));
+
+					// Lưu voucher vào Ticket_Vouchers (CHỈ LƯU KHI VOUCHER HỢP LỆ)
+					TicketVoucher ticketVoucher = new TicketVoucher(ticket, voucher);
+					ticketVoucherService.save(ticketVoucher);
+				} else {
+					redirectAttributes.addFlashAttribute("error", "Mã giảm giá không hợp lệ!");
+				}
+			}
+
+			// Lưu lại vé sau khi cập nhật giá
+			ticketService.saveTicket(ticket);
+
+			redirectAttributes.addFlashAttribute("message", "Lưu thành công!");
 			return "redirect:/booking/step3?ticketId=" + ticketId;
 		} catch (Exception e) {
 			e.printStackTrace();

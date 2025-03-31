@@ -6,22 +6,18 @@ import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Embeddable
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Embeddable
 public class TicketFoodId implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	@Column(name = "ticket_id", nullable = false)
+	@Column(name = "ticket_id")
 	private Integer ticketId;
 
-	@Column(name = "food_id", nullable = false)
+	@Column(name = "food_id")
 	private Integer foodId;
 
 	@Override
