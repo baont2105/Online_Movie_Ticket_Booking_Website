@@ -112,7 +112,10 @@ public class BookingController {
 				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy phim với ID: " + id));
 
 		List<Branch> branches = branchService.getAllBranches();
-		List<Showtime> showtimes = showtimeService.getShowtimesByMovie(movie);
+		Branch branch = branchService.getBranchById(1)
+				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chi nhánh với ID: " + 1));
+
+		List<Showtime> showtimes = showtimeService.getShowtimesByMovieAndBranch(movie, branch);
 
 		model.addAttribute("movies", movieService.getAllMovies());
 		model.addAttribute("branches", branches);
