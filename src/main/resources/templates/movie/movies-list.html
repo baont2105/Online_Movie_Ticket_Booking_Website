@@ -52,6 +52,35 @@
 					</div>
 				</nav>
 
+				<div class="row container-fluid mb-3 p-0">
+					<form action="/movies/search" method="GET"
+						class="d-flex justify-content-center align-items-center">
+
+						<!-- Dropdown chọn thể loại -->
+						<select name="categoryId" class="form-select me-2"
+							style="width: 200px;">
+							<option value="">Tất cả thể loại</option>
+							<option th:each="category : ${categories}"
+								th:value="${category.categoryId}" th:text="${category.name}"
+								th:selected="${category.categoryId == selectedCategory}">
+							</option>
+						</select>
+
+						<!-- Ô tìm kiếm -->
+						<input type="text" name="keyword" class="form-control me-2"
+							placeholder="Nhập tên phim..." style="width: 300px;"
+							th:value="${searchKeyword}">
+
+						<!-- Nút tìm kiếm -->
+						<button type="submit" class="btn btn-primary">Tìm kiếm</button>
+					</form>
+				</div>
+				<div th:if="${errorMessage}"
+					class="alert alert-danger text-center mt-3">
+					<span th:text="${errorMessage}"></span>
+				</div>
+
+
 				<!-- Aside Left -->
 				<aside class="col-sm-0 col-md-2 p-2"></aside>
 				<!-- Article 
@@ -100,33 +129,34 @@
 
 
 
-				<div class="row container justify-content-center">
-					<hr class="my-3" style="width: 50%;">
-					<div class="d-flex justify-content-center pagination">
-						<nav aria-label="Page navigation">
-							<ul class="pagination">
-								<li class="page-item"
-									th:classappend="${currentPage == 0} ? 'disabled'"><a
-									class="page-link"
-									th:href="@{/movies/(page=${currentPage - 1})}">Trước</a>
-								</li>
+				<!-- Điều kiện tránh lỗi nếu không có kết quả -->
+				<th:block th:if="${totalPages > 0}">
+					<nav>
+						<ul class="pagination justify-content-center">
+							<!-- Nút Previous -->
+							<li class="page-item"
+								th:classappend="${currentPage == 0} ? 'disabled'"><a
+								class="page-link"
+								th:href="@{/movies/search(categoryId=${selectedCategory}, keyword=${searchKeyword}, page=${currentPage - 1})}">Trước</a>
+							</li>
 
-								<li class="page-item"
-									th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-									th:classappend="${pageNum == currentPage} ? 'active'"><a
-									class="page-link"
-									th:href="@{/movies/(page=${pageNum})}"
-									th:text="${pageNum + 1}"></a></li>
+							<!-- Các số trang -->
+							<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+								th:classappend="${i == currentPage} ? 'active'"
+								class="page-item"><a class="page-link"
+								th:href="@{/movies/search(categoryId=${selectedCategory}, keyword=${searchKeyword}, page=${i})}"
+								th:text="${i + 1}"></a></li>
 
-								<li class="page-item"
-									th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-									<a class="page-link"
-									th:href="@{/movies/(page=${currentPage + 1})}">Sau</a>
-								</li>
-							</ul>
-						</nav>
-					</div>
-				</div>
+							<!-- Nút Next -->
+							<li class="page-item"
+								th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+								<a class="page-link"
+								th:href="@{/movies/search(categoryId=${selectedCategory}, keyword=${searchKeyword}, page=${currentPage + 1})}">Sau</a>
+							</li>
+						</ul>
+					</nav>
+				</th:block>
+
 
 
 

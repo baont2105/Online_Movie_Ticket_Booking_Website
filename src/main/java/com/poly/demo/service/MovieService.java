@@ -88,4 +88,29 @@ public class MovieService {
 		}
 		movieRepository.deleteById(id);
 	}
+
+	// ================= TÌM KIẾM ===================
+	// Tìm kiếm phim theo từ khóa
+	// Tìm kiếm phim theo từ khóa
+	public List<Movie> searchMoviesByKeyword(String keyword) {
+		return movieRepository.findByNameContainingIgnoreCase(keyword);
+	}
+
+	// Tìm kiếm phim theo thể loại
+	public List<Movie> searchMoviesByCategory(Integer categoryId) {
+		return movieRepository.findByCategory_CategoryId(categoryId);
+	}
+
+	// Tìm kiếm phim theo cả thể loại và từ khóa
+	public List<Movie> searchMovies(Integer categoryId, String keyword) {
+		if (categoryId != null && keyword != null && !keyword.isEmpty()) {
+			return movieRepository.findByCategory_CategoryIdAndNameContainingIgnoreCase(categoryId, keyword);
+		} else if (categoryId != null) {
+			return searchMoviesByCategory(categoryId);
+		} else if (keyword != null && !keyword.isEmpty()) {
+			return searchMoviesByKeyword(keyword);
+		} else {
+			return getAllMovies();
+		}
+	}
 }

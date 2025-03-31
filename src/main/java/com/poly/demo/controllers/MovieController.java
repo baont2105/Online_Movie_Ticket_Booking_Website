@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.poly.demo.entity.Category;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.User;
+import com.poly.demo.service.CategoryService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.ShowtimeService;
 import com.poly.demo.service.UserService;
@@ -34,6 +36,9 @@ public class MovieController {
 
 	@Autowired
 	private ShowtimeService showtimeService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	private void addUserInfoToModel(Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -63,11 +68,17 @@ public class MovieController {
 		addUserInfoToModel(model);
 
 		Page<Movie> moviePage = movieService.getMovies(page, size);
+
+		List<Category> categories = categoryService.getAllCategories();
+		model.addAttribute("categories", categories);
+
 		model.addAttribute("movies", moviePage.getContent());
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", moviePage.getTotalPages());
 		return "movie/movies-list"; // Tên file Thymeleaf (movies.html)
 	}
+
+	// =============== BỘ LỌC, TÌM KIẾM ================
 
 	@GetMapping("/now_showing")
 	public String listMoviesNowShowing(@RequestParam(defaultValue = "0") int page,
@@ -95,6 +106,24 @@ public class MovieController {
 		model.addAttribute("totalPages", moviePage.getTotalPages());
 
 		return "movie/movies-list"; // Tên file Thymeleaf (movies.html)
+	}
+
+	@GetMapping("/search")
+	public String searchMovies(@RequestParam(required = false) Integer categoryId,
+			@RequestParam(required = false) String keyword, Model model) {
+		addUserInfoToModel(model);
+		List<Category> categories = categoryService.getAllCategories();
+		List<Movie> movies = movieService.searchMovies(categoryId, keyword);
+
+		if (movies.isEmpty()) {
+			model.addAttribute("errorMessage", "Không tìm thấy phim nào phù hợp.");
+		}
+
+		model.addAttribute("categories", categories);
+		model.addAttribute("movies", movies);
+		model.addAttribute("selectedCategory", categoryId);
+		model.addAttribute("searchKeyword", keyword);
+		return "movie/movies-list";
 	}
 
 	/*

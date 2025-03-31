@@ -27,4 +27,14 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
 	@Query("SELECT m FROM Movie m WHERE m.releaseDate > CURRENT_DATE")
 	List<Movie> findUpcomingMovies();
+
+	// ================= TÌM KIẾM ===================
+	// Tìm kiếm phim theo tên (chứa từ khóa)
+	List<Movie> findByNameContainingIgnoreCase(String keyword);
+
+	// Tìm kiếm phim theo thể loại
+	List<Movie> findByCategory_CategoryId(Integer categoryId);
+
+	// Tìm kiếm phim theo cả thể loại và từ khóa
+	List<Movie> findByCategory_CategoryIdAndNameContainingIgnoreCase(Integer categoryId, String keyword);
 }
