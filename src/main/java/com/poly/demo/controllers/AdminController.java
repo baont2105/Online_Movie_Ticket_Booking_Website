@@ -27,6 +27,7 @@ import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
+import com.poly.demo.repository.BranchRepository;
 import com.poly.demo.repository.CategoryRepository;
 import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
@@ -241,6 +242,8 @@ public class AdminController {
 	// ======================= CHI NHÁNH =======================
 	@Autowired
 	private BranchService branchService;
+	@Autowired
+	private BranchRepository branchRepository;
 
 	@GetMapping("/branches-manager")
 	public String BranchManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
@@ -254,36 +257,29 @@ public class AdminController {
 		model.addAttribute("totalPages", branchPage.getTotalPages());
 		model.addAttribute("branch", new Branch());
 		return "admin/branches-manager/list";
-
 	}
 
-	@GetMapping("/branch-manager/add")
-	public String showAddBranchForm(@ModelAttribute Branch branch, Model model) {
-		addUserInfoToModel(model); // Thêm thông tin user nếu có
-		branchService.addBranch(branch);
-		return "admin/branch-form"; // Trả về template form thêm chi nhánh
+	// Hiển thị form (thêm mới hoặc sửa)
+	@GetMapping("/branches-manager/{id}")
+	public String form(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+
+		Branch branch = id == 0 ? new Branch() : branchRepository.findById(id).orElse(new Branch());
+		model.addAttribute("selectedBranch", branch);
+		return "admin/branches-manager/form";
 	}
 
-	@PostMapping("/branch-manager/add")
-	public String addBranch(@ModelAttribute Branch branch) {
-		branchService.addBranch(branch);
-		return "redirect:/admin/branch-manager"; // Chuyển hướng về trang quản lý chi nhánh
+	@PostMapping("/branches-manager/save")
+	public String save(@ModelAttribute Branch branch, Model model) {
+		addUserInfoToModel(model);
+		branchRepository.save(branch);
+		return "redirect:/admin/branches-manager";
 	}
 
-	@GetMapping("/branch-manager/edit/{id}")
-	public String showEditBranchForm(@PathVariable Integer id, Model model) {
-		Optional<Branch> branch = branchService.getBranchById(id);
-		if (branch.isPresent()) {
-			model.addAttribute("branch", branch.get());
-			return "branch-form"; // Tạo thêm file Thymeleaf branch-form.html
-		}
-		return "redirect:/admin/branch-manager";
-	}
-
-	@GetMapping("/branch-manager/delete/{id}")
+	@GetMapping("/branches-manager/delete/{id}")
 	public String deleteBranch(@PathVariable Integer id) {
 		branchService.deleteBranch(id);
-		return "redirect:/admin/branch-manager";
+		return "redirect:/admin/branches-manager";
 	}
 
 	// ======================= PHÒNG CHIẾU =======================

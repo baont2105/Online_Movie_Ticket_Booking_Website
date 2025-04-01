@@ -44,7 +44,7 @@
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link active"
 									aria-current="page" th:href="@{/admin/branches-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/branches-manager}">Form</a>
+								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/branches-manager/0}">Form</a>
 								</li>
 							</ul>
 							
@@ -67,9 +67,9 @@
 										<td th:text="${branch.email}"></td>
 										<td th:text="${branch.city}"></td>
 										<td><a
-											th:href="@{/admin/branch-manager/edit/{id}(id=${branch.branchId})}"
+											th:href="@{/admin/branches-manager/{id}(id=${branch.branchId})}"
 											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/branch-manager/delete/{id}(id=${branch.branchId})}"
+											th:href="@{/admin/branches-manager/delete/{id}(id=${branch.branchId})}"
 											class="btn btn-danger btn-sm"
 											onclick="return confirm('Bạn có chắc chắn muốn xóa chi nhánh này?')">Xóa</a>
 										</td>
