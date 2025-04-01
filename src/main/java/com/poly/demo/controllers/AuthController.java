@@ -1,5 +1,7 @@
 package com.poly.demo.controllers;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -79,7 +81,8 @@ public class AuthController {
 		}
 
 		// Kiểm tra username đã tồn tại chưa
-		if (userService.findByUsername(user.getUsername()) != null) {
+		Optional<User> existingUser = userService.findByUsername(user.getUsername());
+		if (existingUser.isPresent()) {
 			model.addAttribute("error", "Tên đăng nhập đã tồn tại.");
 			return "account/register";
 		}
