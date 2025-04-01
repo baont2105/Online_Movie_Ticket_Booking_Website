@@ -15,7 +15,8 @@
 	<link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
-	<div class="container-fluid m-0 p-0" style="background: url(/image/Background/bg_pattern.png) repeat left top;">
+	<div class="background-image"></div>
+	<div class="container-fluid m-0 p-0">
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
@@ -27,7 +28,7 @@
 		<div class="container-fluid mx-0 p-0" style="margin-top: 65px;">
 			<!-- Nội dung trang web -->
 			<div class="container-fluid">
-				<div class="row background-image">
+				<div class="row">
 					<div class="col-md-6 d-flex justify-content-center align-items-center">
 						<div class="login-section">
 							<div class="text-center mb-4">
@@ -84,18 +85,15 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6 d-flex flex-column justify-content-center align-items-center promo-section">
+					<div class="col-md-6 d-flex flex-column justify-content-center align-items-center promo-section" style="height:650px">
+					
 						<div class="col-sm-6">
 							<div class="text-center promo-title">ĐỊA ĐẠO: MẶT TRỜI TRONG BÓNG TỐI</div>
 							<div class="text-center promo-date">Khởi chiếu 04/04/2025</div>
 						</div>
-						<div class="col-sm-6">
-							<div class="text-center movie-poster">
-								<img src="image/Thumbnail/diadao.jpg"
-									class="img-fluid p-0 m-0 border border-5 rounded" style="max-width: 300px;">
-								<!-- Replace with your movie poster URL -->
-							</div>
-						</div>
+
+						<div class="promo-image"></div>
+
 					</div>
 				</div>
 			</div>

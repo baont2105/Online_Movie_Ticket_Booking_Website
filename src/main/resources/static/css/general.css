@@ -5,11 +5,19 @@ body {
 }
 
 .background-image {
-	background-image: url('cinema-background.jpg');
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height: 100vh;
+	background-image: url("../image/Background/bg_cinema.jpg");
+	
+	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
-	height: 100vh;
-	position: relative;
+	/* filter: blur(5px); */
+	
+	z-index: -1;
 }
 
 .head-nav-li {
@@ -88,7 +96,7 @@ body {
 .register-section,
 .login-section,
 .forgot-password-section {
-	background-color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(255, 255, 255);
 	padding: 20px;
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -98,10 +106,27 @@ body {
 
 /* Promo Section */
 .promo-section {
-	background-color: #0066cc;
 	color: white;
 	padding: 20px;
 	border-radius: 10px;
+	position: relative;
+	
+}
+
+.promo-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height: 100vh;
+	background-image: url("../image/Thumbnail/diadao.jpg");
+	
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	filter: blur(5px);
+	
+	z-index: -1;
 }
 
 .promo-title {
