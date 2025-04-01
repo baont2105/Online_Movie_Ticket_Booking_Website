@@ -38,10 +38,18 @@
 					</div>
 					<div class="col-10">
 						<div class="container table-container"
-							style="position: relative; margin-top: 100px; min-height: 500px;">
+							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ TÀI KHOẢN</h2>
-							<table class="table table-default table-bordered"
-								style="margin-bottom: 100px;">
+
+							<ul class="nav nav-tabs">
+								<li class="nav-item"><a class="nav-link active"
+									aria-current="page" href="#">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/accounts-manager/0}">Form</a>
+								</li>
+							</ul>
+
+							<table class="table table-default table-bordered">
 								<thead>
 									<tr>
 										<th>Mã Tài Khoản</th>
@@ -64,7 +72,7 @@
 										<td th:text="${user.role}"></td>
 										<td th:text="${user.visible ? 'Hoạt động' : 'Bị khóa'}"></td>
 										<td><a
-											th:href="@{/admin/accounts-manager/edit/{id}(id=${user.userId})}"
+											th:href="@{/admin/accounts-manager/{id}(id=${user.userId})}"
 											class="btn btn-primary">Sửa</a> <a
 											th:href="@{/admin/accounts-manager/delete/{id}(id=${user.userId})}"
 											class="btn btn-danger"

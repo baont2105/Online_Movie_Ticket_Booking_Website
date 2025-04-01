@@ -38,37 +38,46 @@
 					</div>
 					<div class="col-10">
 						<div class="container table-container"
-							style="position: relative; margin-top: 100px; min-height: 500px;">
-							<h2 class="form-title">QUẢN LÝ TÀI KHOẢN</h2>
-							<table class="table table-default table-bordered"
-								style="margin-bottom: 100px;">
+							style="position: relative; margin-top: 50px; min-height: 500px;">
+							<h2 class="form-title">QUẢN LÝ SUẤT CHIẾU</h2>
+							
+							<ul class="nav nav-tabs">
+								<li class="nav-item"><a class="nav-link active"
+									aria-current="page" th:href="@{/admin/showtimes-manager}">Danh sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/showtimes-manager}">Form</a>
+								</li>
+							</ul>
+							
+							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th>Mã Tài Khoản</th>
-										<th>Họ Tên</th>
-										<th>Tên Tài Khoản</th>
-										<th>Email</th>
-										<th>Số Điện Thoại</th>
-										<th>Vai Trò</th>
-										<th>Trạng Thái</th>
-										<th>Chỉnh Sửa</th>
+										<th>ID</th>
+										<th>Tên Phim</th>
+										<th>Tên Chi Nhánh</th>
+										<th>Tên Phòng Chiếu</th>
+										<th>Thời Gian Bắt Đầu</th>
+										<th>Thời Gian Kết Thúc</th>
+										<th>Giá Vé</th>
+										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="user : ${users}">
-										<td th:text="${user.userId}"></td>
-										<td th:text="${user.name}"></td>
-										<td th:text="${user.username}"></td>
-										<td th:text="${user.email}"></td>
-										<td th:text="${user.phoneNumber}"></td>
-										<td th:text="${user.role}"></td>
-										<td th:text="${user.visible ? 'Hoạt động' : 'Bị khóa'}"></td>
+									<tr th:each="showtime : ${showtimePage.content}">
+										<td th:text="${showtime.showtimeId}"></td>
+										<td th:text="${showtime.movie.name}"></td>
+										<td th:text="${showtime.branch.name}"></td>
+										<td th:text="${showtime.room.name}"></td>
+										<td
+											th:text="${#temporals.format(showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+										<td
+											th:text="${#temporals.format(showtime.endTime, 'dd/MM/yyyy HH:mm')}"></td>
+										<td th:text="${showtime.price} + ' VNĐ'"></td>
 										<td><a
-											th:href="@{/admin/accounts-manager/edit/{id}(id=${user.userId})}"
-											class="btn btn-primary">Sửa</a> <a
-											th:href="@{/admin/accounts-manager/delete/{id}(id=${user.userId})}"
-											class="btn btn-danger"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?');">Xóa</a>
+											th:href="@{/admin/showtime-manager/edit/{id}(id=${showtime.showtimeId})}"
+											class="btn btn-warning btn-sm">Sửa</a> <a
+											th:href="@{/admin/showtime-manager/delete/{id}(id=${showtime.showtimeId})}"
+											class="btn btn-danger btn-sm"
+											onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
 										</td>
 									</tr>
 								</tbody>
@@ -82,20 +91,20 @@
 											<li class="page-item"
 												th:classappend="${currentPage == 0} ? 'disabled'"><a
 												class="page-link"
-												th:href="@{/admin/accounts-manager(page=${currentPage - 1})}">Trước</a>
+												th:href="@{/admin/showtime-manager(page=${currentPage - 1})}">Trước</a>
 											</li>
 
 											<li class="page-item"
 												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
 												th:classappend="${pageNum == currentPage} ? 'active'"><a
 												class="page-link"
-												th:href="@{/admin/accounts-manager(page=${pageNum})}"
+												th:href="@{/admin/showtime-manager(page=${pageNum})}"
 												th:text="${pageNum + 1}"></a></li>
 
 											<li class="page-item"
 												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
 												<a class="page-link"
-												th:href="@{/admin/accounts-manager(page=${currentPage + 1})}">Sau</a>
+												th:href="@{/admin/showtime-manager(page=${currentPage + 1})}">Sau</a>
 											</li>
 										</ul>
 									</nav>

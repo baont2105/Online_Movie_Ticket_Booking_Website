@@ -38,38 +38,61 @@
 					</div>
 					<div class="col-10">
 						<div class="container table-container"
-							style="position: relative; margin-top: 100px; min-height: 500px;">
-							<h2 class="form-title">QUẢN LÝ TÀI KHOẢN</h2>
-							<table class="table table-default table-bordered"
-								style="margin-bottom: 100px;">
+							style="position: relative; margin-top: 50px; min-height: 500px;">
+							<h2 class="form-title">QUẢN LÝ VÉ</h2>
+							
+							<ul class="nav nav-tabs">
+								<li class="nav-item"><a class="nav-link active"
+									aria-current="page" th:href="@{/admin/tickets-manager}">Danh sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/tickets-manager}">Form</a>
+								</li>
+							</ul>
+							
+							<table class="table table-default table-bordered">
 								<thead>
 									<tr>
-										<th>Mã Tài Khoản</th>
-										<th>Họ Tên</th>
-										<th>Tên Tài Khoản</th>
-										<th>Email</th>
-										<th>Số Điện Thoại</th>
-										<th>Vai Trò</th>
+										<th>Mã vé</th>
+										<th>Mã Người Đặt</th>
+										<th>Tên Người Đặt</th>
+										<th>Thời Điểm Chiếu</th>
+										<th>Ghế Ngồi</th>
+										<th>Tổng Tiền (VNĐ)</th>
+										<th>Thời Điểm Đặt</th>
 										<th>Trạng Thái</th>
 										<th>Chỉnh Sửa</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="user : ${users}">
-										<td th:text="${user.userId}"></td>
-										<td th:text="${user.name}"></td>
-										<td th:text="${user.username}"></td>
-										<td th:text="${user.email}"></td>
-										<td th:text="${user.phoneNumber}"></td>
-										<td th:text="${user.role}"></td>
-										<td th:text="${user.visible ? 'Hoạt động' : 'Bị khóa'}"></td>
+									<tr th:each="ticket : ${tickets}">
+										<td th:text="${ticket.ticketId}"></td>
+										<td th:text="${ticket.user.userId}"></td>
+										<td th:text="${ticket.user.name}"></td>
+
+										<!-- THỜI ĐIỂM CHIẾU -->
+										<td
+											th:text="${#temporals.format(ticket.showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+
+										<!-- GHẾ NGỒI -->
+										<td><span
+											th:each="ticketSeat, iterStat : ${ticket.ticketSeats}">
+												<span
+												th:text="${ticketSeat.seat.rowNumber} + ${ticketSeat.seat.seatNumber}"></span>
+												<span th:if="${!iterStat.last}">, </span>
+										</span></td>
+
+										<td
+											th:text="${#numbers.formatDecimal(ticket.price, 0, 'COMMA', 0, 'POINT')}"></td>
+										<td
+											th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+										<td><span th:if="${ticket.ticketStatus == 'CHECKED_IN'}"
+											class="text-success fw-bold">Đã Check-in</span> <span
+											th:if="${ticket.ticketStatus == 'NOT_CHECKED_IN'}"
+											class="text-danger fw-bold">Chưa Check-in</span></td>
 										<td><a
-											th:href="@{/admin/accounts-manager/edit/{id}(id=${user.userId})}"
-											class="btn btn-primary">Sửa</a> <a
-											th:href="@{/admin/accounts-manager/delete/{id}(id=${user.userId})}"
-											class="btn btn-danger"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?');">Xóa</a>
-										</td>
+											th:href="@{/admin/tickets-manager/edit/{id}(id=${ticket.ticketId})}"
+											class="btn btn-warning">Sửa</a> <a
+											th:href="@{/admin/tickets-manager/delete/{id}(id=${ticket.ticketId})}"
+											class="btn btn-danger">Xóa</a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -82,20 +105,20 @@
 											<li class="page-item"
 												th:classappend="${currentPage == 0} ? 'disabled'"><a
 												class="page-link"
-												th:href="@{/admin/accounts-manager(page=${currentPage - 1})}">Trước</a>
+												th:href="@{/admin/tickets-manager(page=${currentPage - 1})}">Trước</a>
 											</li>
 
 											<li class="page-item"
 												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
 												th:classappend="${pageNum == currentPage} ? 'active'"><a
 												class="page-link"
-												th:href="@{/admin/accounts-manager(page=${pageNum})}"
+												th:href="@{/admin/tickets-manager(page=${pageNum})}"
 												th:text="${pageNum + 1}"></a></li>
 
 											<li class="page-item"
 												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
 												<a class="page-link"
-												th:href="@{/admin/accounts-manager(page=${currentPage + 1})}">Sau</a>
+												th:href="@{/admin/tickets-manager(page=${currentPage + 1})}">Sau</a>
 											</li>
 										</ul>
 									</nav>

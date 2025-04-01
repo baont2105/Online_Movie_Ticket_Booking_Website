@@ -39,10 +39,6 @@ import com.poly.demo.service.UserService;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
-	@Autowired
-	private MovieService movieService;
-
 	// Thêm thông tin user vào model
 	private void addUserInfoToModel(Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -80,8 +76,8 @@ public class AdminController {
 	private UserRepository userRepository;
 
 	@GetMapping("/accounts-manager")
-	public String AccountsManager(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size, Model model) {
+	public String AccountList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
 		addUserInfoToModel(model);
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by("userId").ascending());
@@ -91,14 +87,59 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 
-		return "admin/accounts-manager";
+		return "admin/accounts-manager/list";
 	}
 
+	@GetMapping("/accounts-manager/{id}")
+	public String AccountForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+		User user = id == 0 ? new User() : userRepository.findById(id).orElse(new User());
+		model.addAttribute("selectedUser", user);
+		return "admin/accounts-manager/form";
+	}
+
+	// Lưu (thêm hoặc cập nhật)
+	@PostMapping("/accounts-manager/save")
+	public String save(@ModelAttribute User user) {
+		user.setPassword("$2a$10$B4WNFxY26ZqvRckrMXIS0ud2bimwdYUlxzhQJGups1dajH55FWEDa");
+		userRepository.save(user);
+		return "redirect:/admin/accounts-manager";
+	}
+
+	@GetMapping("/accounts-manager/edit/{id}")
+	public String editAccount(@PathVariable("id") Integer id, Model model) {
+		Optional<User> userOptional = userService.getUserById(id);
+		if (userOptional.isPresent()) {
+			model.addAttribute("selectedUser", userOptional.get());
+			return "admin/edit-account"; // Trỏ đến file Thymeleaf
+		} else {
+			return "redirect:/admin/accounts-manager/form?error=UserNotFound";
+		}
+	}
+
+	@PostMapping("/accounts-manager/update")
+	public String updateAccount(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+		try {
+			userService.update(user);
+			redirectAttributes.addFlashAttribute("success", "Cập nhật tài khoản thành công!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật tài khoản!");
+		}
+		return "redirect:/admin/accounts-manager/form";
+	}
+
+	// Xóa tài khoản
+	@GetMapping("/accounts-manager/delete/{id}")
+	public String delete(@PathVariable Integer id) {
+		userRepository.deleteById(id);
+		return "redirect:/admin/accounts-manager";
+	}
+
+	// ======================= SUẤT CHIẾU =======================
 	@Autowired
 	private ShowtimeService showtimeService;
 
-	// ======================= SUẤT CHIẾU =======================
-	@GetMapping("/showtime-manager")
+	@GetMapping("/showtimes-manager")
 	public String ShowtimeManager(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size, Model model) {
 		addUserInfoToModel(model);
@@ -114,7 +155,7 @@ public class AdminController {
 		model.addAttribute("rooms", roomService.findAllRooms());
 		model.addAttribute("showtimes", showtimes);
 		model.addAttribute("showtime", new Showtime());
-		return "admin/showtime-manager";
+		return "admin/showtimes-manager/list";
 	}
 
 	@GetMapping("/showtime-manager/add")
@@ -201,7 +242,7 @@ public class AdminController {
 	@Autowired
 	private BranchService branchService;
 
-	@GetMapping("/branch-manager")
+	@GetMapping("/branches-manager")
 	public String BranchManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
 			Model model) {
 		addUserInfoToModel(model);
@@ -212,7 +253,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", branchPage.getTotalPages());
 		model.addAttribute("branch", new Branch());
-		return "admin/branch-manager";
+		return "admin/branches-manager/list";
 
 	}
 
@@ -249,7 +290,7 @@ public class AdminController {
 	@Autowired
 	private RoomService roomService;
 
-	@GetMapping("/room-manager")
+	@GetMapping("/rooms-manager")
 	public String listRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
 			Model model) {
 		addUserInfoToModel(model);
@@ -259,7 +300,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", roomPage.getTotalPages());
 		model.addAttribute("room", new Room());
-		return "admin/room-manager";
+		return "admin/rooms-manager/list";
 	}
 
 	@PostMapping("/room-manager/save")
@@ -304,7 +345,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", ticketPage.getTotalPages());
 
-		return "admin/tickets-manager";
+		return "admin/tickets-manager/list";
 	}
 
 	// ==================== THỂ LOẠI ======================
@@ -323,10 +364,13 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", categoryPage.getTotalPages());
 
-		return "admin/categories-manager";
+		return "admin/categories-manager/list";
 	}
 
 	// ==================== PHIM ======================
+	@Autowired
+	private MovieService movieService;
+
 	@GetMapping("/movies-manager")
 	public String MoviesManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
 			Model model) {
@@ -336,7 +380,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", moviePage.getTotalPages());
 		model.addAttribute("movie", new Movie()); // Để dùng trong form thêm mới
-		return "admin/movies-manager";
+		return "admin/movies-manager/list";
 	}
 
 	// THÊM PHIM
