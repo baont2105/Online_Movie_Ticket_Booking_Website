@@ -91,20 +91,20 @@
 											<li class="page-item"
 												th:classappend="${currentPage == 0} ? 'disabled'"><a
 												class="page-link"
-												th:href="@{/admin/showtime-manager(page=${currentPage - 1})}">Trước</a>
+												th:href="@{/admin/showtimes-manager(page=${currentPage - 1})}">Trước</a>
 											</li>
 
 											<li class="page-item"
 												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
 												th:classappend="${pageNum == currentPage} ? 'active'"><a
 												class="page-link"
-												th:href="@{/admin/showtime-manager(page=${pageNum})}"
+												th:href="@{/admin/showtimes-manager(page=${pageNum})}"
 												th:text="${pageNum + 1}"></a></li>
 
 											<li class="page-item"
 												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
 												<a class="page-link"
-												th:href="@{/admin/showtime-manager(page=${currentPage + 1})}">Sau</a>
+												th:href="@{/admin/showtimes-manager(page=${currentPage + 1})}">Sau</a>
 											</li>
 										</ul>
 									</nav>
