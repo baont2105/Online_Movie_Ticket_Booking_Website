@@ -40,94 +40,26 @@
 					<div class="col-12">
 						<h2 class="section-title">Khuyến mãi</h2>
 					</div>
-					<div class="col-md-3 promotion-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 2.jpg" class="card-img-top"
-								alt="Promotion 1">
-							<div class="card-body">
-								<p class="card-text">25/03/2025 ~ 31/04/2025</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 promotion-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 2.jpg" class="card-img-top"
-								alt="Promotion 1">
-							<div class="card-body">
-								<p class="card-text">25/03/2025 ~ 31/04/2025</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 promotion-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 2.jpg" class="card-img-top"
-								alt="Promotion 1">
-							<div class="card-body">
-								<p class="card-text">25/03/2025 ~ 31/04/2025</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 promotion-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 2.jpg" class="card-img-top"
-								alt="Promotion 1">
-							<div class="card-body">
-								<p class="card-text">25/03/2025 ~ 31/04/2025</p>
-							</div>
-						</div>
-					</div>
+					<div class="col-md-3 promotion-item mb-3" th:each="v : ${vouchers}">
 
-					<div class="col-12 more-link">
-						<a href="#" class="text-decoration-none">More</a>
+						<div class="card" style="width: 18rem;">
+							<img th:src="@{/image/Content/khuyến mãi 3.jpg}" class="card-img-top" alt="Ảnh Khuyến Mãi">
+							<div class="card-body">
+								<h3 class="card-title fw-bold" th:text="${v.code}"></h3>
+								<p class="card-text">
+									Giảm: <span
+										th:text="${#numbers.formatDecimal(v.discountAmount, 0, 'COMMA', 0, 'POINT')}"></span>
+									VNĐ
+								</p>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<!-- Movie Section -->
-				<div class="row my-5">
-					<div class="col-12">
-						<h2 class="section-title">Phim</h2>
-					</div>
-					<div class="col-md-3 movie-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 3.jpg" class="card-img-top"
-								alt="Movie 1">
-							<div class="card-body">
-								<p class="card-text">17/03/2025 ~ 30/06/2025</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 movie-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 3.jpg" class="card-img-top"
-								alt="Movie 1">
-							<div class="card-body">
-								<p class="card-text">17/03/2025 ~ 30/06/2025</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 movie-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 3.jpg" class="card-img-top"
-								alt="Movie 1">
-							<div class="card-body">
-								<p class="card-text">17/03/2025 ~ 30/06/2025</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 movie-item">
-						<div class="card">
-							<img src="image/Content/khuyến mãi 3.jpg" class="card-img-top"
-								alt="Movie 1">
-							<div class="card-body">
-								<p class="card-text">17/03/2025 ~ 30/06/2025</p>
-							</div>
-						</div>
-					</div>
+				<!-- Sự kiện -->
+				<div class="row container m-0 p-0 "
+					th:replace="/components/event.html"></div>
 
-					<div class="col-12 more-link">
-						<a href="#" class="text-decoration-none">More</a>
-					</div>
-				</div>
 			</div>
 		</div>
 		<!-- Footer -->

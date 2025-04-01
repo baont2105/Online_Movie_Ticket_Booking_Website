@@ -1,9 +1,11 @@
 package com.poly.demo.controllers;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,7 +81,11 @@ public class TicketController {
 		}
 
 		// Lấy danh sách vé theo userID, bao gồm cả TicketSeat
-		List<Ticket> tickets = ticketService.getTicketByUserID(user.getUserId());
+		// Lấy danh sách vé theo userID, bao gồm cả TicketSeat và sắp xếp theo ticketId
+		// tăng dần
+		List<Ticket> tickets = ticketService.getTicketByUserID(user.getUserId()).stream()
+				.sorted(Comparator.comparing(Ticket::getTicketId)) // Sắp xếp theo ticketId tăng dần
+				.collect(Collectors.toList());
 
 		// Thêm danh sách đồ ăn/thức uống và voucher cho mỗi vé
 		Map<Integer, List<TicketFood>> foodItemsMap = new HashMap<>();
