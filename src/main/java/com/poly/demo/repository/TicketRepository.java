@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +20,7 @@ import com.poly.demo.entity.User;
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
 	// Lấy tất cả vé theo trang
+	@EntityGraph(attributePaths = { "ticketSeats.seat" })
 	Page<Ticket> findAll(Pageable pageable);
 
 	// Tìm vé theo ID người dùng

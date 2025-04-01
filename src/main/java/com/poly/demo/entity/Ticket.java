@@ -17,8 +17,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
 @Data
+@Entity
 @Table(name = "Tickets")
 public class Ticket {
 	@Id
@@ -26,32 +26,29 @@ public class Ticket {
 	@Column(name = "ticket_id")
 	private Integer ticketId;
 
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal price;
-
-	@Column(nullable = false, name = "ticket_status")
-	private String ticketStatus; // NOT_CHECKED_IN, CHECKED_IN
-
-	@Column(nullable = false, updatable = false, name = "created_at")
-	private LocalDateTime createdAt = LocalDateTime.now();
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
 	@ManyToOne
 	@JoinColumn(name = "showtime_id", nullable = false)
 	private Showtime showtime;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column(nullable = false)
+	private BigDecimal price;
+
+	@Column(nullable = false, name = "ticket_status")
+	private String ticketStatus; // Trạng thái vé như NOT_CHECKED_IN, CHECKED_IN
+
+	@Column(nullable = false, name = "created_at", updatable = false)
+	private LocalDateTime createdAt = LocalDateTime.now();
 
 	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TicketSeat> ticketSeats = new ArrayList<>();
 
-	@Override
-	public String toString() {
-		return "Ticket{" + "ticketId=" + ticketId + ", showtime="
-				+ (showtime != null ? showtime.getShowtimeId() : "null") + ", user="
-				+ (user != null ? user.getUserId() : "null") + '}';
-	}
+	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TicketFood> ticketFoods = new ArrayList<>();
 
-	// Getters & Setters
+	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TicketVoucher> ticketVouchers = new ArrayList<>();
 }

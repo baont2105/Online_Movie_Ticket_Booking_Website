@@ -62,34 +62,51 @@
 					</thead>
 					<tbody>
 						<tr th:each="t : ${tickets}">
+							<!-- ID -->
 							<td th:text="${t.ticketId}"></td>
+
+							<!-- TÊN PHIM -->
 							<td th:text="${t.showtime.movie.name}"></td>
+
+							<!-- CHI NHÁNH -->
 							<td th:text="${t.showtime.branch.name}"></td>
+
+							<!-- GHẾ NGỒI -->
 							<td><span th:each="ticketSeat, iterStat : ${t.ticketSeats}">
 									<span
 									th:text="${ticketSeat.seat.rowNumber} + ${ticketSeat.seat.seatNumber}"></span>
 									<span th:if="${!iterStat.last}">, </span>
 							</span></td>
+
+							<!-- THỜI ĐIỂM ĐẶT -->
 							<td
 								th:text="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+
+							<!-- THỜI ĐIỂM CHIẾU -->
 							<td
 								th:text="${#temporals.format(t.showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+
+							<!-- ĐỒ ĂN -->
 							<td><span th:if="${foodItemsMap[t.ticketId].isEmpty()}">Không
 									có</span> <span th:each="food, iterStat : ${foodItemsMap[t.ticketId]}">
 									<span
 									th:text="${food.foodItem.name} + ' - SL: ' + ${food.quantity}"></span>
 									<span th:if="${!iterStat.last}">, </span>
 							</span></td>
+
+							<!-- VOUCHER -->
 							<td><span th:if="${voucherMap[t.ticketId].isEmpty()}">Không
 									có</span> <span
 								th:each="voucher, iterStat : ${voucherMap[t.ticketId]}">
 									<span th:text="${voucher.voucher.code}"></span> <span
 									th:if="${!iterStat.last}">, </span>
 							</span></td>
+
+							<!-- TỔNG GIÁ -->
 							<td
 								th:text="${#numbers.formatDecimal(t.price, 0, 'COMMA', 0, 'POINT')}"></td>
 
-
+							<!-- TRẠNG THÁI -->
 							<td>
 								<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
 								<button th:if="${t.ticketStatus == 'NOT_CHECKED_IN'}"
@@ -125,6 +142,7 @@
 									</div>
 								</div> <!-- Kết thúc Modal -->
 							</td>
+
 						</tr>
 					</tbody>
 				</table>

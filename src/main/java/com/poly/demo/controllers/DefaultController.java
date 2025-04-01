@@ -62,12 +62,6 @@ public class DefaultController {
 		return "home/promotions";
 	}
 
-	@RequestMapping("/feedback")
-	public String feedback(Model model) {
-		addUserInfoToModel(model);
-		return "home/feedback";
-	}
-
 	@RequestMapping("/forgot-password")
 	public String forgotPassword(Model model) {
 		addUserInfoToModel(model);

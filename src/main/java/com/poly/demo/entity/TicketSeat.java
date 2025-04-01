@@ -11,8 +11,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
-@Entity
 @Data
+@Entity
 @Table(name = "Ticket_Seats", uniqueConstraints = @UniqueConstraint(columnNames = { "ticket_id", "seat_id" }))
 public class TicketSeat {
 	@Id
@@ -33,6 +33,4 @@ public class TicketSeat {
 		return "TicketSeat{" + "seat=" + (seat != null ? seat.getSeatId() : "null") + ", ticketId="
 				+ (ticket != null ? ticket.getTicketId() : "null") + '}';
 	}
-
-	// Getters & Setters
 }

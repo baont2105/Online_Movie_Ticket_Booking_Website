@@ -46,9 +46,10 @@
 									<tr>
 										<th>Mã vé</th>
 										<th>Mã Người Đặt</th>
-										<th>Mã Suất Chiếu</th>
+										<th>Tên Người Đặt</th>
+										<th>Thời Điểm Chiếu</th>
 										<th>Ghế Ngồi</th>
-										<th>Tổng Tiền</th>
+										<th>Tổng Tiền (VNĐ)</th>
 										<th>Thời Điểm Đặt</th>
 										<th>Trạng Thái</th>
 										<th>Chỉnh Sửa</th>
@@ -57,14 +58,29 @@
 								<tbody>
 									<tr th:each="ticket : ${tickets}">
 										<td th:text="${ticket.ticketId}"></td>
-										<td th:text="${ticket.user.id}"></td>
-										<td th:text="${ticket.showtime.showtimeId}"></td>
-										<td><span th:each="seat : ${ticket.seat}"
-											th:text="${seat.rowNumber} + ${seat.seatNumber} + ' - ' + ${seat.seatType}"></span></td>
-										<td th:text="${ticket.price}"></td>
+										<td th:text="${ticket.user.userId}"></td>
+										<td th:text="${ticket.user.name}"></td>
+
+										<!-- THỜI ĐIỂM CHIẾU -->
+										<td
+											th:text="${#temporals.format(ticket.showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+
+										<!-- GHẾ NGỒI -->
+										<td><span
+											th:each="ticketSeat, iterStat : ${ticket.ticketSeats}">
+												<span
+												th:text="${ticketSeat.seat.rowNumber} + ${ticketSeat.seat.seatNumber}"></span>
+												<span th:if="${!iterStat.last}">, </span>
+										</span></td>
+
+										<td
+											th:text="${#numbers.formatDecimal(ticket.price, 0, 'COMMA', 0, 'POINT')}"></td>
 										<td
 											th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-										<td th:text="${ticket.ticketStatus}"></td>
+										<td><span th:if="${ticket.ticketStatus == 'CHECKED_IN'}"
+											class="text-success fw-bold">Đã Check-in</span> <span
+											th:if="${ticket.ticketStatus == 'NOT_CHECKED_IN'}"
+											class="text-danger fw-bold">Chưa Check-in</span></td>
 										<td><a
 											th:href="@{/admin/tickets-manager/edit/{id}(id=${ticket.ticketId})}"
 											class="btn btn-warning">Sửa</a> <a
