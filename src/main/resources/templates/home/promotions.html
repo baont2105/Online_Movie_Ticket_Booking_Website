@@ -3,6 +3,8 @@
 
 <head>
 <meta charset="UTF-8">
+<link rel="shortcut icon" type="x-icon"
+	th:href="@{/image/logo white.png}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khuyến Mãi</title>
 
@@ -43,7 +45,8 @@
 					<div class="col-md-3 promotion-item mb-3" th:each="v : ${vouchers}">
 
 						<div class="card" style="width: 18rem;">
-							<img th:src="@{/image/Content/khuyến mãi 3.jpg}" class="card-img-top" alt="Ảnh Khuyến Mãi">
+							<img th:src="@{/image/Content/khuyến mãi 3.jpg}"
+								class="card-img-top" alt="Ảnh Khuyến Mãi">
 							<div class="card-body">
 								<h3 class="card-title fw-bold" th:text="${v.code}"></h3>
 								<p class="card-text">
@@ -55,16 +58,16 @@
 						</div>
 					</div>
 				</div>
-
-				<!-- Sự kiện -->
-				<div class="row container m-0 p-0 "
-					th:replace="/components/event.html"></div>
-
 			</div>
+
+			<!-- Sự kiện -->
+			<div class="row container m-0 p-0 "
+				th:replace="/components/event.html"></div>
+
 		</div>
 		<!-- Footer -->
 		<footer class="bg-body-tertiary p-0 m-0"
-			th:replace="components/footer.html"></footer>
+			th:replace="/components/footer.html"></footer>
 	</div>
 
 	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>

@@ -2,21 +2,26 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Thông Tin Phim</title>
+<meta charset="UTF-8">
+<link rel="shortcut icon" type="x-icon"
+	th:href="@{/image/logo white.png}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thông Tin Phim</title>
 
-	<!-- Bootstrap -->
-	<link rel="stylesheet" th:href="@{/bootstrap-5.3.3-dist/css/bootstrap.min.css}">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- Bootstrap -->
+<link rel="stylesheet"
+	th:href="@{/bootstrap-5.3.3-dist/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-	<!-- CSS Custom -->
-	<link rel="stylesheet" th:href="@{/css/general.css}">
+<!-- CSS Custom -->
+<link rel="stylesheet" th:href="@{/css/general.css}">
 
 </head>
 
 <body>
-	<div class="container-fluid m-0 p-0" style="background: url(/image/Background/bg_pattern.png) repeat left top;">
+	<div class="container-fluid m-0 p-0"
+		style="background: url(/image/Background/bg_pattern.png) repeat left top;">
 		<!-- HEADER -->
 		<header class="row">
 			<!-- NAV MENU -->
@@ -32,8 +37,8 @@
 			<!-- Movie Banner -->
 			<div class="movie-banner text-center bg-dark">
 				<div class="container trailer-container">
-					<iframe width="710" height="400" th:src="${movie.trailer}" title="YouTube video player"
-						frameborder="0"
+					<iframe width="710" height="400" th:src="${movie.trailer}"
+						title="YouTube video player" frameborder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 					<!-- 
@@ -52,7 +57,8 @@
 			<div class="row mx-4">
 				<div class="col-md-4 d-flex align-items-end flex-column">
 					<img th:src="@{'/image/Thumbnail/' + ${movie.thumbnail}}"
-						class="img-fluid border border-2 border-white rounded" alt="thumbnail"
+						class="img-fluid border border-2 border-white rounded"
+						alt="thumbnail"
 						style="width: 320px; height: 450px; position: relative; bottom: 100px;">
 					<!-- Replace with the actual poster image URL -->
 				</div>
@@ -60,31 +66,44 @@
 				<div class="col-md-8">
 
 					<h1 class="fw-bold mt-5">
-						<span th:text="${movie.name.toUpperCase()}"></span>
-						<span class="badge bg-warning text-dark" th:text="${movie.tags}"></span>
+						<span th:text="${movie.name.toUpperCase()}"></span> <span
+							class="badge bg-warning text-dark" th:text="${movie.tags}"></span>
 					</h1>
 
 
 					<div class="row">
 						<div class="col-sm-6">
-							<p><i class="bi bi-clock"></i> <span th:text="${movie.duration} + ' Phút |'"></span> <i
-									class="bi bi-calendar"></i>
-								<span th:if="${movie.releaseDate != null}"
+							<p>
+								<i class="bi bi-clock"></i> <span
+									th:text="${movie.duration} + ' Phút |'"></span> <i
+									class="bi bi-calendar"></i> <span
+									th:if="${movie.releaseDate != null}"
 									th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></span>
-								<span th:unless="${movie.releaseDate != null}">Chưa có ngày phát hành</span>
+								<span th:unless="${movie.releaseDate != null}">Chưa có
+									ngày phát hành</span>
 							</p>
-							<p><i class="bi bi-star-fill text-warning"></i> 8.6 (62 votes)</p>
-							<p>Quốc gia: <span th:text="${movie.country}"></span></p>
-							<p>Nhà sản xuất: <span th:text="${movie.producer}"></span></p>
-							<p>Thể loại: <span class="badge bg-primary" th:text="${movie.category.name}"></span>
-							<p>Đạo diễn: <span th:text="${movie.director}"></span></p>
-							<p>Diễn viên: <span th:text="${movie.actors}"></span></p>
+							<p>
+								<i class="bi bi-star-fill text-warning"></i> 8.6 (62 votes)
+							</p>
+							<p>
+								Quốc gia: <span th:text="${movie.country}"></span>
+							</p>
+							<p>
+								Nhà sản xuất: <span th:text="${movie.producer}"></span>
+							</p>
+							<p>
+								Thể loại: <span class="badge bg-primary"
+									th:text="${movie.category.name}"></span>
+							<p>
+								Đạo diễn: <span th:text="${movie.director}"></span>
+							</p>
+							<p>
+								Diễn viên: <span th:text="${movie.actors}"></span>
+							</p>
 						</div>
 						<div class="col-sm-6">
 							<a th:href="@{'/booking/step1/' + ${movie.movieId}}">
-								<button class="btn btn-danger p-3">
-									Đặt vé xem phim
-								</button>
+								<button class="btn btn-danger p-3">Đặt vé xem phim</button>
 							</a>
 						</div>
 					</div>
@@ -114,46 +133,47 @@
 			<div class="container my-3">
 				<h3>Phim cùng thể loại</h3>
 				<div class="container-fluid row">
-						<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
-							th:each="m : ${relatedMovies}">
-							<div class="card p-0 m-0" style="width: 14.5rem;">
-								<img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}"
-									class="card-img-top" alt="..." width="100" height="300">
-								<div class="card-body p-2">
-									<h5 class="card-title"
-										th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 15) + '...' : m.name}">
-									</h5>
+					<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
+						th:each="m : ${relatedMovies}">
+						<div class="card p-0 m-0" style="width: 14.5rem;">
+							<img th:src="@{'/image/Thumbnail/' + ${m.thumbnail}}"
+								class="card-img-top" alt="..." width="100" height="300">
+							<div class="card-body p-2">
+								<h5 class="card-title"
+									th:text="${#strings.length(m.name) > 20 ? #strings.substring(m.name, 0, 15) + '...' : m.name}">
+								</h5>
 
-									<!-- Hiển thị ngày khởi chiếu của phim -->
-									<div class="row">
-										<label> <i class="bi bi-calendar mx-2"></i> <span
-											th:if="${m.releaseDate != null}"
-											th:text="${#temporals.format(m.releaseDate, 'dd/MM/yyyy')}"></span>
-											<span th:unless="${m.releaseDate != null}">Chưa có
-												ngày phát hành</span>
-										</label>
+								<!-- Hiển thị ngày khởi chiếu của phim -->
+								<div class="row">
+									<label> <i class="bi bi-calendar mx-2"></i> <span
+										th:if="${m.releaseDate != null}"
+										th:text="${#temporals.format(m.releaseDate, 'dd/MM/yyyy')}"></span>
+										<span th:unless="${m.releaseDate != null}">Chưa có ngày
+											phát hành</span>
+									</label>
+								</div>
+
+								<div class="row mt-2">
+									<div class="col-6">
+										<a th:href="@{'/booking/step1/' + ${m.movieId}}"
+											class="btn btn-primary ms-2">Đặt vé</a>
 									</div>
-
-									<div class="row mt-2">
-										<div class="col-6">
-											<a th:href="@{'/booking/step1/' + ${m.movieId}}"
-												class="btn btn-primary ms-2">Đặt vé</a>
-										</div>
-										<div class="col-6">
-											<a th:href="@{'/movies/movie-detail/' + ${m.movieId}}"
-												class="btn btn-primary me-2">Chi tiết</a>
-										</div>
+									<div class="col-6">
+										<a th:href="@{'/movies/movie-detail/' + ${m.movieId}}"
+											class="btn btn-primary me-2">Chi tiết</a>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<!-- Footer -->
-	<footer class="bg-body-tertiary p-0 m-0" th:replace="components/footer.html"></footer>
+	<footer class="bg-body-tertiary p-0 m-0"
+		th:replace="components/footer.html"></footer>
 
 	<script th:src="@{'/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'}"></script>
 </body>
