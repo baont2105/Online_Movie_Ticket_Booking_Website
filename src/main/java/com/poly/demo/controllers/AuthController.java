@@ -63,17 +63,6 @@ public class AuthController {
 		return "account/register";
 	}
 
-	/*
-	 * @PostMapping("/register") public String
-	 * processRegister(@ModelAttribute("user") User user, BindingResult result,
-	 * Model model) { if (result.hasErrors()) { return "account/register"; }
-	 * 
-	 * try { userService.create(user); } catch (RuntimeException e) {
-	 * model.addAttribute("error", e.getMessage()); return "account/register"; }
-	 * 
-	 * return "redirect:/register?success"; }
-	 */
-
 	@PostMapping("/register")
 	public String processRegister(@ModelAttribute("user") User user, BindingResult result, Model model) {
 		if (result.hasErrors()) {
