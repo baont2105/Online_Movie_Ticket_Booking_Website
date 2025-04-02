@@ -78,6 +78,29 @@ public class MovieController {
 		return "movie/movies-list"; // Tên file Thymeleaf (movies.html)
 	}
 
+	// =============== CHI TIẾT PHIM ================
+	@GetMapping("/movie-detail/{id}")
+	public String MovieDetail(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+
+		Optional<Movie> movieOpt = movieService.getMovieById(id);
+		if (movieOpt.isPresent()) {
+			Movie movie = movieOpt.get();
+			model.addAttribute("movie", movie);
+
+			// Lấy phim cùng thể loại
+			List<Movie> relatedMovies = movieService.findMoviesByCategory(movie.getCategory());
+			model.addAttribute("relatedMovies", relatedMovies);
+
+			// Lấy suất chiếu
+			List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
+			model.addAttribute("showtime", showtime);
+
+			return "movie/movie-detail";
+		}
+		return "redirect:/movies"; // Trả về danh sách phim nếu không tìm thấy
+	}
+
 	// =============== BỘ LỌC, TÌM KIẾM ================
 
 	@GetMapping("/now_showing")
@@ -124,32 +147,6 @@ public class MovieController {
 		model.addAttribute("selectedCategory", categoryId);
 		model.addAttribute("searchKeyword", keyword);
 		return "movie/movies-list";
-	}
-
-	/*
-	 * 
-	 * */
-	// MovieController.java
-	@GetMapping("/movie-detail/{id}")
-	public String MovieDetail(@PathVariable Integer id, Model model) {
-		addUserInfoToModel(model);
-
-		Optional<Movie> movieOpt = movieService.getMovieById(id);
-		if (movieOpt.isPresent()) {
-			Movie movie = movieOpt.get();
-			model.addAttribute("movie", movie);
-
-			// Lấy phim cùng thể loại
-			List<Movie> relatedMovies = movieService.findMoviesByCategory(movie.getCategory());
-			model.addAttribute("relatedMovies", relatedMovies);
-
-			// Lấy suất chiếu
-			List<Showtime> showtime = showtimeService.getShowtimesByMovieId(id);
-			model.addAttribute("showtime", showtime);
-
-			return "movie/movie-detail";
-		}
-		return "redirect:/movies"; // Trả về danh sách phim nếu không tìm thấy
 	}
 
 }
