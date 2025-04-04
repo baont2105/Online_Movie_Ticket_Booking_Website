@@ -416,3 +416,7 @@ public class AdminController {
 		return "redirect:/admin/movies-manager";
 	}
 }
+
+// ======================= ĐỒ ĂN =======================
+
+// ======================= MÃ GIẢM GIÁ =======================
