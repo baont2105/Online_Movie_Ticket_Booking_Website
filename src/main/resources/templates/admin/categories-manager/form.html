@@ -40,62 +40,35 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ THỂ LOẠI</h2>
-							
+
 							<ul class="nav nav-tabs">
+								<li class="nav-item"><a class="nav-link text-black"
+									aria-current="page" th:href="@{/admin/categories-manager}">Danh
+										sách</a></li>
 								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/categories-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/categories-manager}">Form</a>
-								</li>
+									href="#">Form</a></li>
 							</ul>
-							
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>Mã Thể Loại</th>
-										<th>Tên Thể Loại</th>
-										<th>Chỉnh sửa</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="c : ${categories}">
-										<td th:text="${c.categoryId}"></td>
-										<td th:text="${c.name}"></td>
-										<td><a
-											th:href="@{/admin/categories-manager/edit/{id}(id=${c.categoryId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/categories-manager/delete/{id}(id=${c.categoryId})}"
-											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa thể loại này?')">Xóa</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
 
-							<!-- PHÂN TRANG -->
-							<div class="d-flex justify-content-center pagination">
-								<nav aria-label="Page navigation">
-									<ul class="pagination">
-										<li class="page-item"
-											th:classappend="${currentPage == 0} ? 'disabled'"><a
-											class="page-link"
-											th:href="@{/admin/categories-manager(page=${currentPage - 1})}">Trước</a>
-										</li>
+							<form th:action="@{/admin/categories-manager/save}"
+								th:object="${selectedCategory}" method="post"
+								class="bg-white py-4 px-5 mb-5">
+								<input type="hidden" th:field="*{categoryId}">
 
-										<li class="page-item"
-											th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-											th:classappend="${pageNum == currentPage} ? 'active'"><a
-											class="page-link"
-											th:href="@{/admin/categories-manager(page=${pageNum})}"
-											th:text="${pageNum + 1}"></a></li>
+								<div class="mb-3">
+									<label class="form-label">Tên Thể Loại:</label> <input
+										type="text" class="form-control" th:field="*{name}" required>
+								</div>
 
-										<li class="page-item"
-											th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-											<a class="page-link"
-											th:href="@{/admin/categories-manager(page=${currentPage + 1})}">Sau</a>
-										</li>
-									</ul>
-								</nav>
-							</div>
+								<button type="submit" class="btn btn-success">Lưu</button>
+								<a th:if="${selectedCategory.categoryId != null}"
+									th:href="@{/admin/categories-manager/delete/{id}(id=${selectedCategory.categoryId})}"
+									class="btn btn-danger"
+									onclick="return confirm('Bạn có chắc chắn muốn xóa phim này không?');">Xoá</a>
+								<a th:href="@{/admin/categories-manager/0}"
+									class="btn btn-warning">Làm mới</a> <a
+									th:href="@{/admin/categories-manager}"
+									class="btn btn-secondary">Quay lại</a>
+							</form>
 
 
 						</div>

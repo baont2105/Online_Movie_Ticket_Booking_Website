@@ -34,6 +34,7 @@ import com.poly.demo.repository.CategoryRepository;
 import com.poly.demo.repository.MovieRepository;
 import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
+import com.poly.demo.service.CategoryService;
 import com.poly.demo.service.FoodItemService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.RoomService;
@@ -394,21 +395,45 @@ public class AdminController {
 
 	// ==================== THỂ LOẠI ======================
 	@Autowired
+	private CategoryService categoryService;
+
+	@Autowired
 	private CategoryRepository categoryRepository;
 
 	@GetMapping("/categories-manager")
 	public String CategoriesManager(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size, Model model) {
 		addUserInfoToModel(model);
-
 		Pageable pageable = PageRequest.of(page, size, Sort.by("categoryId").ascending());
-		Page<Category> categoryPage = categoryRepository.findAll(pageable);
+		Page<Category> categoryPage = categoryRepository.findAllPage(pageable);
 
 		model.addAttribute("categories", categoryPage.getContent());
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", categoryPage.getTotalPages());
+		model.addAttribute("selectedCategory", new Category()); // Để dùng trong form thêm mới
 
-		return "admin/categories-manager/list";
+		return "admin/categories-manager/list"; // Đường dẫn tới giao diện danh sách
+	}
+
+	@GetMapping("/categories-manager/{id}")
+	public String CategoryForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+		Category category = id == 0 ? new Category() : categoryRepository.findById(id).orElse(new Category());
+		model.addAttribute("selectedCategory", category);
+		return "admin/categories-manager/form"; // Đường dẫn tới giao diện form
+	}
+
+	@PostMapping("/categories-manager/save")
+	public String SaveCategory(@ModelAttribute Category category, Model model) {
+		addUserInfoToModel(model);
+		categoryRepository.save(category); // Lưu danh mục vào database
+		return "redirect:/admin/categories-manager"; // Quay lại danh sách danh mục
+	}
+
+	@GetMapping("/categories-manager/delete/{id}")
+	public String DeleteCategory(@PathVariable Integer id) {
+		categoryService.deleteCategory(id); // Xóa danh mục theo ID
+		return "redirect:/admin/categories-manager"; // Quay lại danh sách danh mục
 	}
 
 	// ==================== PHIM ======================

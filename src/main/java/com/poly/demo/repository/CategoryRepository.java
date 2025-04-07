@@ -18,4 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 	// Lấy theo phân trang
 	@Query("SELECT c FROM Category c")
 	Page<Category> findAllPage(Pageable pageable);
+
+	void deleteByCategoryId(Integer id);
 }

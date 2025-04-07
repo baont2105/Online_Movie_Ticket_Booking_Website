@@ -40,32 +40,33 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ THỂ LOẠI</h2>
-							
+
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/categories-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/categories-manager}">Form</a>
-								</li>
+									aria-current="page" th:href="@{/admin/categories-manager}">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black"
+									th:href="@{/admin/categories-manager/0}">Form</a></li>
 							</ul>
-							
+
 							<table class="table table-bordered">
-								<thead>
+								<thead class="table-dark">
 									<tr>
 										<th>Mã Thể Loại</th>
 										<th>Tên Thể Loại</th>
-										<th>Chỉnh sửa</th>
+										<th>Hành động</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="c : ${categories}">
-										<td th:text="${c.categoryId}"></td>
-										<td th:text="${c.name}"></td>
+									<tr th:each="category : ${categories}">
+										<td th:text="${category.categoryId}"></td>
+										<td th:text="${category.name}"></td>
 										<td><a
-											th:href="@{/admin/categories-manager/edit/{id}(id=${c.categoryId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/categories-manager/delete/{id}(id=${c.categoryId})}"
+											th:href="@{/admin/categories-manager/{id}(id=${category.categoryId})}"
+											class="btn btn-primary btn-sm">Sửa</a> <a
+											th:href="@{/admin/categories-manager/delete/{id}(id=${category.categoryId})}"
 											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa thể loại này?')">Xóa</a>
+											onclick="return confirm('Bạn có chắc chắn muốn xóa thể loại này không?')">Xóa</a>
 										</td>
 									</tr>
 								</tbody>

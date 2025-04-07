@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.poly.demo.entity.Category;
 import com.poly.demo.repository.CategoryRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CategoryService {
 	@Autowired
@@ -19,6 +21,11 @@ public class CategoryService {
 	public Page<Category> getCategories(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return categoryRepository.findAllPage(pageable);
+	}
+
+	@Transactional
+	public void deleteCategory(Integer id) {
+		categoryRepository.deleteByCategoryId(id);
 	}
 
 	public List<Category> getAllCategories() {
