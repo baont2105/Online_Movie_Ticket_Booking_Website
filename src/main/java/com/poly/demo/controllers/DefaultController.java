@@ -6,9 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.demo.entity.User;
 import com.poly.demo.entity.Voucher;
@@ -23,6 +26,9 @@ public class DefaultController {
 
 	@Autowired
 	private VoucherService voucherService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	private void addUserInfoToModel(Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -68,9 +74,36 @@ public class DefaultController {
 		return "home/promotions";
 	}
 
+	// Quên mật khẩu
 	@RequestMapping("/forgot-password")
 	public String forgotPassword(Model model) {
 		addUserInfoToModel(model);
-		return "account/forgot-password";
+		return "account/forgot-password"; // Trả về trang quên mật khẩu
 	}
+
+	@PostMapping("/forgot-password")
+	public String resetPassword(@RequestParam String username, @RequestParam String newPassword,
+			@RequestParam String confirmNewPassword, Model model) {
+		// Kiểm tra tên đăng nhập
+		Optional<User> optionalUser = userService.findByUsername(username);
+		if (optionalUser.isEmpty()) {
+			model.addAttribute("error_form", "Tên đăng nhập không tồn tại.");
+			return "account/forgot-password"; // Trả về trang nhập lại
+		}
+		User user = optionalUser.get();
+
+		// Kiểm tra mật khẩu mới và xác nhận mật khẩu
+		if (!newPassword.equals(confirmNewPassword)) {
+			model.addAttribute("error_form", "Mật khẩu mới và xác nhận không khớp.");
+			return "account/forgot-password"; // Trả về trang nhập lại
+		}
+
+		// Mã hóa mật khẩu mới trước khi lưu
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userService.save(user); // Cập nhật thông tin người dùng
+
+		model.addAttribute("success", "Đã đặt lại mật khẩu thành công!");
+		return "account/forgot-password"; // Trả về trang xác nhận thành công
+	}
+
 }
