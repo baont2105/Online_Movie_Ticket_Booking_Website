@@ -31,6 +31,7 @@ import com.poly.demo.entity.User;
 import com.poly.demo.entity.Voucher;
 import com.poly.demo.repository.BranchRepository;
 import com.poly.demo.repository.CategoryRepository;
+import com.poly.demo.repository.MovieRepository;
 import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.FoodItemService;
@@ -414,6 +415,9 @@ public class AdminController {
 	@Autowired
 	private MovieService movieService;
 
+	@Autowired
+	private MovieRepository movieRepository;
+
 	@GetMapping("/movies-manager")
 	public String MoviesManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
 			Model model) {
@@ -426,39 +430,27 @@ public class AdminController {
 		return "admin/movies-manager/list";
 	}
 
-	// THÊM PHIM
-	@PostMapping("/movies-manager/add")
-	public String addMovie(@ModelAttribute Movie movie, Model model) {
-		addUserInfoToModel(model); // Thêm thông tin user vào model
-		movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail()); // Ảnh mặc
-																											// định nếu
-																											// rỗng
-		movieService.addMovie(movie); // Lưu phim vào database
-		return "redirect:/admin/movies-manager"; // Chuyển hướng về trang danh sách phim
-	}
-
-	// CHỈNH SỬA PHIM - HIỂN THỊ FORM
-	@GetMapping("/movies-manager/edit/{id}")
-	public String showEditMovieForm(@PathVariable Integer id, Model model) {
+	@GetMapping("/movies-manager/{id}")
+	public String MovieForm(@PathVariable Integer id, Model model) {
 		addUserInfoToModel(model);
-		Optional<Movie> movie = movieService.getMovieById(id);
-		if (movie.isPresent()) {
-			model.addAttribute("movie", movie.get());
-			return "movie-form"; // Trang chỉnh sửa phim
-		}
+		Movie movie = id == 0 ? new Movie() : movieRepository.findById(id).orElse(new Movie());
+		model.addAttribute("selectedMovie", movie);
+		model.addAttribute("categories", categoryRepository.findAll());
+		return "admin/movies-manager/form";
+	}
+
+	// THÊM PHIM
+	@PostMapping("/movies-manager/save")
+	public String SaveMovie(@ModelAttribute Movie movie, Model model) {
+		addUserInfoToModel(model);
+
+		movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail());
+		movieRepository.save(movie);
 		return "redirect:/admin/movies-manager";
 	}
 
-	// XỬ LÝ CẬP NHẬT PHIM
-	@PostMapping("/movies-manager/edit/{id}")
-	public String updateMovie(@PathVariable Integer id, @ModelAttribute Movie movie) {
-		movieService.updateMovie(id, movie);
-		return "redirect:/admin/movies-manager";
-	}
-
-	// XÓA PHIM
 	@GetMapping("/movies-manager/delete/{id}")
-	public String deleteMovie(@PathVariable Integer id) {
+	public String DeleteMovie(@PathVariable Integer id) {
 		movieService.deleteMovie(id);
 		return "redirect:/admin/movies-manager";
 	}
@@ -496,7 +488,7 @@ public class AdminController {
 	@PostMapping("/foods-manager/save")
 	public String saveFood(@ModelAttribute FoodItem foodItem, Model model) {
 		addUserInfoToModel(model);
-		// foodItem.setImage("default.png");
+		foodItem.setImage(foodItem.getImage().isEmpty() ? "default.png" : foodItem.getImage());
 		foodItemService.save(foodItem);
 		return "redirect:/admin/foods-manager";
 	}

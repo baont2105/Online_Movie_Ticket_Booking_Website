@@ -40,72 +40,104 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ PHIM</h2>
-							
+
 							<ul class="nav nav-tabs">
-								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/movies-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/movies-manager}">Form</a>
-								</li>
+								<li class="nav-item"><a class="nav-link text-black"
+									aria-current="page" th:href="@{/admin/movies-manager}">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link active text-black"
+									href="$">Form</a></li>
 							</ul>
-							
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>Mã Phim</th>
-										<th>Tên Phim</th>
-										<th>Thể Loại</th>
-										<th>Thời Lượng</th>
-										<th>Ngày Chiếu</th>
-										<th>Ngày Kết Thúc</th>
-										<th>Hành Động</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="movie : ${movies}">
-										<td th:text="${movie.movieId}"></td>
-										<td th:text="${movie.name}"></td>
-										<td th:text="${movie.tags}"></td>
-										<td th:text="${movie.duration + ' phút'}"></td>
-										<td
-											th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></td>
-										<td
-											th:text="${#temporals.format(movie.endDate, 'dd/MM/yyyy')}"></td>
-										<td><a
-											th:href="@{/admin/movies-manager/edit/{id}(id=${movie.movieId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/movies-manager/delete/{id}(id=${movie.movieId})}"
-											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa phim này?')">Xóa</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
 
-							<!-- PHÂN TRANG -->
-							<div class="d-flex justify-content-center pagination">
-								<nav aria-label="Page navigation">
-									<ul class="pagination">
-										<li class="page-item"
-											th:classappend="${currentPage == 0} ? 'disabled'"><a
-											class="page-link"
-											th:href="@{/admin/movies-manager(page=${currentPage - 1})}">Trước</a>
-										</li>
+							<form th:action="@{/admin/movies-manager/save}"
+								th:object="${selectedMovie}" method="post"
+								class="bg-white py-4 px-5">
+								<input type="hidden" th:field="*{movieId}">
 
-										<li class="page-item"
-											th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-											th:classappend="${pageNum == currentPage} ? 'active'"><a
-											class="page-link"
-											th:href="@{/admin/movies-manager(page=${pageNum})}"
-											th:text="${pageNum + 1}"></a></li>
+								<div class="mb-3">
+									<label class="form-label">Tên phim:</label> <input type="text"
+										class="form-control" th:field="*{name}" required>
+								</div>
 
-										<li class="page-item"
-											th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-											<a class="page-link"
-											th:href="@{/admin/movies-manager(page=${currentPage + 1})}">Sau</a>
-										</li>
-									</ul>
-								</nav>
-							</div>
+								<div class="mb-3">
+									<div class="mb-3">
+										<label class="form-label">Thể loại:</label> <select
+											class="form-select" th:field="*{category}" required>
+											<option value="">-- Chọn thể loại --</option>
+											<option th:each="c : ${categories}"
+												th:value="${c.categoryId}" th:text="${c.name}"></option>
+										</select>
+									</div>
+
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Tags:</label> <input type="text"
+										class="form-control" th:field="*{tags}">
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Thời lượng (phút):</label> <input
+										type="number" class="form-control" th:field="*{duration}">
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Ngày phát hành:</label> <input
+										type="date" name="releaseDate" class="form-control"
+										th:value="${#temporals.format(selectedMovie.releaseDate, 'yyyy-MM-dd')}" />
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Ngày kết thúc:</label> <input
+										type="date" name="endDate" class="form-control"
+										th:value="${#temporals.format(selectedMovie.endDate, 'yyyy-MM-dd')}" />
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Quốc gia:</label> <input type="text"
+										class="form-control" th:field="*{country}">
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Nhà sản xuất:</label> <input
+										type="text" class="form-control" th:field="*{producer}">
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Đạo diễn:</label> <input type="text"
+										class="form-control" th:field="*{director}">
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Diễn viên:</label>
+									<textarea class="form-control" th:field="*{actors}"></textarea>
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Mô tả:</label>
+									<textarea class="form-control" th:field="*{description}"></textarea>
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Thumbnail:</label> <input type="text"
+										class="form-control" th:field="*{thumbnail}">
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Trailer:</label> <input type="text"
+										class="form-control" th:field="*{trailer}">
+								</div>
+
+								<button type="submit" class="btn btn-success">Lưu</button>
+								<a th:if="${selectedMovie.movieId != null}"
+									th:href="@{/admin/movies-manager/delete/{id}(id=${selectedMovie.movieId})}"
+									class="btn btn-danger"
+									onclick="return confirm('Bạn có chắc chắn muốn xóa phim này không?');">Xoá</a>
+								<a th:href="@{/admin/movies-manager/0}" class="btn btn-warning">Làm
+									mới</a> <a th:href="@{/admin/movies-manager}"
+									class="btn btn-secondary">Quay lại</a>
+							</form>
+
 
 
 						</div>

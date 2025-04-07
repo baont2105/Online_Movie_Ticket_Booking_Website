@@ -18,7 +18,7 @@ public class CategoryService {
 
 	public Page<Category> getCategories(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return categoryRepository.findAll(pageable);
+		return categoryRepository.findAllPage(pageable);
 	}
 
 	public List<Category> getAllCategories() {

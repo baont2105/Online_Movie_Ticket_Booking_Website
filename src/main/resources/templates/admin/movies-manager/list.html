@@ -40,14 +40,15 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ PHIM</h2>
-							
+
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/movies-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/movies-manager}">Form</a>
-								</li>
+									aria-current="page" th:href="@{/admin/movies-manager}">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black"
+									th:href="@{/admin/movies-manager/0}">Form</a></li>
 							</ul>
-							
+
 							<table class="table table-bordered">
 								<thead>
 									<tr>
@@ -64,18 +65,18 @@
 									<tr th:each="movie : ${movies}">
 										<td th:text="${movie.movieId}"></td>
 										<td th:text="${movie.name}"></td>
-										<td th:text="${movie.tags}"></td>
+										<td th:text="${movie.category.name}"></td>
 										<td th:text="${movie.duration + ' phút'}"></td>
 										<td
 											th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></td>
 										<td
 											th:text="${#temporals.format(movie.endDate, 'dd/MM/yyyy')}"></td>
 										<td><a
-											th:href="@{/admin/movies-manager/edit/{id}(id=${movie.movieId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
+											th:href="@{/admin/movies-manager/{id}(id=${movie.movieId})}"
+											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/movies-manager/delete/{id}(id=${movie.movieId})}"
 											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa phim này?')">Xóa</a>
+											onclick="return confirm('Bạn có chắc muốn xoá phim này?')">Xoá</a>
 										</td>
 									</tr>
 								</tbody>
