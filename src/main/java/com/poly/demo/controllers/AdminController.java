@@ -108,38 +108,36 @@ public class AdminController {
 
 	// Lưu (thêm hoặc cập nhật)
 	@PostMapping("/accounts-manager/save")
-	public String save(@ModelAttribute User user) {
+	public String save(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
 		user.setPassword("$2a$10$B4WNFxY26ZqvRckrMXIS0ud2bimwdYUlxzhQJGups1dajH55FWEDa");
 		userRepository.save(user);
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật tài khoản thành công!");
 		return "redirect:/admin/accounts-manager";
 	}
 
-	@GetMapping("/accounts-manager/edit/{id}")
-	public String editAccount(@PathVariable("id") Integer id, Model model) {
-		Optional<User> userOptional = userService.getUserById(id);
-		if (userOptional.isPresent()) {
-			model.addAttribute("selectedUser", userOptional.get());
-			return "admin/edit-account"; // Trỏ đến file Thymeleaf
-		} else {
-			return "redirect:/admin/accounts-manager/form?error=UserNotFound";
-		}
-	}
-
-	@PostMapping("/accounts-manager/update")
-	public String updateAccount(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
-		try {
-			userService.update(user);
-			redirectAttributes.addFlashAttribute("success", "Cập nhật tài khoản thành công!");
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật tài khoản!");
-		}
-		return "redirect:/admin/accounts-manager/form";
-	}
+	/*
+	 * @GetMapping("/accounts-manager/edit/{id}") public String
+	 * editAccount(@PathVariable("id") Integer id, Model model) { Optional<User>
+	 * userOptional = userService.getUserById(id); if (userOptional.isPresent()) {
+	 * model.addAttribute("selectedUser", userOptional.get()); return
+	 * "admin/edit-account"; // Trỏ đến file Thymeleaf } else { return
+	 * "redirect:/admin/accounts-manager/form?error=UserNotFound"; } }
+	 * 
+	 * @PostMapping("/accounts-manager/update") public String
+	 * updateAccount(@ModelAttribute("user") User user, RedirectAttributes
+	 * redirectAttributes) { try { userService.update(user);
+	 * redirectAttributes.addFlashAttribute("success",
+	 * "Cập nhật tài khoản thành công!"); } catch (Exception e) {
+	 * redirectAttributes.addFlashAttribute("error",
+	 * "Có lỗi xảy ra khi cập nhật tài khoản!"); } return
+	 * "redirect:/admin/accounts-manager/form"; }
+	 */
 
 	// Xóa tài khoản
 	@GetMapping("/accounts-manager/delete/{id}")
-	public String delete(@PathVariable Integer id) {
+	public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		userRepository.deleteById(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa tài khoản thành công!");
 		return "redirect:/admin/accounts-manager";
 	}
 
@@ -163,12 +161,12 @@ public class AdminController {
 
 	@PostMapping("/check-in")
 	public String checkInTicket(@RequestParam("ticketId") Integer ticketId, @RequestParam("staffId") Integer staffId,
-			Model model) {
+			Model model, RedirectAttributes redirectAttributes) {
 		// Lấy thông tin nhân viên từ UserService
 		Optional<User> staffOpt = userService.getUserById(staffId);
 
 		if (staffOpt.isEmpty()) {
-			model.addAttribute("error", "Mã nhân viên không tồn tại!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Mã nhân viên không tồn tại!");
 			return "redirect:/admin/tickets-manager"; // Trả về trang vé
 		}
 
@@ -176,7 +174,7 @@ public class AdminController {
 
 		// Kiểm tra quyền của nhân viên
 		if (!staff.getRole().equalsIgnoreCase("STAFF")) {
-			model.addAttribute("error", "Người dùng không có quyền check-in!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Người dùng không có quyền check-in!");
 			return "redirect:/admin/tickets-manager";
 		}
 
@@ -184,7 +182,7 @@ public class AdminController {
 		Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
 
 		if (ticketOpt.isEmpty()) {
-			model.addAttribute("error", "Không tìm thấy vé!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy vé!");
 			return "redirect:/admin/tickets-manager";
 		}
 
@@ -192,7 +190,7 @@ public class AdminController {
 
 		// Kiểm tra trạng thái vé
 		if ("CHECKED_IN".equals(ticket.getTicketStatus())) {
-			model.addAttribute("error", "Vé đã được check-in trước đó!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Vé đã được check-in trước đó!");
 			return "redirect:/admin/tickets-manager";
 		}
 
@@ -200,7 +198,7 @@ public class AdminController {
 		ticket.setTicketStatus("CHECKED_IN");
 		ticketService.updateTicket(ticket);
 
-		model.addAttribute("success", "Check-in thành công!");
+		redirectAttributes.addFlashAttribute("successMessage", "Check-in thành công!");
 		return "redirect:/admin/tickets-manager";
 	}
 
@@ -234,17 +232,19 @@ public class AdminController {
 
 	// THÊM PHIM
 	@PostMapping("/movies-manager/save")
-	public String SaveMovie(@ModelAttribute Movie movie, Model model) {
+	public String SaveMovie(@ModelAttribute Movie movie, Model model, RedirectAttributes redirectAttributes) {
 		addUserInfoToModel(model);
 
 		movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail());
 		movieRepository.save(movie);
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật phim thành công!");
 		return "redirect:/admin/movies-manager";
 	}
 
 	@GetMapping("/movies-manager/delete/{id}")
-	public String DeleteMovie(@PathVariable Integer id) {
+	public String DeleteMovie(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		movieService.deleteMovie(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa phim thành công!");
 		return "redirect:/admin/movies-manager";
 	}
 
@@ -279,15 +279,17 @@ public class AdminController {
 	}
 
 	@PostMapping("/categories-manager/save")
-	public String SaveCategory(@ModelAttribute Category category, Model model) {
+	public String SaveCategory(@ModelAttribute Category category, Model model, RedirectAttributes redirectAttributes) {
 		addUserInfoToModel(model);
 		categoryRepository.save(category); // Lưu danh mục vào database
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật thể loại thành công!");
 		return "redirect:/admin/categories-manager"; // Quay lại danh sách danh mục
 	}
 
 	@GetMapping("/categories-manager/delete/{id}")
-	public String DeleteCategory(@PathVariable Integer id) {
+	public String DeleteCategory(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		categoryService.deleteCategory(id); // Xóa danh mục theo ID
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa thể loại thành công!");
 		return "redirect:/admin/categories-manager"; // Quay lại danh sách danh mục
 	}
 
@@ -322,15 +324,17 @@ public class AdminController {
 	}
 
 	@PostMapping("/branches-manager/save")
-	public String save(@ModelAttribute Branch branch, Model model) {
+	public String save(@ModelAttribute Branch branch, Model model, RedirectAttributes redirectAttributes) {
 		addUserInfoToModel(model);
 		branchRepository.save(branch);
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật chi nhánh thành công!");
 		return "redirect:/admin/branches-manager";
 	}
 
 	@GetMapping("/branches-manager/delete/{id}")
-	public String deleteBranch(@PathVariable Integer id) {
+	public String deleteBranch(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		branchService.deleteBranch(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa chi nhánh thành công!");
 		return "redirect:/admin/branches-manager";
 	}
 
@@ -364,15 +368,17 @@ public class AdminController {
 	}
 
 	@PostMapping("/rooms-manager/save")
-	public String SaveRoom(@ModelAttribute Room room, Model model) {
+	public String SaveRoom(@ModelAttribute Room room, Model model, RedirectAttributes redirectAttributes) {
 		addUserInfoToModel(model);
 		roomService.addRoomWithSeats(room); // Gồm cả tạo ghế
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật phòng chiếu thành công!");
 		return "redirect:/admin/rooms-manager";
 	}
 
 	@GetMapping("/rooms-manager/delete/{id}")
-	public String DeleteRoom(@PathVariable Integer id) {
+	public String DeleteRoom(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		roomService.deleteRoom(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa phòng chiếu thành công!");
 		return "redirect:/admin/rooms-manager";
 	}
 
@@ -416,14 +422,16 @@ public class AdminController {
 	}
 
 	@PostMapping("/showtimes-manager/save")
-	public String saveShowtime(@ModelAttribute Showtime showtime) {
+	public String saveShowtime(@ModelAttribute Showtime showtime, RedirectAttributes redirectAttributes) {
 		showtimeService.saveShowtime(showtime);
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật suất chiếu thành công!");
 		return "redirect:/admin/showtimes-manager";
 	}
 
 	@GetMapping("/showtimes-manager/delete/{id}")
-	public String deleteShowtime(@PathVariable Integer id) {
+	public String deleteShowtime(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		showtimeService.deleteShowtime(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa suấ chiếu thành công!");
 		return "redirect:/admin/showtimes-manager";
 	}
 
@@ -458,16 +466,18 @@ public class AdminController {
 	}
 
 	@PostMapping("/foods-manager/save")
-	public String saveFood(@ModelAttribute FoodItem foodItem, Model model) {
+	public String saveFood(@ModelAttribute FoodItem foodItem, Model model, RedirectAttributes redirectAttributes) {
 		addUserInfoToModel(model);
 		foodItem.setImage(foodItem.getImage().isEmpty() ? "default.png" : foodItem.getImage());
 		foodItemService.save(foodItem);
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật món ăn thành công!");
 		return "redirect:/admin/foods-manager";
 	}
 
 	@GetMapping("/foods-manager/delete/{id}")
-	public String deleteFood(@PathVariable Integer id) {
+	public String deleteFood(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		foodItemService.delete(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa món ăn thành công!");
 		return "redirect:/admin/foods-manager";
 	}
 
@@ -498,14 +508,16 @@ public class AdminController {
 	}
 
 	@PostMapping("/vouchers-manager/save")
-	public String saveVoucher(@ModelAttribute Voucher voucher) {
+	public String saveVoucher(@ModelAttribute Voucher voucher, RedirectAttributes redirectAttributes) {
 		voucherService.saveVoucher(voucher);
+		redirectAttributes.addFlashAttribute("successMessage", "Thêm/Cập nhật mã khuyến mãi thành công!");
 		return "redirect:/admin/vouchers-manager"; // Quay về danh sách vouchers
 	}
 
 	@GetMapping("/vouchers-manager/delete/{id}")
-	public String deleteVoucher(@PathVariable Integer id) {
+	public String deleteVoucher(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
 		voucherService.deleteVoucher(id);
+		redirectAttributes.addFlashAttribute("successMessage", "Xóa mã khuyến mãi thành công!");
 		return "redirect:/admin/vouchers-manager"; // Quay về danh sách vouchers
 	}
 
