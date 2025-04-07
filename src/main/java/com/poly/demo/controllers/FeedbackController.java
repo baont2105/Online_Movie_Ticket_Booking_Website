@@ -48,10 +48,10 @@ public class FeedbackController {
 			// Gửi email
 			mailSender.send(message);
 
-			redirectAttributes.addFlashAttribute("message", "Phản hồi đã được gửi thành công!");
+			redirectAttributes.addFlashAttribute("successMessage", "Phản hồi đã được gửi thành công!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi gửi phản hồi!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi gửi phản hồi!");
 		}
 
 		return "redirect:/feedback"; // Quay lại trang phản hồi

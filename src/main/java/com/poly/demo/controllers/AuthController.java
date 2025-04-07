@@ -75,15 +75,26 @@ public class AuthController {
 			return "account/register";
 		}
 
+		// Kiểm tra mật khẩu có hợp lệ không
+		if (user.getPassword() == null || user.getPassword().isEmpty()) {
+			model.addAttribute("error", "Mật khẩu không được để trống.");
+			return "account/register";
+		}
+
 		try {
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			userService.create(user);
+			// Mã hóa mật khẩu trước khi lưu
+			System.out.println(user.getPassword());
+			String encodedPassword = passwordEncoder.encode(user.getPassword());
+			System.out.println(user.getPassword());
+			user.setPassword(encodedPassword);
+			System.out.println(user.getPassword());
+			userService.create(user); // Lưu người dùng
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
 			return "account/register";
 		}
 
-		return "redirect:/register?success";
+		return "redirect:/register?success"; // Chuyển hướng thành công
 	}
 
 	@GetMapping("/check-login")

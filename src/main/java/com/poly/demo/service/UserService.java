@@ -13,11 +13,9 @@ import com.poly.demo.repository.UserRepository;
 @Service
 public class UserService {
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 
 	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Transactional
@@ -25,7 +23,6 @@ public class UserService {
 		if (userRepository.findByUsername(user.getUsername()).isPresent()) {
 			throw new RuntimeException("Tên tài khoản đã tồn tại.");
 		}
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setName("anonymous");
 		user.setPhoneNumber("0987654321");
 		user.setVisible(true);
