@@ -43,10 +43,9 @@
 
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" href="#">Danh
-										sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/accounts-manager/0}">Form</a>
-								</li>
+									aria-current="page" href="#">Danh sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black"
+									th:href="@{/admin/accounts-manager/0}">Form</a></li>
 							</ul>
 
 							<table class="table table-default table-bordered">
@@ -70,7 +69,10 @@
 										<td th:text="${user.email}"></td>
 										<td th:text="${user.phoneNumber}"></td>
 										<td th:text="${user.role}"></td>
-										<td th:text="${user.visible ? 'Hoạt động' : 'Bị khóa'}"></td>
+										<td><span th:if="${user.visible}"
+											class="text-success fw-bold">Hoạt động</span> <span
+											th:if="${!user.visible}" class="text-danger fw-bold">Bị
+												Khóa</span></td>
 										<td><a
 											th:href="@{/admin/accounts-manager/{id}(id=${user.userId})}"
 											class="btn btn-primary">Sửa</a> <a

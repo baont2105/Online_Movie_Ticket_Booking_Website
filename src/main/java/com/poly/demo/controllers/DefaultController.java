@@ -52,6 +52,12 @@ public class DefaultController {
 		return "home/home";
 	}
 
+	@RequestMapping("/home")
+	public String home(Model model) {
+		addUserInfoToModel(model);
+		return "home/home";
+	}
+
 	@RequestMapping("/promotions")
 	public String promotions(Model model) {
 		addUserInfoToModel(model);

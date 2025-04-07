@@ -132,32 +132,28 @@
 
 
 				<!-- Điều kiện tránh lỗi nếu không có kết quả -->
-				<th:block th:if="${totalPages > 0}">
-					<nav>
-						<ul class="pagination justify-content-center">
-							<!-- Nút Previous -->
-							<li class="page-item"
-								th:classappend="${currentPage == 0} ? 'disabled'"><a
-								class="page-link"
-								th:href="@{/movies/search(categoryId=${selectedCategory}, keyword=${searchKeyword}, page=${currentPage - 1})}">Trước</a>
-							</li>
+<th:block th:if="${totalPages > 0}">
+    <nav>
+        <ul class="pagination justify-content-center">
+            <!-- Nút Previous -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/movies/(page=${currentPage - 1})}">Trước</a>
+            </li>
 
-							<!-- Các số trang -->
-							<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-								th:classappend="${i == currentPage} ? 'active'"
-								class="page-item"><a class="page-link"
-								th:href="@{/movies/search(categoryId=${selectedCategory}, keyword=${searchKeyword}, page=${i})}"
-								th:text="${i + 1}"></a></li>
+            <!-- Các số trang -->
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'" class="page-item">
+                <a class="page-link" th:href="@{/movies/(page=${i})}" th:text="${i + 1}"></a>
+            </li>
 
-							<!-- Nút Next -->
-							<li class="page-item"
-								th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-								<a class="page-link"
-								th:href="@{/movies/search(categoryId=${selectedCategory}, keyword=${searchKeyword}, page=${currentPage + 1})}">Sau</a>
-							</li>
-						</ul>
-					</nav>
-				</th:block>
+            <!-- Nút Next -->
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/movies/(page=${currentPage + 1})}">Sau</a>
+            </li>
+        </ul> 
+    </nav>
+</th:block>
+
 
 
 

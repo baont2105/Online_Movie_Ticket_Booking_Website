@@ -1,7 +1,7 @@
 package com.poly.demo.service;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,9 +16,14 @@ public class CustomUserDetails implements UserDetails {
 		this.user = user;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())); // VD: ROLE_ADMIN, ROLE_USER
+		// Trả về danh sách quyền dựa trên role của user
+		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 	}
 
 	@Override
@@ -31,8 +36,14 @@ public class CustomUserDetails implements UserDetails {
 		return user.getUsername();
 	}
 
-	public String getName() { // Hàm để lấy tên
-		return user.getName();
+	@Override
+	public boolean isAccountNonLocked() {
+		return user.getVisible();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return user.getVisible();
 	}
 
 	@Override
@@ -41,17 +52,7 @@ public class CustomUserDetails implements UserDetails {
 	}
 
 	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
-
-	/*
-	 * @Override public boolean isEnabled() { return user.isVisible(); // 🟢 Chỉ
-	 * user có `visible = true` mới đăng nhập được }
-	 */
 }

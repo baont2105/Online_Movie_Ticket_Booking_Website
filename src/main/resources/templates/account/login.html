@@ -46,8 +46,10 @@
 							<h3 class="text-center mb-4">ĐĂNG NHẬP TÀI KHOẢN</h3>
 							<form method="post" th:action="@{/login}">
 								<!-- Hiển thị thông báo lỗi nếu đăng nhập thất bại -->
-								<div th:if="${param.error}" class="alert alert-danger">
-									Sai tên đăng nhập hoặc mật khẩu!</div>
+								<div th:if="${param.error != null}" class="alert alert-danger">
+									<span th:text="${session.error}"></span>
+								</div>
+
 								<!-- Hiển thị thông báo nếu đăng xuất thành công -->
 								<div th:if="${param.logout}" class="alert alert-success">
 									Đăng xuất thành công!</div>

@@ -3,7 +3,6 @@ package com.poly.demo.controllers;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.User;
 import com.poly.demo.service.UserService;
@@ -39,23 +37,25 @@ public class AuthController {
 	}
 
 	@GetMapping("/login")
-	public String login() {
+	public String login(Model model) {
+		model.addAttribute("user", new User());
 		return "account/login";
 	}
 
-	@PostMapping("/login")
-	public String processLogin(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
-		try {
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			return "redirect:/home";
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
-			return "redirect:/login?error";
-		}
-	}
+	/*
+	 * @PostMapping("/login") public String processLogin(@ModelAttribute("user")
+	 * User user, RedirectAttributes redirectAttributes) { try { Authentication
+	 * authentication = authenticationManager .authenticate(new
+	 * UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+	 * SecurityContextHolder.getContext().setAuthentication(authentication); return
+	 * "redirect:/home"; } catch (DisabledException e) {
+	 * redirectAttributes.addFlashAttribute("error",
+	 * "Tài khoản của bạn đã bị khóa."); return "redirect:/login"; } catch
+	 * (BadCredentialsException e) { redirectAttributes.addFlashAttribute("error",
+	 * "Tên đăng nhập hoặc mật khẩu không đúng."); return "redirect:/login"; } catch
+	 * (Exception e) { redirectAttributes.addFlashAttribute("error",
+	 * "Đăng nhập thất bại."); return "redirect:/login"; } }
+	 */
 
 	@GetMapping("/register")
 	public String registerForm(Model model) {
@@ -69,7 +69,6 @@ public class AuthController {
 			return "account/register";
 		}
 
-		// Kiểm tra username đã tồn tại chưa
 		Optional<User> existingUser = userService.findByUsername(user.getUsername());
 		if (existingUser.isPresent()) {
 			model.addAttribute("error", "Tên đăng nhập đã tồn tại.");
@@ -77,7 +76,6 @@ public class AuthController {
 		}
 
 		try {
-			// Mã hóa mật khẩu trước khi lưu
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			userService.create(user);
 		} catch (RuntimeException e) {
