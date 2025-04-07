@@ -40,76 +40,99 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ SUẤT CHIẾU</h2>
-							
+
 							<ul class="nav nav-tabs">
-								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/showtimes-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/showtimes-manager}">Form</a>
-								</li>
+								<li class="nav-item"><a class="nav-link text-black"
+									aria-current="page" th:href="@{/admin/showtimes-manager}">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link active" href="#">Form</a></li>
 							</ul>
-							
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Tên Phim</th>
-										<th>Tên Chi Nhánh</th>
-										<th>Tên Phòng Chiếu</th>
-										<th>Thời Gian Bắt Đầu</th>
-										<th>Thời Gian Kết Thúc</th>
-										<th>Giá Vé</th>
-										<th>Hành Động</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="showtime : ${showtimePage.content}">
-										<td th:text="${showtime.showtimeId}"></td>
-										<td th:text="${showtime.movie.name}"></td>
-										<td th:text="${showtime.branch.name}"></td>
-										<td th:text="${showtime.room.name}"></td>
-										<td
-											th:text="${#temporals.format(showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
-										<td
-											th:text="${#temporals.format(showtime.endTime, 'dd/MM/yyyy HH:mm')}"></td>
-										<td th:text="${showtime.price} + ' VNĐ'"></td>
-										<td><a
-											th:href="@{/admin/showtime-manager/edit/{id}(id=${showtime.showtimeId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/showtime-manager/delete/{id}(id=${showtime.showtimeId})}"
-											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
 
-							<!-- PHÂN TRANG -->
-							<div class="d-flex justify-content-center pagination">
-								<div>
-									<nav aria-label="Page navigation">
-										<ul class="pagination">
-											<li class="page-item"
-												th:classappend="${currentPage == 0} ? 'disabled'"><a
-												class="page-link"
-												th:href="@{/admin/showtime-manager(page=${currentPage - 1})}">Trước</a>
-											</li>
+							<form th:action="@{/admin/showtimes-manager/save}"
+								th:object="${selectedShowtime}" method="post"
+								class="needs-validation bg-white py-4 px-5 mb-5" novalidate>
 
-											<li class="page-item"
-												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-												th:classappend="${pageNum == currentPage} ? 'active'"><a
-												class="page-link"
-												th:href="@{/admin/showtime-manager(page=${pageNum})}"
-												th:text="${pageNum + 1}"></a></li>
+								<input type="hidden" th:field="*{showtimeId}" />
 
-											<li class="page-item"
-												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-												<a class="page-link"
-												th:href="@{/admin/showtime-manager(page=${currentPage + 1})}">Sau</a>
-											</li>
-										</ul>
-									</nav>
+								<!-- Ngày chiếu -->
+								<div class="mb-3">
+									<label class="form-label">Ngày Chiếu:</label> <input
+										type="date" class="form-control" name="showDate"
+										th:value="${#temporals.format(selectedShowtime.showDate, 'yyyy-MM-dd')}"
+										required />
 								</div>
-							</div>
+
+
+								<!-- Giờ bắt đầu -->
+								<div class="mb-3">
+									<label class="form-label">Giờ Bắt Đầu</label> <input
+										type="time" class="form-control" name="startTime"
+										required
+										th:value="${#temporals.format(selectedShowtime.startTime, 'HH:mm')}" />
+								</div>
+
+								<!-- Giờ kết thúc -->
+								<div class="mb-3">
+									<label class="form-label">Giờ Kết Thúc</label> <input
+										type="time" class="form-control" name="endTime"
+										required
+										th:value="${#temporals.format(selectedShowtime.endTime, 'HH:mm')}" />
+								</div>
+
+
+								<!-- Giá vé -->
+								<div class="mb-3">
+									<label class="form-label">Giá Vé (VNĐ)</label> <input
+										type="number" class="form-control" th:field="*{price}" min="0"
+										required />
+								</div>
+
+								<!-- Phim -->
+								<div class="mb-3">
+									<label class="form-label">Phim:</label> <select
+										th:field="*{movie.movieId}" class="form-select me-2" required>
+										<option value="">-- Chọn Phim --</option>
+										<option th:each="movie : ${movies}"
+											th:value="${movie.movieId}" th:text="${movie.name}"
+											th:selected="${selectedShowtime.movie?.movieId == movie.movieId}"></option>
+									</select>
+								</div>
+
+								<!-- Chi nhánh -->
+								<div class="mb-3">
+									<label class="form-label">Chi Nhánh</label> <select
+										th:field="*{branch.branchId}" class="form-select" required>
+										<option value="">-- Chọn Chi Nhánh --</option>
+										<option th:each="branch : ${branches}"
+											th:value="${branch.branchId}" th:text="${branch.name}"
+											th:selected="${selectedShowtime.branch?.branchId == branch.branchId}"></option>
+									</select>
+								</div>
+
+								<!-- Phòng chiếu -->
+								<div class="mb-3">
+									<label class="form-label">Phòng Chiếu</label> <select
+										th:field="*{room.roomId}" class="form-select" required>
+										<option value="">-- Chọn Phòng Chiếu --</option>
+										<option th:each="room : ${rooms}" th:value="${room.roomId}"
+											th:text="${room.name}"
+											th:selected="${selectedShowtime.room?.roomId == room.roomId}"></option>
+									</select>
+								</div>
+
+								<!-- Trạng thái hiển thị -->
+								<div class="form-check mb-3">
+									<input class="form-check-input" type="checkbox"
+										th:field="*{visible}" /> <label class="form-check-label">Hiển
+										thị</label>
+								</div>
+
+								<!-- Nút lưu -->
+								<button type="submit" class="btn btn-primary">Lưu</button>
+								<a th:href="@{/admin/showtimes-manager}"
+									class="btn btn-secondary">Quay lại</a>
+							</form>
+
 
 
 						</div>

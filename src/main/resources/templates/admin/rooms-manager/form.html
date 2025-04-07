@@ -40,66 +40,41 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ PHÒNG CHIẾU</h2>
-							
+
 							<ul class="nav nav-tabs">
-								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/rooms-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/rooms-manager}">Form</a>
-								</li>
+								<li class="nav-item"><a class="nav-link text-black"
+									aria-current="page" th:href="@{/admin/rooms-manager}">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link active" href="#">Form</a></li>
 							</ul>
-							
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Tên Phòng Chiếu</th>
-										<th>Tên Chi Nhánh</th>
-										<th>Hành Động</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="room : ${rooms}">
-										<td th:text="${room.roomId}"></td>
-										<td th:text="${room.name}"></td>
-										<td th:text="${room.branch.name}"></td>
-										<td><a
-											th:href="@{/admin/room-manager/edit/{id}(id=${room.roomId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/room-manager/delete/{id}(id=${room.roomId})}"
-											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
 
-							<!-- PHÂN TRANG -->
-							<div class="d-flex justify-content-center pagination">
-								<div>
-									<nav aria-label="Page navigation">
-										<ul class="pagination">
-											<li class="page-item"
-												th:classappend="${currentPage == 0} ? 'disabled'"><a
-												class="page-link"
-												th:href="@{/admin/rooms-manager(page=${currentPage - 1})}">Trước</a>
-											</li>
+							<form th:action="@{/admin/rooms-manager/save}"
+								th:object="${selectedRoom}" method="post"
+								class="bg-white py-4 px-5 mb-5">
+								<input type="hidden" th:field="*{roomId}"/>
 
-											<li class="page-item"
-												th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-												th:classappend="${pageNum == currentPage} ? 'active'"><a
-												class="page-link"
-												th:href="@{/admin/rooms-manager(page=${pageNum})}"
-												th:text="${pageNum + 1}"></a></li>
-
-											<li class="page-item"
-												th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-												<a class="page-link"
-												th:href="@{/admin/rooms-manager(page=${currentPage + 1})}">Sau</a>
-											</li>
-										</ul>
-									</nav>
+								<div class="mb-3">
+									<label class="form-label">Tên Phòng</label> <input type="text"
+										class="form-control" th:field="*{name}" required />
 								</div>
-							</div>
+
+								<div class="mb-3">
+									<label class="form-label">Chi Nhánh</label> <select
+										class="form-control" th:field="*{branch.branchId}" required>
+										<option value="">-- Chọn Chi Nhánh --</option>
+										<option th:each="branch : ${branches}"
+											th:value="${branch.branchId}" th:text="${branch.name}">
+										</option>
+									</select>
+
+								</div>
+
+								<div class="d-flex justify-content-between">
+									<a class="btn btn-secondary" th:href="@{/admin/rooms-manager}">Quay
+										lại</a>
+									<button type="submit" class="btn btn-primary">Lưu</button>
+								</div>
+							</form>
 
 
 						</div>

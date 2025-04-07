@@ -44,7 +44,7 @@
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link active"
 									aria-current="page" th:href="@{/admin/showtimes-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/showtimes-manager}">Form</a>
+								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/showtimes-manager/0}">Form</a>
 								</li>
 							</ul>
 							
@@ -57,7 +57,7 @@
 										<th>Tên Phòng Chiếu</th>
 										<th>Thời Gian Bắt Đầu</th>
 										<th>Thời Gian Kết Thúc</th>
-										<th>Giá Vé</th>
+										<th>Giá Vé (VNĐ)</th>
 										<th>Hành Động</th>
 									</tr>
 								</thead>
@@ -71,11 +71,11 @@
 											th:text="${#temporals.format(showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
 										<td
 											th:text="${#temporals.format(showtime.endTime, 'dd/MM/yyyy HH:mm')}"></td>
-										<td th:text="${showtime.price} + ' VNĐ'"></td>
+										<td th:text="${#numbers.formatDecimal(showtime.price, 0, 'COMMA', 0, 'POINT')}"></td>
 										<td><a
-											th:href="@{/admin/showtime-manager/edit/{id}(id=${showtime.showtimeId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/showtime-manager/delete/{id}(id=${showtime.showtimeId})}"
+											th:href="@{/admin/showtimes-manager/{id}(id=${showtime.showtimeId})}"
+											class="btn btn-primary btn-sm">Sửa</a> <a
+											th:href="@{/admin/showtimes-manager/delete/{id}(id=${showtime.showtimeId})}"
 											class="btn btn-danger btn-sm"
 											onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
 										</td>

@@ -1,6 +1,5 @@
 package com.poly.demo.controllers;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,8 @@ import com.poly.demo.entity.Voucher;
 import com.poly.demo.repository.BranchRepository;
 import com.poly.demo.repository.CategoryRepository;
 import com.poly.demo.repository.MovieRepository;
+import com.poly.demo.repository.RoomRepository;
+import com.poly.demo.repository.ShowtimeRepository;
 import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
 import com.poly.demo.service.CategoryService;
@@ -142,196 +143,6 @@ public class AdminController {
 		return "redirect:/admin/accounts-manager";
 	}
 
-	// ======================= SUẤT CHIẾU =======================
-	@Autowired
-	private ShowtimeService showtimeService;
-
-	@GetMapping("/showtimes-manager")
-	public String ShowtimeManager(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size, Model model) {
-		addUserInfoToModel(model);
-
-		Page<Showtime> showtimePage = showtimeService.getShowtimesPaginated(page, size);
-		model.addAttribute("showtimePage", showtimePage);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", showtimePage.getTotalPages());
-
-		List<Showtime> showtimes = showtimeService.getAllShowtime();
-		model.addAttribute("movies", movieService.getAllMovies());
-		model.addAttribute("branches", branchService.getAllBranches());
-		model.addAttribute("rooms", roomService.findAllRooms());
-		model.addAttribute("showtimes", showtimes);
-		model.addAttribute("showtime", new Showtime());
-		return "admin/showtimes-manager/list";
-	}
-
-	@GetMapping("/showtime-manager/add")
-	public String showAddShowtimeForm(Model model) {
-		addUserInfoToModel(model);
-
-		model.addAttribute("showtime", new Showtime());
-		model.addAttribute("movies", movieService.getAllMovies());
-		model.addAttribute("branches", branchService.getAllBranches());
-		model.addAttribute("rooms", roomService.findAllRooms());
-
-		return "showtime-form"; // Hiển thị form thêm suất chiếu
-	}
-
-	@PostMapping("/showtime-manager/add")
-	public String addShowtime(@ModelAttribute Showtime showtime) {
-		showtimeService.addShowtime(showtime);
-		return "redirect:/admin/showtime-manager";
-	}
-
-	/*
-	 * @GetMapping("/showtime-manager/edit/{id}") public String
-	 * showEditShowtimeForm(@PathVariable Integer id, Model model) {
-	 * addUserInfoToModel(model);
-	 * 
-	 * Showtime showtime = showtimeService.getShowtimeById(id); if (showtime !=
-	 * null) { model.addAttribute("showtime", showtime); return "showtime-form"; //
-	 * Trang chỉnh sửa suất chiếu } return "redirect:/admin/showtime-manager"; }
-	 */
-
-	@GetMapping("/showtime-manager/edit/{id}")
-	public String showEditShowtimeForm(@PathVariable("id") Integer id, Model model) {
-		Optional<Showtime> optionalShowtime = showtimeService.getShowtimeById(id);
-
-		if (optionalShowtime.isPresent()) {
-			model.addAttribute("showtime", optionalShowtime.get());
-			return "redirect:/admin/showtime-manager"; // Trả về trang chỉnh sửa suất chiếu
-		} else {
-			model.addAttribute("errorMessage", "Không tìm thấy suất chiếu có ID: " + id);
-			return "error"; // Trả về trang lỗi hoặc thông báo
-		}
-	}
-
-	/*
-	 * @PostMapping("/showtime-manager/edit/{id}") public String
-	 * updateShowtime(@PathVariable Integer id, @ModelAttribute Showtime showtime) {
-	 * Showtime existingShowtime = showtimeService.getShowtimeById(id); if
-	 * (existingShowtime != null) { existingShowtime.setMovie(showtime.getMovie());
-	 * existingShowtime.setBranch(showtime.getBranch());
-	 * existingShowtime.setStartTime(showtime.getStartTime());
-	 * existingShowtime.setPrice(showtime.getPrice());
-	 * 
-	 * showtimeService.addShowtime(existingShowtime); } return
-	 * "redirect:/admin/showtime-manager"; }
-	 */
-
-	@PostMapping("/showtime-manager/edit/{id}")
-	public String updateShowtime(@PathVariable("id") Integer id, @ModelAttribute Showtime updatedShowtime,
-			RedirectAttributes redirectAttributes) {
-		if (!showtimeService.existsById(id)) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy suất chiếu có ID: " + id);
-			return "redirect:/admin/showtimes"; // Chuyển hướng về danh sách suất chiếu
-		}
-
-		Showtime showtime = showtimeService.getShowtimeById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy suất chiếu có ID: " + id));
-
-		// Cập nhật thông tin suất chiếu
-		showtime.setMovie(updatedShowtime.getMovie());
-
-		showtimeService.addShowtime(showtime);
-		redirectAttributes.addFlashAttribute("successMessage", "Cập nhật suất chiếu thành công!");
-
-		return "redirect:/admin/showtime-manager";
-	}
-
-	@GetMapping("/showtime-manager/delete/{id}")
-	public String deleteShowtime(@PathVariable Integer id) {
-		showtimeService.deleteShowtime(id);
-		return "redirect:/admin/showtime-manager";
-	}
-
-	// ======================= CHI NHÁNH =======================
-	@Autowired
-	private BranchService branchService;
-	@Autowired
-	private BranchRepository branchRepository;
-
-	@GetMapping("/branches-manager")
-	public String BranchManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
-			Model model) {
-		addUserInfoToModel(model);
-
-		Page<Branch> branchPage = branchService.getBranches(page, size);
-
-		model.addAttribute("branches", branchPage.getContent());
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", branchPage.getTotalPages());
-		model.addAttribute("branch", new Branch());
-		return "admin/branches-manager/list";
-	}
-
-	// Hiển thị form (thêm mới hoặc sửa)
-	@GetMapping("/branches-manager/{id}")
-	public String form(@PathVariable Integer id, Model model) {
-		addUserInfoToModel(model);
-
-		Branch branch = id == 0 ? new Branch() : branchRepository.findById(id).orElse(new Branch());
-		model.addAttribute("selectedBranch", branch);
-		return "admin/branches-manager/form";
-	}
-
-	@PostMapping("/branches-manager/save")
-	public String save(@ModelAttribute Branch branch, Model model) {
-		addUserInfoToModel(model);
-		branchRepository.save(branch);
-		return "redirect:/admin/branches-manager";
-	}
-
-	@GetMapping("/branches-manager/delete/{id}")
-	public String deleteBranch(@PathVariable Integer id) {
-		branchService.deleteBranch(id);
-		return "redirect:/admin/branches-manager";
-	}
-
-	// ======================= PHÒNG CHIẾU =======================
-	@Autowired
-	private RoomService roomService;
-
-	@GetMapping("/rooms-manager")
-	public String listRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
-			Model model) {
-		addUserInfoToModel(model);
-		Page<Room> roomPage = roomService.getRooms(page, size);
-		model.addAttribute("branches", branchService.getAllBranches());
-		model.addAttribute("rooms", roomPage.getContent());
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", roomPage.getTotalPages());
-		model.addAttribute("room", new Room());
-		return "admin/rooms-manager/list";
-	}
-
-	@PostMapping("/room-manager/save")
-	public String saveRoom(@ModelAttribute Room room) {
-		roomService.addRoomWithSeats(room);
-		return "redirect:/admin/room-manager";
-	}
-
-	@GetMapping("/room-manager/edit/{id}")
-	public String showEditForm(@PathVariable Integer id, Model model) {
-		Room room = roomService.findRoomById(id).orElse(null);
-		if (room == null)
-			return "redirect:/admin/rooms";
-		model.addAttribute("room", room);
-		return "admin/room-manager";
-	}
-
-	@GetMapping("/room-manager/delete/{id}")
-	public String deleteRoom(@PathVariable Integer id) {
-		roomService.deleteRoom(id);
-		return "redirect:/admin/room-manager";
-	}
-
-	@PostMapping("/room-manager/add")
-	public String addRoom(@ModelAttribute Room room) {
-		roomService.addRoomWithSeats(room);
-		return "redirect:/admin/room-manager";
-	}
-
 	// ================================= VÉ ==================================
 	@Autowired
 	private TicketService ticketService;
@@ -393,6 +204,50 @@ public class AdminController {
 		return "redirect:/admin/tickets-manager";
 	}
 
+	// ==================== PHIM ======================
+	@Autowired
+	private MovieService movieService;
+
+	@Autowired
+	private MovieRepository movieRepository;
+
+	@GetMapping("/movies-manager")
+	public String MoviesManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
+		addUserInfoToModel(model);
+		Page<Movie> moviePage = movieService.getMovies(page, size);
+		model.addAttribute("movies", moviePage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", moviePage.getTotalPages());
+		model.addAttribute("movie", new Movie()); // Để dùng trong form thêm mới
+		return "admin/movies-manager/list";
+	}
+
+	@GetMapping("/movies-manager/{id}")
+	public String MovieForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+		Movie movie = id == 0 ? new Movie() : movieRepository.findById(id).orElse(new Movie());
+		model.addAttribute("selectedMovie", movie);
+		model.addAttribute("categories", categoryRepository.findAll());
+		return "admin/movies-manager/form";
+	}
+
+	// THÊM PHIM
+	@PostMapping("/movies-manager/save")
+	public String SaveMovie(@ModelAttribute Movie movie, Model model) {
+		addUserInfoToModel(model);
+
+		movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail());
+		movieRepository.save(movie);
+		return "redirect:/admin/movies-manager";
+	}
+
+	@GetMapping("/movies-manager/delete/{id}")
+	public String DeleteMovie(@PathVariable Integer id) {
+		movieService.deleteMovie(id);
+		return "redirect:/admin/movies-manager";
+	}
+
 	// ==================== THỂ LOẠI ======================
 	@Autowired
 	private CategoryService categoryService;
@@ -436,48 +291,140 @@ public class AdminController {
 		return "redirect:/admin/categories-manager"; // Quay lại danh sách danh mục
 	}
 
-	// ==================== PHIM ======================
+	// ======================= CHI NHÁNH =======================
 	@Autowired
-	private MovieService movieService;
-
+	private BranchService branchService;
 	@Autowired
-	private MovieRepository movieRepository;
+	private BranchRepository branchRepository;
 
-	@GetMapping("/movies-manager")
-	public String MoviesManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+	@GetMapping("/branches-manager")
+	public String BranchManager(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
 			Model model) {
 		addUserInfoToModel(model);
-		Page<Movie> moviePage = movieService.getMovies(page, size);
-		model.addAttribute("movies", moviePage.getContent());
+
+		Page<Branch> branchPage = branchService.getBranches(page, size);
+
+		model.addAttribute("branches", branchPage.getContent());
 		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", moviePage.getTotalPages());
-		model.addAttribute("movie", new Movie()); // Để dùng trong form thêm mới
-		return "admin/movies-manager/list";
+		model.addAttribute("totalPages", branchPage.getTotalPages());
+		model.addAttribute("branch", new Branch());
+		return "admin/branches-manager/list";
 	}
 
-	@GetMapping("/movies-manager/{id}")
-	public String MovieForm(@PathVariable Integer id, Model model) {
-		addUserInfoToModel(model);
-		Movie movie = id == 0 ? new Movie() : movieRepository.findById(id).orElse(new Movie());
-		model.addAttribute("selectedMovie", movie);
-		model.addAttribute("categories", categoryRepository.findAll());
-		return "admin/movies-manager/form";
-	}
-
-	// THÊM PHIM
-	@PostMapping("/movies-manager/save")
-	public String SaveMovie(@ModelAttribute Movie movie, Model model) {
+	// Hiển thị form (thêm mới hoặc sửa)
+	@GetMapping("/branches-manager/{id}")
+	public String form(@PathVariable Integer id, Model model) {
 		addUserInfoToModel(model);
 
-		movie.setThumbnail(movie.getThumbnail().isEmpty() ? "absolute_cinema.jpg" : movie.getThumbnail());
-		movieRepository.save(movie);
-		return "redirect:/admin/movies-manager";
+		Branch branch = id == 0 ? new Branch() : branchRepository.findById(id).orElse(new Branch());
+		model.addAttribute("selectedBranch", branch);
+		return "admin/branches-manager/form";
 	}
 
-	@GetMapping("/movies-manager/delete/{id}")
-	public String DeleteMovie(@PathVariable Integer id) {
-		movieService.deleteMovie(id);
-		return "redirect:/admin/movies-manager";
+	@PostMapping("/branches-manager/save")
+	public String save(@ModelAttribute Branch branch, Model model) {
+		addUserInfoToModel(model);
+		branchRepository.save(branch);
+		return "redirect:/admin/branches-manager";
+	}
+
+	@GetMapping("/branches-manager/delete/{id}")
+	public String deleteBranch(@PathVariable Integer id) {
+		branchService.deleteBranch(id);
+		return "redirect:/admin/branches-manager";
+	}
+
+	// ======================= PHÒNG CHIẾU =======================
+	@Autowired
+	private RoomService roomService;
+	@Autowired
+	private RoomRepository roomRepository;
+
+	@GetMapping("/rooms-manager")
+	public String listRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
+		addUserInfoToModel(model);
+		Page<Room> roomPage = roomService.getRooms(page, size);
+		model.addAttribute("branches", branchService.getAllBranches());
+		model.addAttribute("rooms", roomPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", roomPage.getTotalPages());
+		model.addAttribute("room", new Room());
+		return "admin/rooms-manager/list";
+	}
+
+	@GetMapping("/rooms-manager/{id}")
+	public String RoomForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+		Room room = id == 0 ? new Room() : roomRepository.findById(id).orElse(new Room());
+
+		model.addAttribute("selectedRoom", room);
+		model.addAttribute("branches", branchService.getAllBranches());
+		return "admin/rooms-manager/form";
+	}
+
+	@PostMapping("/rooms-manager/save")
+	public String SaveRoom(@ModelAttribute Room room, Model model) {
+		addUserInfoToModel(model);
+		roomService.addRoomWithSeats(room); // Gồm cả tạo ghế
+		return "redirect:/admin/rooms-manager";
+	}
+
+	@GetMapping("/rooms-manager/delete/{id}")
+	public String DeleteRoom(@PathVariable Integer id) {
+		roomService.deleteRoom(id);
+		return "redirect:/admin/rooms-manager";
+	}
+
+	// ======================= SUẤT CHIẾU =======================
+	@Autowired
+	private ShowtimeService showtimeService;
+	@Autowired
+	private ShowtimeRepository showtimeRepository;
+
+	@GetMapping("/showtimes-manager")
+	public String listShowtimes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
+		addUserInfoToModel(model);
+
+		Page<Showtime> showtimePage = showtimeService.getShowtimesPaginated(page, size);
+		model.addAttribute("showtimePage", showtimePage);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", showtimePage.getTotalPages());
+		model.addAttribute("showtimes", showtimePage.getContent());
+
+		model.addAttribute("movies", movieService.getAllMovies());
+		model.addAttribute("branches", branchService.getAllBranches());
+		model.addAttribute("rooms", roomService.findAllRooms());
+
+		model.addAttribute("showtime", new Showtime());
+		return "admin/showtimes-manager/list";
+	}
+
+	@GetMapping("/showtimes-manager/{id}")
+	public String showtimeForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+
+		Showtime showtime = id == 0 ? new Showtime() : showtimeRepository.findById(id).orElse(new Showtime());
+
+		model.addAttribute("selectedShowtime", showtime);
+		model.addAttribute("movies", movieService.getAllMovies());
+		model.addAttribute("branches", branchService.getAllBranches());
+		model.addAttribute("rooms", roomService.findAllRooms());
+
+		return "admin/showtimes-manager/form";
+	}
+
+	@PostMapping("/showtimes-manager/save")
+	public String saveShowtime(@ModelAttribute Showtime showtime) {
+		showtimeService.saveShowtime(showtime);
+		return "redirect:/admin/showtimes-manager";
+	}
+
+	@GetMapping("/showtimes-manager/delete/{id}")
+	public String deleteShowtime(@PathVariable Integer id) {
+		showtimeService.deleteShowtime(id);
+		return "redirect:/admin/showtimes-manager";
 	}
 
 	// ======================= ĐỒ ĂN =======================

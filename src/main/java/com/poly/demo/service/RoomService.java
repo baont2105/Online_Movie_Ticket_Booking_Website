@@ -1,16 +1,7 @@
 package com.poly.demo.service;
 
-import com.poly.demo.entity.Branch;
-import com.poly.demo.entity.Movie;
-import com.poly.demo.entity.Room;
-import com.poly.demo.entity.Seat;
-import com.poly.demo.entity.Showtime;
-import com.poly.demo.repository.MovieRepository;
-import com.poly.demo.repository.RoomRepository;
-import com.poly.demo.repository.SeatRepository;
-import com.poly.demo.repository.ShowtimeRepository;
-
-import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,9 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.poly.demo.entity.Room;
+import com.poly.demo.entity.Seat;
+import com.poly.demo.repository.RoomRepository;
+import com.poly.demo.repository.SeatRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class RoomService {
@@ -45,14 +39,16 @@ public class RoomService {
 		return roomRepository.save(room);
 	}
 
+	@Transactional
 	public void deleteRoom(Integer id) {
+		seatRepository.deleteByRoomId(id);
 		roomRepository.deleteByRoomId(id);
 	}
 
 	public Page<Room> getRooms(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("roomId").ascending());
-        return roomRepository.findAll(pageable);
-    }
+		Pageable pageable = PageRequest.of(page, size, Sort.by("roomId").ascending());
+		return roomRepository.findAll(pageable);
+	}
 
 	public void addRoomWithSeats(Room room) {
 		// Lưu phòng chiếu vào database
@@ -77,11 +73,11 @@ public class RoomService {
 				seat.setVisible(true);
 				System.out.println("CALLED!!!: " + seat);
 				try {
-				    seatRepository.save(seat);
-				    seatRepository.flush();
-				    System.out.println("Saved Seat ID: " + seat.getSeatId());
+					seatRepository.save(seat);
+					seatRepository.flush();
+					System.out.println("Saved Seat ID: " + seat.getSeatId());
 				} catch (Exception e) {
-				    System.err.println("Lỗi khi lưu ghế: " + e.getMessage());
+					System.err.println("Lỗi khi lưu ghế: " + e.getMessage());
 				}
 			}
 		}

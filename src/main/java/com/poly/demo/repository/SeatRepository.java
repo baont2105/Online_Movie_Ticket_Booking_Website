@@ -3,6 +3,7 @@ package com.poly.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Seat;
 import com.poly.demo.entity.Showtime;
+
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Integer> {
@@ -27,4 +30,9 @@ public interface SeatRepository extends JpaRepository<Seat, Integer> {
 	@Query("SELECT s FROM Seat s WHERE s.room = :room AND s.seatId NOT IN "
 			+ "(SELECT ts.seat.seatId FROM TicketSeat ts WHERE ts.ticket.showtime = :showtime)")
 	List<Seat> findAvailableSeats(@Param("room") Room room, @Param("showtime") Showtime showtime);
+
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM Seat s WHERE s.room.roomId = :roomId")
+	void deleteByRoomId(@Param("roomId") Integer roomId);
 }

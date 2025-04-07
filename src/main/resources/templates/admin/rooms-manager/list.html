@@ -40,14 +40,15 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ PHÒNG CHIẾU</h2>
-							
+
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/rooms-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/rooms-manager}">Form</a>
-								</li>
+									aria-current="page" th:href="@{/admin/rooms-manager}">Danh
+										sách</a></li>
+								<li class="nav-item"><a class="nav-link text-black"
+									th:href="@{/admin/rooms-manager/0}">Form</a></li>
 							</ul>
-							
+
 							<table class="table table-bordered">
 								<thead class="table-dark">
 									<tr>
@@ -63,12 +64,13 @@
 										<td th:text="${room.name}"></td>
 										<td th:text="${room.branch.name}"></td>
 										<td><a
-											th:href="@{/admin/room-manager/edit/{id}(id=${room.roomId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/room-manager/delete/{id}(id=${room.roomId})}"
+											th:href="@{/admin/rooms-manager/{id}(id=${room.roomId})}"
+											class="btn btn-primary btn-sm">Sửa</a> <a
+											th:href="@{/admin/rooms-manager/delete/{id}(id=${room.roomId})}"
 											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
+											onclick="return confirm('Bạn có chắc chắn muốn xóa phòng chiếu này?')">Xóa</a>
 										</td>
+
 									</tr>
 								</tbody>
 							</table>

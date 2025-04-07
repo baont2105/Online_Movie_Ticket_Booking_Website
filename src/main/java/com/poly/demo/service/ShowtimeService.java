@@ -48,7 +48,7 @@ public class ShowtimeService {
 		return showtimeRepository.findByMovie(movie);
 	}
 
-	public Showtime addShowtime(Showtime showtime) {
+	public Showtime saveShowtime(Showtime showtime) {
 		return showtimeRepository.save(showtime);
 	}
 
