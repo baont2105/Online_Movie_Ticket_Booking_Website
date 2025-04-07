@@ -83,7 +83,7 @@
 									ngày phát hành</span>
 							</p>
 							<p>
-								<i class="bi bi-star-fill text-warning"></i> 8.6 (62 votes)
+								<i class="bi bi-eye-fill"></i> <span th:text="${#numbers.formatDecimal(movie.viewCount, 0, 'COMMA', 0, 'POINT')}"></span>
 							</p>
 							<p>
 								Quốc gia: <span th:text="${movie.country}"></span>
