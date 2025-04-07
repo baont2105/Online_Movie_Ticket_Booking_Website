@@ -40,14 +40,7 @@
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
 							<h2 class="form-title">QUẢN LÝ VÉ</h2>
-							
-							<ul class="nav nav-tabs">
-								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/tickets-manager}">Danh sách</a></li>
-								<li class="nav-item"><a class="nav-link text-black" th:href="@{/admin/tickets-manager}">Form</a>
-								</li>
-							</ul>
-							
+
 							<table class="table table-default table-bordered">
 								<thead>
 									<tr>
@@ -84,13 +77,42 @@
 											th:text="${#numbers.formatDecimal(ticket.price, 0, 'COMMA', 0, 'POINT')}"></td>
 										<td
 											th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-										<td><span th:if="${ticket.ticketStatus == 'CHECKED_IN'}"
-											class="text-success fw-bold">Đã Check-in</span> <span
-											th:if="${ticket.ticketStatus == 'NOT_CHECKED_IN'}"
-											class="text-danger fw-bold">Chưa Check-in</span></td>
+										<td>
+											<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
+											<button th:if="${ticket.ticketStatus == 'NOT_CHECKED_IN'}"
+												class="btn btn-warning btn-sm" data-bs-toggle="modal"
+												th:attr="data-bs-target='#checkInModal' + ${ticket.ticketId}">
+												Chưa Check-in</button> <!-- Nếu trạng thái là CHECKED_IN, hiển thị trạng thái -->
+											<span th:if="${ticket.ticketStatus == 'CHECKED_IN'}"
+											class="text-success fw-bold">Đã Check-in</span> <!-- Modal nhập mã nhân viên -->
+											<div class="modal fade"
+												th:id="'checkInModal' + ${ticket.ticketId}" tabindex="-1">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title">Check-in vé</h5>
+															<button type="button" class="btn-close"
+																data-bs-dismiss="modal"></button>
+														</div>
+														<div class="modal-body">
+															<form th:action="@{/admin/check-in}" method="post">
+																<input type="hidden" name="ticketId"
+																	th:value="${ticket.ticketId}">
+																<div class="mb-3">
+																	<label for="staffId" class="form-label">Nhập mã
+																		nhân viên (User ID)</label> <input type="text" id="staffId"
+																		name="staffId" class="form-control" required>
+																</div>
+																<button type="submit" class="btn btn-success">Xác
+																	nhận</button>
+															</form>
+
+														</div>
+													</div>
+												</div>
+											</div> <!-- Kết thúc Modal -->
+										</td>
 										<td><a
-											th:href="@{/admin/tickets-manager/edit/{id}(id=${ticket.ticketId})}"
-											class="btn btn-warning">Sửa</a> <a
 											th:href="@{/admin/tickets-manager/delete/{id}(id=${ticket.ticketId})}"
 											class="btn btn-danger">Xóa</a></td>
 									</tr>

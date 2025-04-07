@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.poly.demo.entity.Voucher;
@@ -20,9 +22,14 @@ public class VoucherService {
 		return voucherRepository.findAll();
 	}
 
+	// Lấy tất cả voucher phân trang ()
+	public Page<Voucher> getPageVouchers(Pageable pageable) {
+		return voucherRepository.findAll(pageable); // Lấy danh sách vouchers với phân trang
+	}
+
 	// Tìm voucher theo ID
-	public Optional<Voucher> getVoucherById(Integer id) {
-		return voucherRepository.findById(id);
+	public Optional<Voucher> getVoucherById(Integer voucherId) {
+		return voucherRepository.findById(voucherId);
 	}
 
 	// Tìm voucher theo mã voucher
@@ -36,7 +43,7 @@ public class VoucherService {
 	}
 
 	// Xóa voucher theo ID
-	public void deleteVoucher(Integer id) {
-		voucherRepository.deleteById(id);
+	public void deleteVoucher(Integer voucherId) {
+		voucherRepository.deleteById(voucherId);
 	}
 }

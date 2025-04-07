@@ -22,20 +22,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.Branch;
 import com.poly.demo.entity.Category;
+import com.poly.demo.entity.FoodItem;
 import com.poly.demo.entity.Movie;
 import com.poly.demo.entity.Room;
 import com.poly.demo.entity.Showtime;
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.User;
+import com.poly.demo.entity.Voucher;
 import com.poly.demo.repository.BranchRepository;
 import com.poly.demo.repository.CategoryRepository;
 import com.poly.demo.repository.UserRepository;
 import com.poly.demo.service.BranchService;
+import com.poly.demo.service.FoodItemService;
 import com.poly.demo.service.MovieService;
 import com.poly.demo.service.RoomService;
 import com.poly.demo.service.ShowtimeService;
 import com.poly.demo.service.TicketService;
 import com.poly.demo.service.UserService;
+import com.poly.demo.service.VoucherService;
 
 @Controller
 @RequestMapping("/admin")
@@ -344,6 +348,49 @@ public class AdminController {
 		return "admin/tickets-manager/list";
 	}
 
+	@PostMapping("/check-in")
+	public String checkInTicket(@RequestParam("ticketId") Integer ticketId, @RequestParam("staffId") Integer staffId,
+			Model model) {
+		// Lấy thông tin nhân viên từ UserService
+		Optional<User> staffOpt = userService.getUserById(staffId);
+
+		if (staffOpt.isEmpty()) {
+			model.addAttribute("error", "Mã nhân viên không tồn tại!");
+			return "redirect:/admin/tickets-manager"; // Trả về trang vé
+		}
+
+		User staff = staffOpt.get();
+
+		// Kiểm tra quyền của nhân viên
+		if (!staff.getRole().equalsIgnoreCase("STAFF")) {
+			model.addAttribute("error", "Người dùng không có quyền check-in!");
+			return "redirect:/admin/tickets-manager";
+		}
+
+		// Lấy thông tin vé
+		Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
+
+		if (ticketOpt.isEmpty()) {
+			model.addAttribute("error", "Không tìm thấy vé!");
+			return "redirect:/admin/tickets-manager";
+		}
+
+		Ticket ticket = ticketOpt.get();
+
+		// Kiểm tra trạng thái vé
+		if ("CHECKED_IN".equals(ticket.getTicketStatus())) {
+			model.addAttribute("error", "Vé đã được check-in trước đó!");
+			return "redirect:/admin/tickets-manager";
+		}
+
+		// Cập nhật trạng thái vé
+		ticket.setTicketStatus("CHECKED_IN");
+		ticketService.updateTicket(ticket);
+
+		model.addAttribute("success", "Check-in thành công!");
+		return "redirect:/admin/tickets-manager";
+	}
+
 	// ==================== THỂ LOẠI ======================
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -415,8 +462,87 @@ public class AdminController {
 		movieService.deleteMovie(id);
 		return "redirect:/admin/movies-manager";
 	}
+
+	// ======================= ĐỒ ĂN =======================
+	@Autowired
+	private FoodItemService foodItemService;
+
+	@GetMapping("/foods-manager")
+	public String foodList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
+		addUserInfoToModel(model);
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by("foodItemId").ascending());
+		Page<FoodItem> foodPage = foodItemService.getFoodItems(pageable);
+
+		model.addAttribute("foods", foodPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", foodPage.getTotalPages());
+		model.addAttribute("food", new FoodItem()); // Để dùng trong form thêm mới
+
+		return "admin/foods-manager/list";
+	}
+
+	// Hiển thị form (thêm mới hoặc sửa)
+	@GetMapping("/foods-manager/{id}")
+	public String foodForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+
+		FoodItem foodItem = id == 0 ? new FoodItem() : foodItemService.getFoodItemById(id).orElse(new FoodItem());
+		model.addAttribute("selectedFood", foodItem);
+		return "admin/foods-manager/form";
+	}
+
+	@PostMapping("/foods-manager/save")
+	public String saveFood(@ModelAttribute FoodItem foodItem, Model model) {
+		addUserInfoToModel(model);
+		// foodItem.setImage("default.png");
+		foodItemService.save(foodItem);
+		return "redirect:/admin/foods-manager";
+	}
+
+	@GetMapping("/foods-manager/delete/{id}")
+	public String deleteFood(@PathVariable Integer id) {
+		foodItemService.delete(id);
+		return "redirect:/admin/foods-manager";
+	}
+
+	// ======================= MÃ GIẢM GIÁ =======================
+
+	@Autowired
+	private VoucherService voucherService;
+
+	@GetMapping("/vouchers-manager")
+	public String listVouchers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+			Model model) {
+		addUserInfoToModel(model);
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Voucher> voucherPage = voucherService.getPageVouchers(pageable);
+
+		model.addAttribute("vouchers", voucherPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", voucherPage.getTotalPages());
+		return "admin/vouchers-manager/list"; // Trả về trang danh sách vouchers
+	}
+
+	@GetMapping("/vouchers-manager/{id}")
+	public String VoucherForm(@PathVariable Integer id, Model model) {
+		addUserInfoToModel(model);
+		Voucher voucher = id == 0 ? new Voucher() : voucherService.getVoucherById(id).orElse(new Voucher());
+		model.addAttribute("selectedVoucher", voucher);
+		return "admin/vouchers-manager/form"; // Trả về form cho voucher
+	}
+
+	@PostMapping("/vouchers-manager/save")
+	public String saveVoucher(@ModelAttribute Voucher voucher) {
+		voucherService.saveVoucher(voucher);
+		return "redirect:/admin/vouchers-manager"; // Quay về danh sách vouchers
+	}
+
+	@GetMapping("/vouchers-manager/delete/{id}")
+	public String deleteVoucher(@PathVariable Integer id) {
+		voucherService.deleteVoucher(id);
+		return "redirect:/admin/vouchers-manager"; // Quay về danh sách vouchers
+	}
+
 }
-
-// ======================= ĐỒ ĂN =======================
-
-// ======================= MÃ GIẢM GIÁ =======================

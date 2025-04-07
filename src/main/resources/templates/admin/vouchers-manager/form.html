@@ -43,49 +43,38 @@
 
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a class="nav-link text-black"
-									aria-current="page" th:href="@{/admin/branches-manager}">Danh
-										sách</a></li>
+									th:href="@{/admin/vouchers-manager}">Danh sách</a></li>
 								<li class="nav-item"><a class="nav-link active" href="#">Form</a></li>
 							</ul>
 
-							<form th:action="@{/admin/branches-manager/save}"
-								th:object="${selectedBranch}" method="post"
-								class="bg-white py-4 px-5 mb-5">
-								<!-- ID ẩn -->
-								<input type="hidden" th:field="*{branchId}">
+							<form th:action="@{/admin/vouchers-manager/save}"
+								th:object="${selectedVoucher}" method="post" class="bg-white py-4 px-5 mb-5">
+								<input type="hidden" th:field="*{voucherId}">
 
 								<div class="mb-3">
-									<label class="form-label">Tên Chi Nhánh:</label> <input
-										type="text" class="form-control" th:field="*{name}" required>
+									<label class="form-label">Mã Giảm Giá:</label> <input
+										type="text" class="form-control" th:field="*{code}" required>
 								</div>
 
 								<div class="mb-3">
-									<label class="form-label">Địa Chỉ:</label> <input type="text"
-										class="form-control" th:field="*{address}" required>
+									<label class="form-label">Giá Trị Giảm Giá:</label> <input
+										type="number" class="form-control"
+										th:field="*{discountAmount}" required>
 								</div>
 
-								<div class="mb-3">
-									<label class="form-label">Email:</label> <input type="email"
-										class="form-control" th:field="*{email}">
-								</div>
 
-								<div class="mb-3">
-									<label class="form-label">Thành Phố:</label> <input type="text"
-										class="form-control" th:field="*{city}" required>
-								</div>
-
-								<!-- Các nút CRUD -->
 								<button type="submit" class="btn btn-success">Lưu</button>
 								<a
-									th:href="@{/admin/branches-manager/delete/{id}(id=${selectedBranch.branchId})}"
+									th:href="@{/admin/vouchers-manager/delete/{id}(id=${selectedVoucher.voucherId})}"
 									class="btn btn-danger"
-									th:if="${selectedBranch.branchId != null}"
-									onclick="return confirm('Bạn có chắc chắn muốn xóa chi nhánh này không?');">Xóa</a>
-								<a th:href="@{/admin/branches-manager/0}"
-									class="btn btn-warning">Làm mới</a> <a
-									href="/admin/branches-manager" class="btn btn-secondary">Quay
+									th:if="${selectedVoucher.voucherId != null}"
+									onclick="return confirm('Bạn có chắc chắn muốn xóa món ăn này không?');">Xóa</a>
+									<a th:href="@{/admin/vouchers-manager/0}"
+									class="btn btn-warning">Làm mới</a>
+								<a href="/admin/vouchers-manager" class="btn btn-secondary">Quay
 									lại</a>
 							</form>
+
 
 
 						</div>

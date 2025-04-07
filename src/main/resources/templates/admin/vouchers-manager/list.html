@@ -39,41 +39,35 @@
 					<div class="col-10">
 						<div class="container table-container"
 							style="position: relative; margin-top: 50px; min-height: 500px;">
-							<h2 class="form-title">QUẢN LÝ ĐỒ ĂN</h2>
+							<h2 class="form-title">QUẢN LÝ MÃ GIẢM GIÁ</h2>
 
 							<ul class="nav nav-tabs">
-								<li class="nav-item"><a class="nav-link active"
-									aria-current="page" th:href="@{/admin/foods-manager}">Danh
+								<li class="nav-item"><a class="nav-link active" href="#">Danh
 										sách</a></li>
 								<li class="nav-item"><a class="nav-link text-black"
-									th:href="@{/admin/foods-manager/0}">Form</a></li>
+									th:href="@{/admin/vouchers-manager/0}">Form</a></li>
 							</ul>
 
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th>Mã Món Ăn</th>
-										<th>Hình ảnh</th>
-										<th>Tên Món Ăn</th>
-										<th>Mô Tả</th>
-										<th>Đơn Giá</th>
+										<th>Mã Voucher</th>
+										<th>Code Giảm Giá</th>
+										<th>Giá Trị Giảm Giá</th>
 										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="food : ${foods}">
-										<td th:text="${food.foodItemId}"></td>
-										<td><img th:src="@{'/image/Foods/' + ${food.image}}"
-											alt="Image" style="width: 50%; height: 100px;"></td>
-										<td th:text="${food.name}"></td>
-										<td th:text="${food.description}"></td>
-										<td th:text="${food.price}"></td>
+									<tr th:each="voucher : ${vouchers}">
+										<td th:text="${voucher.voucherId}"></td>
+										<td th:text="${voucher.code}"></td>
+										<td th:text="${voucher.discountAmount}"></td>
 										<td><a
-											th:href="@{/admin/foods-manager/{id}(id=${food.foodItemId})}"
-											class="btn btn-warning btn-sm">Sửa</a> <a
-											th:href="@{/admin/foods-manager/delete/{id}(id=${food.foodItemId})}"
-											class="btn btn-danger btn-sm"
-											onclick="return confirm('Bạn có chắc chắn muốn xóa món ăn này?')">Xóa</a>
+											th:href="@{/admin/vouchers-manager/{id}(id=${voucher.voucherId})}"
+											class="btn btn-primary">Sửa</a> <a
+											th:href="@{/admin/vouchers-manager/delete/{id}(id=${voucher.voucherId})}"
+											class="btn btn-danger"
+											onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?')">Xóa</a>
 										</td>
 									</tr>
 								</tbody>
@@ -86,20 +80,20 @@
 										<li class="page-item"
 											th:classappend="${currentPage == 0} ? 'disabled'"><a
 											class="page-link"
-											th:href="@{/admin/foods-manager(page=${currentPage - 1})}">Trước</a>
+											th:href="@{/admin/vouchers-manager(page=${currentPage - 1})}">Trước</a>
 										</li>
 
 										<li class="page-item"
-											th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-											th:classappend="${pageNum == currentPage} ? 'active'"><a
+											th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+											th:classappend="${i == currentPage} ? 'active'"><a
 											class="page-link"
-											th:href="@{/admin/foods-manager(page=${pageNum})}"
-											th:text="${pageNum + 1}"></a></li>
+											th:href="@{/admin/vouchers-manager(page=${i})}"
+											th:text="${i + 1}"></a></li>
 
 										<li class="page-item"
 											th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
 											<a class="page-link"
-											th:href="@{/admin/foods-manager(page=${currentPage + 1})}">Sau</a>
+											th:href="@{/admin/vouchers-manager(page=${currentPage + 1})}">Sau</a>
 										</li>
 									</ul>
 								</nav>

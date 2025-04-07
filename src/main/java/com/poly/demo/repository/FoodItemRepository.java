@@ -10,4 +10,5 @@ import com.poly.demo.entity.FoodItem;
 @Repository
 public interface FoodItemRepository extends JpaRepository<FoodItem, Integer> {
 	Optional<FoodItem> findById(Integer id);
+
 }
