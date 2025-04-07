@@ -195,7 +195,7 @@ public class BookingController {
 		// Kiểm tra đăng nhập
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (!(principal instanceof UserDetails)) {
-			model.addAttribute("error", "Bạn chưa đăng nhập!");
+			model.addAttribute("errorMessage", "Bạn chưa đăng nhập!");
 			return "redirect:/login";
 		}
 		String username = ((UserDetails) principal).getUsername();
@@ -207,6 +207,12 @@ public class BookingController {
 		User user = userService.findByUsername(username)
 				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng!"));
 
+		// ✅ Nếu không chọn ghế
+		if (selectedSeats == null || selectedSeats.trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng chọn ít nhất một ghế!");
+			return "redirect:/booking/step2?showtimeId=" + showtimeId;
+		}
+
 		// Chuyển đổi danh sách ghế từ String → List<Integer>
 		List<Integer> seatIds = Arrays.stream(selectedSeats.split(",")).map(Integer::parseInt) // Đổi từ `valueOf` sang
 																								// `parseInt` để tránh
@@ -217,7 +223,7 @@ public class BookingController {
 
 		// Kiểm tra nếu không có ghế nào được chọn
 		if (selectedSeatList.isEmpty()) {
-			model.addAttribute("error", "Vui lòng chọn ít nhất một ghế!");
+			model.addAttribute("errorMessage", "Vui lòng chọn ít nhất một ghế!");
 			return "redirect:/booking/step2?showtimeId=" + showtimeId;
 		}
 
@@ -293,7 +299,7 @@ public class BookingController {
 			// Lấy thông tin vé
 			Optional<Ticket> optionalTicket = ticketService.getTicketById(ticketId);
 			if (optionalTicket.isEmpty()) {
-				redirectAttributes.addFlashAttribute("error", "Vé không tồn tại!");
+				redirectAttributes.addFlashAttribute("errorMessage", "Vé không tồn tại!");
 				return "redirect:/booking/step3?ticketId=" + ticketId;
 			}
 
@@ -341,6 +347,7 @@ public class BookingController {
 			ticket.setPrice(ticketPrice.add(totalFoodPrice));
 
 			// Xử lý voucher nếu có
+			String successMess = "Đặt vé thành công! ";
 			if (voucherCode != null && !voucherCode.trim().isEmpty()) {
 				Optional<Voucher> optionalVoucher = voucherService.getVoucherByCode(voucherCode.trim());
 				if (optionalVoucher.isPresent()) {
@@ -353,19 +360,20 @@ public class BookingController {
 					// Lưu voucher vào Ticket_Vouchers (CHỈ LƯU KHI VOUCHER HỢP LỆ)
 					TicketVoucher ticketVoucher = new TicketVoucher(ticket, voucher);
 					ticketVoucherService.save(ticketVoucher);
+					successMess += "Đã áp dụng voucher!";
 				} else {
-					redirectAttributes.addFlashAttribute("error", "Mã giảm giá không hợp lệ!");
+					redirectAttributes.addFlashAttribute("errorMessage", "Mã giảm giá không hợp lệ!");
 				}
 			}
 
 			// Lưu lại vé sau khi cập nhật giá
 			ticketService.saveTicket(ticket);
 
-			redirectAttributes.addFlashAttribute("message", "Lưu thành công!");
+			redirectAttributes.addFlashAttribute("successMessage", successMess);
 			return "redirect:/booking/step3?ticketId=" + ticketId;
 		} catch (Exception e) {
 			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi lưu dữ liệu!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi lưu dữ liệu!");
 			return "redirect:/booking/step3?ticketId=" + ticketId;
 		}
 	}

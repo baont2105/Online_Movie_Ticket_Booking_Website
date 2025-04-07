@@ -62,7 +62,7 @@ public class UserController {
 		if (userOptional.isPresent()) {
 			model.addAttribute("user", userOptional.get());
 		} else {
-			redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản");
+			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy tài khoản");
 		}
 		return "account/account-info"; // Tên file Thymeleaf
 	}
@@ -79,9 +79,9 @@ public class UserController {
 			existingUser.setPhoneNumber(user.getPhoneNumber());
 
 			userService.save(existingUser);
-			redirectAttributes.addFlashAttribute("message", "Cập nhật thành công!");
+			redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thành công!");
 		} else {
-			redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản");
+			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy tài khoản");
 		}
 		return "redirect:/account";
 	}
@@ -91,7 +91,7 @@ public class UserController {
 	public String changePassword(@RequestParam Integer userId, @RequestParam String newPassword,
 			@RequestParam String confirmPassword, Model model, RedirectAttributes redirectAttributes) {
 		if (!newPassword.equals(confirmPassword)) {
-			redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu xác nhận không khớp!");
 			return "redirect:/account";
 		}
 
@@ -100,9 +100,9 @@ public class UserController {
 			User user = userOptional.get();
 			user.setPassword(passwordEncoder.encode(newPassword));
 			userService.save(user);
-			redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
+			redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công!");
 		} else {
-			redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy tài khoản!");
 		}
 
 		return "redirect:/account";

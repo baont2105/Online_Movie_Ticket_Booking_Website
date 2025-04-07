@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.Ticket;
 import com.poly.demo.entity.TicketFood;
@@ -69,14 +70,14 @@ public class TicketController {
 		if (principal instanceof UserDetails) {
 			username = ((UserDetails) principal).getUsername();
 		} else {
-			model.addAttribute("error", "Bạn chưa đăng nhập!");
+			model.addAttribute("errorMessage", "Bạn chưa đăng nhập!");
 			return "redirect:/login"; // Chuyển hướng về trang login nếu chưa đăng nhập
 		}
 
 		// Tìm User theo username
 		User user = userService.findByUsername(username).orElse(null);
 		if (user == null) {
-			model.addAttribute("error", "Không tìm thấy người dùng!");
+			model.addAttribute("errorMessage", "Không tìm thấy người dùng!");
 			return "error-page"; // Chuyển hướng đến trang lỗi
 		}
 
@@ -110,12 +111,12 @@ public class TicketController {
 
 	@PostMapping("/check-in")
 	public String checkInTicket(@RequestParam("ticketId") Integer ticketId, @RequestParam("staffId") Integer staffId,
-			Model model) {
+			Model model, RedirectAttributes redirectAttributes) {
 		// Lấy thông tin nhân viên từ UserService
 		Optional<User> staffOpt = userService.getUserById(staffId);
 
 		if (staffOpt.isEmpty()) {
-			model.addAttribute("error", "Mã nhân viên không tồn tại!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Mã nhân viên không tồn tại!");
 			return "redirect:/ticket/my-tickets"; // Trả về trang vé
 		}
 
@@ -123,7 +124,7 @@ public class TicketController {
 
 		// Kiểm tra quyền của nhân viên
 		if (!staff.getRole().equalsIgnoreCase("STAFF")) {
-			model.addAttribute("error", "Người dùng không có quyền check-in!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Người dùng không có quyền check-in!");
 			return "redirect:/ticket/my-tickets";
 		}
 
@@ -131,7 +132,7 @@ public class TicketController {
 		Optional<Ticket> ticketOpt = ticketService.getTicketById(ticketId);
 
 		if (ticketOpt.isEmpty()) {
-			model.addAttribute("error", "Không tìm thấy vé!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy vé!");
 			return "redirect:/ticket/my-tickets";
 		}
 
@@ -139,7 +140,7 @@ public class TicketController {
 
 		// Kiểm tra trạng thái vé
 		if ("CHECKED_IN".equals(ticket.getTicketStatus())) {
-			model.addAttribute("error", "Vé đã được check-in trước đó!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Vé đã được check-in trước đó!");
 			return "redirect:/ticket/my-tickets";
 		}
 
@@ -147,7 +148,7 @@ public class TicketController {
 		ticket.setTicketStatus("CHECKED_IN");
 		ticketService.updateTicket(ticket);
 
-		model.addAttribute("success", "Check-in thành công!");
+		redirectAttributes.addFlashAttribute("successMessage", "Check-in thành công!");
 		return "redirect:/ticket/my-tickets";
 	}
 }

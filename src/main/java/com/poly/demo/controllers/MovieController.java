@@ -139,7 +139,7 @@ public class MovieController {
 		List<Movie> movies = movieService.searchMovies(categoryId, keyword);
 
 		if (movies.isEmpty()) {
-			model.addAttribute("errorMessage", "Không tìm thấy phim nào phù hợp.");
+			model.addAttribute("error", "Không tìm thấy phim nào phù hợp.");
 		}
 
 		model.addAttribute("categories", categories);

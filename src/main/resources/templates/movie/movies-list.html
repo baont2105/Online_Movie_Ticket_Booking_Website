@@ -77,9 +77,9 @@
 						<button type="submit" class="btn btn-primary">Tìm kiếm</button>
 					</form>
 				</div>
-				<div th:if="${errorMessage}"
-					class="alert alert-danger text-center mt-3">
-					<span th:text="${errorMessage}"></span>
+				<div th:if="${error}"
+					class=" text-center mt-3" >
+					<span th:text="${error}" class="alert alert-danger" style="width:300px"></span>
 				</div>
 
 
