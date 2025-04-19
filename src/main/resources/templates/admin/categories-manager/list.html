@@ -52,16 +52,16 @@
 							<table class="table table-bordered">
 								<thead class="table-dark">
 									<tr>
-										<th>Mã Thể Loại</th>
+										<th>ID</th>
 										<th>Tên Thể Loại</th>
 										<th>Hành động</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="category : ${categories}">
-										<td th:text="${category.categoryId}"></td>
+										<td class="text-center" th:text="${category.categoryId}"></td>
 										<td th:text="${category.name}"></td>
-										<td><a
+										<td class="text-center"><a
 											th:href="@{/admin/categories-manager/{id}(id=${category.categoryId})}"
 											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/categories-manager/delete/{id}(id=${category.categoryId})}"

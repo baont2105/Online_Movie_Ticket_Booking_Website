@@ -51,7 +51,7 @@
 							<table class="table table-default table-bordered">
 								<thead class="table-dark">
 									<tr>
-										<th>Mã Tài Khoản</th>
+										<th>ID</th>
 										<th>Họ Tên</th>
 										<th>Tên Tài Khoản</th>
 										<th>Email</th>
@@ -63,21 +63,21 @@
 								</thead>
 								<tbody>
 									<tr th:each="user : ${users}">
-										<td th:text="${user.userId}"></td>
+										<td class="text-center" th:text="${user.userId}"></td>
 										<td th:text="${user.name}"></td>
 										<td th:text="${user.username}"></td>
 										<td th:text="${user.email}"></td>
-										<td th:text="${user.phoneNumber}"></td>
-										<td th:text="${user.role}"></td>
-										<td><span th:if="${user.visible}"
+										<td class="text-center" th:text="${user.phoneNumber}"></td>
+										<td class="text-center" th:text="${user.role}"></td>
+										<td class="text-center"><span th:if="${user.visible}"
 											class="text-success fw-bold">Hoạt động</span> <span
 											th:if="${!user.visible}" class="text-danger fw-bold">Bị
 												Khóa</span></td>
-										<td><a
+										<td class="text-center"><a
 											th:href="@{/admin/accounts-manager/{id}(id=${user.userId})}"
-											class="btn btn-primary">Sửa</a> <a
+											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/accounts-manager/delete/{id}(id=${user.userId})}"
-											class="btn btn-danger"
+											class="btn btn-danger btn-sm"
 											onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?');">Xóa</a>
 										</td>
 									</tr>

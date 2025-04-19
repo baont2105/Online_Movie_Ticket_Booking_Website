@@ -63,16 +63,16 @@
 								</thead>
 								<tbody>
 									<tr th:each="showtime : ${showtimePage.content}">
-										<td th:text="${showtime.showtimeId}"></td>
+										<td class="text-center" th:text="${showtime.showtimeId}"></td>
 										<td th:text="${showtime.movie.name}"></td>
 										<td th:text="${showtime.branch.name}"></td>
 										<td th:text="${showtime.room.name}"></td>
-										<td
+										<td class="text-center"
 											th:text="${#temporals.format(showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
-										<td
+										<td class="text-center"
 											th:text="${#temporals.format(showtime.endTime, 'dd/MM/yyyy HH:mm')}"></td>
-										<td th:text="${#numbers.formatDecimal(showtime.price, 0, 'COMMA', 0, 'POINT')}"></td>
-										<td><a
+										<td class="text-center" th:text="${#numbers.formatDecimal(showtime.price, 0, 'COMMA', 0, 'POINT')}"></td>
+										<td class="text-center"><a
 											th:href="@{/admin/showtimes-manager/{id}(id=${showtime.showtimeId})}"
 											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/showtimes-manager/delete/{id}(id=${showtime.showtimeId})}"

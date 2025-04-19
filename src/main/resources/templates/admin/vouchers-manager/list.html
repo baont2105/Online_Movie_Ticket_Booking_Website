@@ -51,22 +51,23 @@
 							<table class="table table-bordered">
 								<thead class="table-dark">
 									<tr>
-										<th>Mã Voucher</th>
+										<th>ID</th>
 										<th>Code Giảm Giá</th>
-										<th>Giá Trị Giảm Giá</th>
+										<th>Giá Trị Giảm Giá (VNĐ)</th>
 										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="voucher : ${vouchers}">
-										<td th:text="${voucher.voucherId}"></td>
+										<td class="text-center" th:text="${voucher.voucherId}"></td>
 										<td th:text="${voucher.code}"></td>
-										<td th:text="${voucher.discountAmount}"></td>
-										<td><a
+										<td class="text-center"
+											th:text="${#numbers.formatDecimal(voucher.discountAmount, 0, 'COMMA', 0, 'POINT')}"></td>
+										<td class="text-center"><a
 											th:href="@{/admin/vouchers-manager/{id}(id=${voucher.voucherId})}"
-											class="btn btn-primary">Sửa</a> <a
+											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/vouchers-manager/delete/{id}(id=${voucher.voucherId})}"
-											class="btn btn-danger"
+											class="btn btn-danger btn-sm"
 											onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?')">Xóa</a>
 										</td>
 									</tr>

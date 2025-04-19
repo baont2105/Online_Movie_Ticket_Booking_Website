@@ -52,10 +52,10 @@
 							<table class="table table-bordered">
 								<thead class="table-dark">
 									<tr>
-										<th>Mã Phim</th>
+										<th>ID</th>
 										<th>Tên Phim</th>
 										<th>Thể Loại</th>
-										<th>Thời Lượng</th>
+										<th>Thời Lượng (phút)</th>
 										<th>Ngày Chiếu</th>
 										<th>Ngày Kết Thúc</th>
 										<th>Hành Động</th>
@@ -63,15 +63,15 @@
 								</thead>
 								<tbody>
 									<tr th:each="movie : ${movies}">
-										<td th:text="${movie.movieId}"></td>
+										<td class="text-center" th:text="${movie.movieId}"></td>
 										<td th:text="${movie.name}"></td>
 										<td th:text="${movie.category.name}"></td>
-										<td th:text="${movie.duration + ' phút'}"></td>
-										<td
+										<td class="text-center" th:text="${movie.duration}"></td>
+										<td class="text-center"
 											th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></td>
-										<td
+										<td class="text-center"
 											th:text="${#temporals.format(movie.endDate, 'dd/MM/yyyy')}"></td>
-										<td><a
+										<td class="text-center"><a
 											th:href="@{/admin/movies-manager/{id}(id=${movie.movieId})}"
 											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/movies-manager/delete/{id}(id=${movie.movieId})}"

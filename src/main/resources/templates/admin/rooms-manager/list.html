@@ -60,10 +60,10 @@
 								</thead>
 								<tbody>
 									<tr th:each="room : ${rooms}">
-										<td th:text="${room.roomId}"></td>
+										<td class="text-center" th:text="${room.roomId}"></td>
 										<td th:text="${room.name}"></td>
 										<td th:text="${room.branch.name}"></td>
-										<td><a
+										<td class="text-center"><a
 											th:href="@{/admin/rooms-manager/{id}(id=${room.roomId})}"
 											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/rooms-manager/delete/{id}(id=${room.roomId})}"

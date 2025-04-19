@@ -57,12 +57,12 @@
 								</thead>
 								<tbody>
 									<tr th:each="ticket : ${tickets}">
-										<td th:text="${ticket.ticketId}"></td>
-										<td th:text="${ticket.user.userId}"></td>
+										<td class="text-center" th:text="${ticket.ticketId}"></td>
+										<td class="text-center" th:text="${ticket.user.userId}"></td>
 										<td th:text="${ticket.user.name}"></td>
 
 										<!-- THỜI ĐIỂM CHIẾU -->
-										<td
+										<td class="text-center"
 											th:text="${#temporals.format(ticket.showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
 
 										<!-- GHẾ NGỒI -->
@@ -73,14 +73,14 @@
 												<span th:if="${!iterStat.last}">, </span>
 										</span></td>
 
-										<td
+										<td class="text-center"
 											th:text="${#numbers.formatDecimal(ticket.price, 0, 'COMMA', 0, 'POINT')}"></td>
-										<td
+										<td class="text-center"
 											th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-										<td>
+										<td class="text-center">
 											<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
 											<button th:if="${ticket.ticketStatus == 'NOT_CHECKED_IN'}"
-												class="btn btn-warning btn-sm" data-bs-toggle="modal"
+												class=" btn btn-warning btn-sm" data-bs-toggle="modal"
 												th:attr="data-bs-target='#checkInModal' + ${ticket.ticketId}">
 												Chưa Check-in</button> <!-- Nếu trạng thái là CHECKED_IN, hiển thị trạng thái -->
 											<span th:if="${ticket.ticketStatus == 'CHECKED_IN'}"
@@ -112,9 +112,9 @@
 												</div>
 											</div> <!-- Kết thúc Modal -->
 										</td>
-										<td><a
+										<td class="text-center"><a
 											th:href="@{/admin/tickets-manager/delete/{id}(id=${ticket.ticketId})}"
-											class="btn btn-danger">Xóa</a></td>
+											class="btn btn-danger btn-sm">Xóa</a></td>
 									</tr>
 								</tbody>
 							</table>

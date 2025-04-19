@@ -52,23 +52,23 @@
 							<table class="table table-bordered">
 								<thead class="table-dark">
 									<tr>
-										<th>Mã Món Ăn</th>
+										<th>ID</th>
 										<th>Hình ảnh</th>
 										<th>Tên Món Ăn</th>
 										<th>Mô Tả</th>
-										<th>Đơn Giá</th>
+										<th>Đơn Giá (VNĐ)</th>
 										<th>Hành Động</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="food : ${foods}">
-										<td th:text="${food.foodItemId}"></td>
-										<td><img th:src="@{'/image/Foods/' + ${food.image}}"
+										<td class="text-center" th:text="${food.foodItemId}"></td>
+										<td class="text-center"><img th:src="@{'/image/Foods/' + ${food.image}}"
 											alt="Image" style="width: 50%; height: 100px;"></td>
 										<td th:text="${food.name}"></td>
 										<td th:text="${food.description}"></td>
-										<td th:text="${food.price}"></td>
-										<td><a
+										<td class="text-center" th:text="${#numbers.formatDecimal(food.price, 0, 'COMMA', 0, 'POINT')}"></td>
+										<td class="text-center"><a
 											th:href="@{/admin/foods-manager/{id}(id=${food.foodItemId})}"
 											class="btn btn-primary btn-sm">Sửa</a> <a
 											th:href="@{/admin/foods-manager/delete/{id}(id=${food.foodItemId})}"
