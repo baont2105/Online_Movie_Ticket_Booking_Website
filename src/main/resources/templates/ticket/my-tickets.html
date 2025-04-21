@@ -63,7 +63,7 @@
 					<tbody>
 						<tr th:each="t : ${tickets}">
 							<!-- ID -->
-							<td th:text="${t.ticketId}"></td>
+							<td class="text-center" th:text="${t.ticketId}"></td>
 
 							<!-- TÊN PHIM -->
 							<td th:text="${t.showtime.movie.name}"></td>
@@ -79,11 +79,11 @@
 							</span></td>
 
 							<!-- THỜI ĐIỂM ĐẶT -->
-							<td
+							<td class="text-center"
 								th:text="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
 
 							<!-- THỜI ĐIỂM CHIẾU -->
-							<td
+							<td class="text-center"
 								th:text="${#temporals.format(t.showtime.startTime, 'dd/MM/yyyy HH:mm')}"></td>
 
 							<!-- ĐỒ ĂN -->
@@ -95,7 +95,7 @@
 							</span></td>
 
 							<!-- VOUCHER -->
-							<td><span th:if="${voucherMap[t.ticketId].isEmpty()}">Không
+							<td class="text-center"><span th:if="${voucherMap[t.ticketId].isEmpty()}">Không
 									có</span> <span
 								th:each="voucher, iterStat : ${voucherMap[t.ticketId]}">
 									<span th:text="${voucher.voucher.code}"></span> <span
@@ -103,11 +103,11 @@
 							</span></td>
 
 							<!-- TỔNG GIÁ -->
-							<td
+							<td class="text-center"
 								th:text="${#numbers.formatDecimal(t.price, 0, 'COMMA', 0, 'POINT')}"></td>
 
 							<!-- TRẠNG THÁI -->
-							<td>
+							<td class="text-center">
 								<!-- Nếu trạng thái là NOT_CHECKED_IN, hiển thị nút mở modal nhập mã nhân viên -->
 								<button th:if="${t.ticketStatus == 'NOT_CHECKED_IN'}"
 									class="btn btn-warning btn-sm" data-bs-toggle="modal"
