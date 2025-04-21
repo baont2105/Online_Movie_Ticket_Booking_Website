@@ -45,21 +45,35 @@ public class MovieController {
 
 		if (principal instanceof UserDetails) {
 			UserDetails userDetails = (UserDetails) principal;
-			String username = userDetails.getUsername(); // Lấy username từ UserDetails
+			String username = userDetails.getUsername();
 
-			// Lấy thông tin User từ database
 			Optional<User> userOptional = userService.findByUsername(username);
-			if (userOptional.isPresent()) {
-				User user = userOptional.get();
+			userOptional.ifPresentOrElse(user -> {
 				model.addAttribute("user", user);
-				model.addAttribute("name", user.getName()); // Gửi tên đến Thymeleaf
-				return;
-			}
+				model.addAttribute("name", user.getName());
+			}, () -> {
+				model.addAttribute("user", null);
+				model.addAttribute("name", null);
+			});
 		}
+		// Xử lý trường hợp đăng nhập bằng OAuth2 (mạng xã hội)
+		else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
+			org.springframework.security.oauth2.core.user.DefaultOAuth2User oauth2User = (org.springframework.security.oauth2.core.user.DefaultOAuth2User) principal;
 
-		// Nếu không tìm thấy user hoặc chưa đăng nhập
-		model.addAttribute("user", null);
-		model.addAttribute("name", null);
+			String email = oauth2User.getAttribute("email");
+
+			Optional<User> userOptional = userService.findByEmail(email);
+			userOptional.ifPresentOrElse(user -> {
+				model.addAttribute("user", user);
+				model.addAttribute("name", user.getName());
+			}, () -> {
+				model.addAttribute("user", null);
+				model.addAttribute("name", null);
+			});
+		} else {
+			model.addAttribute("user", null);
+			model.addAttribute("name", null);
+		}
 	}
 
 	@GetMapping("/")

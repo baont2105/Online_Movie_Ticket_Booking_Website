@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.poly.demo.entity.User;
 import com.poly.demo.service.UserService;
@@ -117,4 +120,30 @@ public class AuthController {
 		}
 		return "redirect:/login";
 	}
+
+	// Đăng nhập mạng xã hội
+	@RequestMapping("/oauth2/login/success")
+	public String oauth2LoginSuccess(OAuth2AuthenticationToken oauth2, Model model,
+			RedirectAttributes redirectAttributes) {
+		String email = oauth2.getPrincipal().getAttribute("email");
+		String name = oauth2.getPrincipal().getAttribute("name");
+
+		// Nếu user chưa tồn tại trong DB thì tạo mới
+		Optional<User> existingUser = userService.findByEmail(email);
+		if (existingUser.isEmpty()) {
+			User newUser = new User();
+			newUser.setUsername(email); // hoặc bạn có thể tách username từ email nếu muốn
+			newUser.setEmail(email);
+			newUser.setName(name != null ? name : "Mạng xã hội");
+			newUser.setPhoneNumber("0000000000");
+			newUser.setPassword("SOCIAL_LOGIN"); // không dùng đến
+			newUser.setRole("USER");
+			newUser.setVisible(true);
+			userService.save(newUser);
+		}
+
+		redirectAttributes.addFlashAttribute("successMessage", "Đăng nhập bằng Google thành công!");
+		return "redirect:/";
+	}
+
 }
