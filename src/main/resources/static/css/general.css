@@ -42,7 +42,6 @@ body {
 
 /* Movie Details */
 .movie-banner {
-	background-image: url('banner-image-url.jpg');
 	background-size: cover;
 	background-position: center;
 	height: 400px;
