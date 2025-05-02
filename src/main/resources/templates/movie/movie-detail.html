@@ -20,6 +20,12 @@
 </head>
 
 <body>
+
+	<!-- Nhúng Facebook comment plugin -->
+	<div id="fb-root"></div>
+	<script async defer crossorigin="anonymous"
+		src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v22.0&appId=9033353583432944"></script>
+
 	<div class="container-fluid m-0 p-0"
 		style="background: url(/image/Background/bg_pattern.png) repeat left top;">
 		<!-- HEADER -->
@@ -83,7 +89,8 @@
 									ngày phát hành</span>
 							</p>
 							<p>
-								<i class="bi bi-eye-fill"></i> <span th:text="${#numbers.formatDecimal(movie.viewCount, 0, 'COMMA', 0, 'POINT')}"></span>
+								<i class="bi bi-eye-fill"></i> <span
+									th:text="${#numbers.formatDecimal(movie.viewCount, 0, 'COMMA', 0, 'POINT')}"></span>
 							</p>
 							<p>
 								Quốc gia: <span th:text="${movie.country}"></span>
@@ -107,34 +114,46 @@
 							</a>
 						</div>
 					</div>
-
 				</div>
 			</div>
 
 			<!-- Sub title -->
 			<div class="container">
 				<h3>Nội dung phim</h3>
+				<hr>
 				<p th:text="${movie.description}"></p>
 			</div>
 
 			<!-- lịch chiếu -->
 			<div class="container my-3">
 				<h3>Lịch chiếu</h3>
-				<div class="d-flex row">
+				<hr>
+				<div class="d-flex row bg-white p-3">
 					<div th:each="s : ${showtime}" class="col-md-6">
-						<div class="border border-2 rounded rounded-4 px-4 py-2 text-center btn btn-primary">
-							<strong th:text="${s.branch.name}"></strong>: 
-							<span
-								class=""
+						<div
+							class="border border-2 rounded rounded-4 px-4 py-2 text-center btn btn-primary">
+							<strong th:text="${s.branch.name}"></strong>: <span class=""
 								th:text="${s.showDate} + ' | ' + ${s.startTime}"></span>
 						</div>
 					</div>
 				</div>
 			</div>
 
+
+			<!-- FACEBOOK COMMENT SECTION -->
+			<div class="container my-3">
+				<h3>Thảo luận</h3>
+				<hr>
+				<div class="fb-comments bg-white"
+					th:data-href="'https://c5ef-2405-4802-9155-be00-d16d-39ea-e5d4-c267.ngrok-free.app/movies/movie-detail/' + ${movie.movieId}"
+					data-width="100%" data-numposts="5"></div>
+			</div>
+
+
 			<!-- Phim cùng thể loại -->
 			<div class="container my-3">
 				<h3>Phim cùng thể loại</h3>
+				<hr>
 				<div class="container-fluid row">
 					<div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4"
 						th:each="m : ${relatedMovies}">
